@@ -1,0 +1,8 @@
+POST http://47.106.71.3:8080/api/company?cid=1 HTTP/1.1
+content-type: application/json
+
+# {
+#     "name":"Hendry",
+#     "salary":"61888",
+#     "age":"26"
+# }
