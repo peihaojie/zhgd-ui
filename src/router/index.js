@@ -337,6 +337,10 @@ const router = new VueRouter({
         {
           path: '/systemLiangZhi_epidemic',
           component: resolve => require(['../components/system/systemLiangZhi/systemLiangZhi_epidemic'], resolve)
+        },
+        {
+          path: '/systemLiangZhi_temperature',
+          component: resolve => require(['../components/system/systemLiangZhi/systemLiangZhi_temperature'], resolve)
         }
       ]
     },

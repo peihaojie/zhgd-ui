@@ -100,13 +100,13 @@
           </a>
         </li>
         <li @click="isActiveShow('/systemLiangZhi_epidemic')">
-          <router-link
-            to="/systemLiangZhi_epidemic"
-            :class="activeShow=='/systemLiangZhi_epidemic'?'active':''"
+          <a class="tabs-wrap"
+            :class="activeShow=='/systemLiangZhi_epidemic' ?'active':''"
           >
             <div class="icon epidemic"></div>
             <span>疫情防控</span>
-          </router-link>
+            <tabs :data="epidemicOptions" class="tabs"></tabs>
+          </a>
         </li>
         <!-- <li @click="permissionClick">
           <a :class="activeShow.includes('/systemLiangZhi_permission')?'active':''">
@@ -186,7 +186,7 @@
   .side-nav {
     width: 1.75rem;
     height: 10rem;
-    overflow: hidden;
+    // overflow: hidden;
     background-color: #54a4d7;
     ul {
       width: 1.75rem;
@@ -266,6 +266,17 @@
           background-color: #378dc5;
           .icon {
             opacity: 1;
+          }
+        }
+        .tabs-wrap {
+          z-index: 10;
+          &:hover {
+            .tabs {
+              display: inline-block !important;
+            }
+          }
+          .tabs {
+            display: none;
           }
         }
       }
@@ -436,6 +447,7 @@
 </style>
 
 <script>
+import tabs from '@/base/tabs';
 export default {
   data() {
     return {
@@ -444,7 +456,21 @@ export default {
       fwShow: false, // 两制服务系统侧拉框状态
       rewardShow: false, // 奖罚记录侧拉框状态
       permissionShow: false, // 权限设置侧拉框状态
+      epidemicOptions: [
+        {
+          name: "地区管理",
+          url: "/systemLiangZhi_epidemic"
+        },
+        {
+          name: "体温管理",
+          url: "/systemLiangZhi_temperature"
+        }
+      ], // 下属页面
+      epidemicType: false, // 下拉框显示与否
     };
+  },
+  components: {
+    tabs
   },
   created() {
     this.getPath();

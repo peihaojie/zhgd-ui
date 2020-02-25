@@ -25,16 +25,24 @@
       </div>
       <div class="body">
         <div class="btn">
-          <div @click="searchData('湖北省')">
+          <div class="click" @click="searchData('湖北省')">
             <i class="particularly-area"></i>
             特殊地区
           </div>
-          <div v-show="updateType === 2 || updateType === 0" @click="updateQuarantine(1)">
+          <div class="click" v-if="updateType === 2 || updateType === 0" @click="updateQuarantine(1)">
             <i class="observation-shield"></i>
             隔离观察
           </div>
-          <div v-show="updateType === 2 || updateType === 1" @click="updateQuarantine(0)">
+          <div class="no-click" v-else>
+            <i class="no-observation-shield"></i>
+            隔离观察
+          </div>
+          <div class="click" v-if="updateType === 2 || updateType === 1" @click="updateQuarantine(0)">
             <i class="work"></i>
+            恢复工作
+          </div>
+          <div class="no-click" v-else>
+            <i class="no-work"></i>
             恢复工作
           </div>
         </div>
@@ -69,8 +77,8 @@
             </el-table-column>
             <el-table-column label="状态" width="100" sortable align="center">
               <template slot-scope="scope">
-                <p style="color: #ffd14f" v-if="scope.row.quarantine==1">隔离</p>
-                <p v-else>正常</p>
+                <p style="color: #ffd14f" v-if="scope.row.quarantine==1">隔离观察</p>
+                <p v-else>正常工作</p>
               </template>
             </el-table-column>
           </el-table>
@@ -358,7 +366,7 @@ export default {
     position: relative;
     .btn {
       padding-bottom: 0.1rem;
-      > div {
+      .click {
         display: inline-block;
         color: #0090ff;
         line-height: 0.28rem;
@@ -410,6 +418,42 @@ export default {
         }
         .work {
           background-image: url("../../../../static/images/back-work.png");
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+        }
+      }
+      .no-click {
+        display: inline-block;
+        color: #dbdbdb;
+        line-height: 0.28rem;
+        border-radius: 0.05rem;
+        border: 0.01rem solid #dbdbdb;
+        font-size: 0.14rem;
+        width: 1rem;
+        text-align: center;
+        cursor: pointer;
+        margin-right: 0.15rem;
+        background-color: #fff;
+        transition: background-color 0.5s, color 0.5s;
+        transition-timing-function: ease-in-out;
+        i {
+          display: inline-block;
+          width: 0.2rem;
+          height: 0.2rem;
+          vertical-align: sub;
+        }
+        .particularly-area {
+          background-image: url("../../../../static/images/particularly-area.png");
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+        }
+        .no-observation-shield {
+          background-image: url("../../../../static/images/no-observation-shield.png");
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+        }
+        .no-work {
+          background-image: url("../../../../static/images/no-back-work.png");
           background-size: 100% 100%;
           background-repeat: no-repeat;
         }
