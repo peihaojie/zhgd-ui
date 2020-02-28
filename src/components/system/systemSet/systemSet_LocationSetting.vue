@@ -4,9 +4,12 @@
       <div class="main-box">
         <div class="AddList">
           <div class="button-box">
-            <a class="add" @click="isShow=true">
+            <a
+              class="add"
+              @click="isShow=true, titleNmae='添加工区',modify=false,Preservation=false,Delete=true"
+            >
               <i class="icon"></i>
-              添加工区
+              工区定位
             </a>
           </div>
           <div class="AddList-header">
@@ -14,49 +17,14 @@
             <span style="color:#0090ff;">▼</span>
           </div>
           <ul class="list-main">
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
-            </li>
-            <li>
-              <span>龙创科技园</span>
-              <span>设置</span>
+            <li v-for="(item,index) in WorkAreaList" :key="index">
+              <span>{{item.name}}</span>
+              <span
+                :longitude="item.longitude?item.longitude:'-'"
+                :latitude="item.latitude?item.latitude:'-'"
+                :radius="item.radius?item.radius:'-'"
+                @click="isShow=true,setWorkAreaFunc(item),modify=true,Preservation=true,Delete=false"
+              >设置</span>
             </li>
           </ul>
         </div>
@@ -69,6 +37,8 @@
                 :position="marker.position"
                 :events="marker.events"
                 :icon="marker.icon"
+                :radius="marker.radius"
+                :fill-opacity="marker.fillOpacity"
                 animation="AMAP_ANIMATION_DROP"
               ></el-amap-marker>
               <el-amap-info-window
@@ -79,6 +49,13 @@
                 :content="window.content"
                 :offset="window.offset"
               ></el-amap-info-window>
+              <el-amap-circle
+                v-for="(circle ,index) in markerList"
+                :key="index"
+                :radius="circle.circles[0].radius"
+                :center="circle.circles[0].center" 
+                :fill-opacity="circle.circles[0].fillOpacity"
+              ></el-amap-circle>
             </div>
           </el-amap>
         </div>
@@ -88,112 +65,309 @@
         <div class="NewTask-box">
           <div class="NewTask-header">
             <span></span>
-            <span style="font-size:.20rem;">添加工区</span>
+            <span style="font-size:.20rem;">{{titleNmae}}</span>
             <span style="font-size:.30rem;" @click="isShow=false">×</span>
           </div>
           <div class="NewTask-main">
-            <div class="item" style=" padding-left: 1.06rem;">
+            <div class="item" style=" padding-left: 1rem;">
               <div class="item-text">
-                选择工区
+                工区名称
                 <span style="color:red;">*</span>
               </div>
-              <el-select v-model="SelectWorkArea" placeholder="请选择工业区">
-                <el-option
-                  v-for="(item, index) in SelectWorkAreaList"
-                  :label="item.label"
-                  :value="item.value"
-                  :key="index"
-                ></el-option>
-              </el-select>
-              <span class="item-text" style="color:#0090ff;padding-left:.1rem;">添加工区</span>
+              <el-input v-model="WorkAreaName" placeholder="请输入工区名称" style="margin-left:.14rem;"></el-input>
             </div>
-            <div class="item" style=" padding-left: 1.06rem;">
+            <div class="item" style=" padding-left: 1rem;">
               <div class="item-text">
                 选择半径
                 <span style="color:red;">*</span>
               </div>
-              <el-select v-model="SelectWorkArea" placeholder="请选择半径">
+              <el-select v-model="Radius" placeholder="请选择半径">
                 <el-option
-                  v-for="(item, index) in SelectWorkAreaList"
+                  v-for="(item, index) in RadiusList"
                   :label="item.label"
                   :value="item.value"
                   :key="index"
                 ></el-option>
               </el-select>
             </div>
+            <div class="item" style=" padding-left: 1.06rem;">
+              <div class="item-text">
+                经度
+                <span style="color:red;">*</span>
+              </div>
+              <el-input v-model="longitude" placeholder style="margin-left:.11rem;"></el-input>
+            </div>
+            <div class="item" style=" padding-left: 1.06rem;">
+              <div class="item-text">
+                纬度
+                <span style="color:red;">*</span>
+              </div>
+              <el-input v-model="latitude" placeholder style="margin-left:.11rem;"></el-input>
+            </div>
+            <div class="item" style=" padding-left: 1.06rem;">
+              地图定位
+              <span style="color:red;">*</span>
+              <span style="margin-left:.3rem;">请在地图上标记位置</span>
+            </div>
+            <div class="minMap">
+              <el-amap class="amap-box" :vid="'minMap-vue'" :events="events"></el-amap>
+            </div>
           </div>
           <div class="main-footer">
-            <div class="Btn">保存</div>
+            <div
+              class="Btn"
+              v-show="modify"
+              style="margin-right:.1rem;"
+              @click="isShow=false,modifyFunc()"
+            >修改</div>
+            <div class="Btn" v-show="Delete" @click="AddWorkAreaN(),isShow=false">保存</div>
+            <div
+              class="Btn"
+              v-show="Preservation"
+              style="margin-left:.1rem;"
+              @click="isShow=false,delectFunc()"
+            >删除</div>
           </div>
         </div>
       </div>
     </div>
+    <el-button :plain="true" @click="Success">成功</el-button>
+    <el-button :plain="true" @click="fail">错误</el-button>
+    <el-button :plain="true" @click="fails">错误</el-button>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      isShow: false, //是否显示新增任务弹框
+      //是否显示新增任务弹框
+      isShow: false,
+      //是否显示修改按钮
+      modify: false,
+      //是否显示删除按钮
+      Delete: false,
+      //是否显示保存按钮
+      Preservation: false,
+      //弹框标题
+      titleNmae: "添加工区",
+      //工区名称
+      WorkAreaName: "",
+      //工业区id
+      WorkAreaID: "",
+      //选择的经度
+      longitude: "",
+      //选择的纬度
+      latitude: "",
+      //获取项目id
+      projectId: sessionStorage.getItem("pid"),
+      //地图中心点
       center: [114.083372, 22.544146],
-      //   markers: [
-      //     {
-      //       position: [114.02769, 22.655081],
-      //       events: {
-      //         click: () => {
-      //           alert("click marker");
-      //         },
-      //         dragend: e => {
-      //           console.log("---event---: dragend");
-      //           this.markers[0].position = [e.lnglat.lng, e.lnglat.lat];
-      //         }
-      //       }
-      //     }
-      //   ],
-      markerList: [
+      //地图事件对象
+      events: {
+        click: e => {
+          //获取点击地图的经纬度
+          this.longitude = e.lnglat.lng;
+          this.latitude = e.lnglat.lat;
+        }
+      },
+      //地图数据对象
+      markerList: [],
+      //工区列表
+      WorkAreaList: [],
+      //工区半径
+      Radius: 50,
+      //工区半径下拉列表
+      RadiusList: [
         {
-          position: [114.02769, 22.655081],
-          content:
-            "<div class='prompt'>2019年龙岗区深圳河流域消除黑臭及河流水质保障工程——布吉街道</div>",
-          visible: false,
-          offset: [2, -15],
-          events: {
-            mouseover: () => {
-              this.markerList[0].visible = true;
-            },
-            mouseout: () => {
-              this.markerList[0].visible = false;
-            }
-          }
+          value: 50,
+          label: 50
         },
         {
-          position: [114.099038, 22.568989],
-          content:
-            "<div class='prompt'>笔架山水厂-东湖水厂DN1200 原水管修复工程设计采购施工总承包（EPC）项目</div>",
-          visible: false,
-          offset: [2, -15],
-          events: {
-            mouseover: () => {
-              this.markerList[1].visible = true;
-            },
-            mouseout: () => {
-              this.markerList[1].visible = false;
-            }
-          }
-        }
-      ],
-      SelectWorkArea: "", //选择工区
-      //选择工区下拉列表
-      SelectWorkAreaList: [
+          value: 100,
+          label: 100
+        },
         {
-          value: 1,
-          label: "所有"
+          value: 200,
+          label: 200
+        },
+        {
+          value: 300,
+          label: 300
+        },
+        {
+          value: 400,
+          label: 400
+        },
+        {
+          value: 500,
+          label: 500
         }
       ]
     };
   },
-
-  methods: {}
+  mounted() {
+    //获取工区列表
+    this.getWorkAreaList();
+  },
+  methods: {
+    //获取工区列表
+    getWorkAreaList() {
+      this.markerList = [];
+      this.$axios
+        .post(
+          `http://localhost:3000/api/location/query?projectId=${this.projectId}`
+        )
+        .then(res => {
+          //将返回的工区列表数据赋值给对象渲染到页面左侧工区列表
+          this.WorkAreaList = res.data.data;
+          //将工区列表的数据添加到地图对象数组中渲染地图坐标点
+          this.WorkAreaList.forEach((item, key) => {
+            if (item.longitude && item.latitude) {
+              this.markerList.push({
+                position: [item.longitude, item.latitude],
+                content: `<div class='prompt'>${item.name}</div>`,
+                visible: false,
+                offset: [2, -15],
+                circles: [
+                  {
+                    center: [item.longitude, item.latitude],
+                    radius: item.radius,
+                    fillOpacity: 0.5,
+                    events: {
+                      click: () => {
+                        alert("click");
+                      }
+                    }
+                  }
+                ]
+              });
+            }
+          });
+          this.markerList.forEach((item, key) => {
+            this.markerList[key].events = {
+              mouseover: () => {
+                this.markerList[key].visible = true;
+              },
+              mouseout: () => {
+                this.markerList[key].visible = false;
+              }
+            };
+          });
+        });
+    },
+    //设置工区
+    setWorkAreaFunc(item) {
+      //切换弹框标题
+      this.titleNmae = "设置工区";
+      //获取工区名称
+      this.WorkAreaName = item.name;
+      //获取经度
+      this.longitude = item.longitude;
+      //获取纬度
+      this.latitude = item.latitude;
+      //获取id
+      this.WorkAreaID = item.id;
+    },
+    //添加工区
+    AddWorkAreaN() {
+      var self = this;
+      if (
+        this.longitude != "" &&
+        this.longitude != "" &&
+        this.WorkAreaName != "" &&
+        this.Radius != ""
+      ) {
+        this.$axios
+          .post("http://localhost:3000/api/location/insert", {
+            projectId: this.projectId,
+            longitude: this.longitude,
+            latitude: this.latitude,
+            name: this.WorkAreaName,
+            radius: this.Radius
+          })
+          .then(function(response) {
+            if (response.data.code == 0) {
+              //获取工区列表
+              self.getWorkAreaList();
+              self.Success();
+            } else {
+              self.fail();
+            }
+          });
+      } else {
+        self.fails();
+      }
+    },
+    //修改工区
+    modifyFunc() {
+      var self = this;
+      if (
+        this.longitude != "" &&
+        this.longitude != "" &&
+        this.WorkAreaName != "" &&
+        this.Radius != ""
+      ) {
+        this.$axios
+          .post("http://localhost:3000/api/location/modify", {
+            id: this.WorkAreaID,
+            projectId: this.projectId,
+            longitude: this.longitude,
+            latitude: this.latitude,
+            name: this.WorkAreaName,
+            radius: this.Radius
+          })
+          .then(function(response) {
+            if (response.data.code == 0) {
+              //获取工区列表
+              self.getWorkAreaList();
+              self.Success();
+            } else {
+              self.fail();
+            }
+          });
+      } else {
+        self.fails();
+      }
+    },
+    //删除工区
+    delectFunc() {
+      var self = this;
+      this.$axios
+        .post("http://localhost:3000/api/location/remove", {
+          id: this.WorkAreaID
+        })
+        .then(function(response) {
+          if (response.data.code == 0) {
+            //获取工区列表
+            self.getWorkAreaList();
+            self.Success();
+          } else {
+            self.fail();
+          }
+        });
+    },
+    //操作成功弹框
+    Success() {
+      this.$message({
+        message: "操作成功",
+        type: "success"
+      });
+    },
+    //操作失败弹框
+    fail() {
+      this.$message({
+        message: "操作失败",
+        type: "warning"
+      });
+    },
+    //处理输入框为s空提示
+    fails() {
+      this.$message({
+        message: "输入框不能为空,操作失败!",
+        type: "warning"
+      });
+    }
+  }
 };
 </script>
 <style lang="less">
@@ -300,7 +474,7 @@ export default {
         width: 7rem;
         height: 6rem;
         margin-left: 4.5rem;
-        margin-top: 1rem;
+        margin-top: 0.2rem;
         .NewTask-header {
           width: 100%;
           padding: 0.1rem 0.2rem;
@@ -319,18 +493,19 @@ export default {
         }
         .NewTask-main {
           width: 100%;
-          height: 1.5rem;
+          height: 6.5rem;
           background: #fff;
           .item {
             width: 100%;
             padding-top: 0.2rem;
             display: flex;
+            align-items: center;
             padding-left: 1.2rem;
             .item-text {
               width: 1rem;
               display: flex;
               align-items: center;
-              justify-content: center;
+              justify-content: flex-start;
             }
             input {
               width: 3.58rem;
@@ -340,7 +515,12 @@ export default {
             }
           }
         }
-         .main-footer {
+        .minMap {
+          width: 4.9rem;
+          height: 3.5rem;
+          margin-left: 1rem;
+        }
+        .main-footer {
           width: 100%;
           height: 0.6rem;
           border-radius: 0 0 0.1rem 0.1rem;
@@ -349,22 +529,24 @@ export default {
           display: flex;
           justify-content: center;
           align-content: center;
-          .Btn {
-            width: 1.61rem;
-            height: 0.38rem;
-            margin-top: .1rem;
-            background-color: #ffd14f;
-            border: 0.01rem solid #d4ad40;
-            border-radius: 0.03rem;
+          padding-top: 0.1rem;
+          padding-left: 0.1rem;
+          padding-right: 0.1rem;
+        }
+        .Btn {
+          width: 1.61rem;
+          height: 0.38rem;
+          background-color: #ffd14f;
+          border: 0.01rem solid #d4ad40;
+          border-radius: 0.03rem;
+          color: #fff;
+          font-size: 0.2rem;
+          text-align: center;
+          line-height: 0.38rem;
+          cursor: pointer;
+          &:hover {
             color: #fff;
-            font-size: 0.2rem;
-            text-align: center;
-            line-height: 0.40rem;
-            cursor: pointer;
-            &:hover {
-              color: #fff;
-              background-color: #fcb928;
-            }
+            background-color: #fcb928;
           }
         }
       }

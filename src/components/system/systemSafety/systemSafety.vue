@@ -42,7 +42,7 @@
                     <span>安全隐患库</span>
                 </a>
             </li> -->
-              <li @click="isActiveShow('/systemSafety_TaskArrangement')">
+              <!-- <li @click="isActiveShow('/systemSafety_TaskArrangement')">
                 <router-link
                   to="/systemSafety_TaskArrangement"
                   :class="activeShow.includes('/systemSafety_TaskArrangement')?'active':''"
@@ -50,7 +50,7 @@
                     <div class="icon TaskArrangement"></div>
                     <span>任务安排</span>
                 </router-link>
-            </li>
+            </li> -->
           </ul>
         </div>
         <!-- 内容 -->
