@@ -48,6 +48,15 @@
             <span>操作日志</span>
           </a>
         </li>
+        <li @click="isActiveShow('/systemSet_epidemic')">
+          <router-link
+            to="/systemSet_epidemic"
+            :class="activeShow.includes('/systemSet_epidemic')?'active':''"
+          >
+            <div class="icon"></div>
+            <span>疫情设置</span>
+          </router-link>
+        </li>
       </ul>
     </div>
     <!-- 权限设置侧拉框 -->

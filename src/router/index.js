@@ -471,8 +471,24 @@ const router = new VueRouter({
         },
         {
           path: '/systemSet_unit',
-          component: resolve => require(['../components/system/systemSet//systemSet_unit.vue'], resolve)
+          component: resolve => require(['../components/system/systemSet/systemSet_unit.vue'], resolve)
         },
+        {
+          path: '/systemSet_epidemic',
+          component: resolve => require(['../components/system/systemSet/systemSet_epidemic.vue'], resolve)
+        },
+        {
+          path: '/setting_age',
+          component: resolve => require(['../components/system/systemSet/systemSet_epidemic/setting_age.vue'], resolve)
+        },
+        {
+          path: '/setting_body_temperatur',
+          component: resolve => require(['../components/system/systemSet/systemSet_epidemic/setting_body_temperatur.vue'], resolve)
+        },
+        {
+          path: '/setting_regional',
+          component: resolve => require(['../components/system/systemSet/systemSet_epidemic/setting_regional.vue'], resolve)
+        }
       ]
     },
     {
