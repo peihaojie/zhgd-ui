@@ -154,15 +154,24 @@
           </div>
           <div class="NewTask-main">
             <div class="item">
-              <div class="item-text">任务名称<span style="color:red;">*</span></div>
+              <div class="item-text">
+                任务名称
+                <span style="color:red;">*</span>
+              </div>
               <el-input v-model="MissionName" placeholder="请输入任务名称"></el-input>
             </div>
             <div class="item">
-              <div class="item-text">任务描述<span style="color:red;">*</span></div>
+              <div class="item-text">
+                任务描述
+                <span style="color:red;">*</span>
+              </div>
               <el-input v-model="TaskDescription" type="textarea" :rows="2" placeholder="请描述..."></el-input>
             </div>
             <div class="item" style=" padding-left: 1.06rem;">
-              <div class="item-text">选择工区<span style="color:red;">*</span></div>
+              <div class="item-text">
+                选择工区
+                <span style="color:red;">*</span>
+              </div>
               <el-select v-model="SelectWorkArea" placeholder="请选择工业区">
                 <el-option
                   v-for="(item, index) in SelectWorkAreaList"
@@ -173,7 +182,10 @@
               </el-select>
             </div>
             <div class="item" style=" padding-left: 1.06rem;">
-              <div class="item-text">选择检查人<span style="color:red;">*</span></div>
+              <div class="item-text">
+                选择检查人
+                <span style="color:red;">*</span>
+              </div>
               <el-select v-model="SelectWorkArea" placeholder="请选择">
                 <el-option
                   v-for="(item, index) in SelectWorkAreaList"
@@ -184,7 +196,10 @@
               </el-select>
             </div>
             <div class="item" style=" padding-left: 1.06rem;">
-              <div class="item-text">任务类型<span style="color:red;">*</span></div>
+              <div class="item-text">
+                任务类型
+                <span style="color:red;">*</span>
+              </div>
               <el-select v-model="SelectWorkArea" placeholder="请选择">
                 <el-option
                   v-for="(item, index) in SelectWorkAreaList"
@@ -195,7 +210,10 @@
               </el-select>
             </div>
             <div class="item" style=" padding-left: 1.06rem;">
-              <div class="item-text">选择时间<span style="color:red;">*</span></div>
+              <div class="item-text">
+                选择时间
+                <span style="color:red;">*</span>
+              </div>
               <div class="time">
                 <el-date-picker
                   type="daterange"
@@ -224,7 +242,7 @@ export default {
       InspectingOfficer: "", //巡查人
       allTableData: [], // 表格数据
       pageNum: 1, // 当前页
-      pageSize: 8, // 每页显示条数
+      pageSize: 6, // 每页显示条数
       pageTotal: 0, // 总条数
       isShow: false, //是否显示新增任务弹框
       MissionName: "", //任务名称
@@ -270,6 +288,11 @@ export default {
   created() {
     this.getInspectionRecordList();
   },
+  mounted() {
+    this.$axios.post(`http://localhost:3000/test`).then(res => {
+      console.log(res)
+    });
+  },
   methods: {
     // 翻页
     handleCurrentChange(val) {
@@ -286,6 +309,54 @@ export default {
     // 获取检查记录列表
     getInspectionRecordList() {
       this.allTableData = [
+        {
+          safetyId: 87,
+          status: 1,
+          safetyDescribe: "巡查整个工业区",
+          gradeName: "月计划",
+          areaName: "科伦特工业区",
+          hiddenName: "重点巡查排污管道",
+          initiatorTime: "2019-08-30",
+          rectifyName: "某某某",
+          constructionName: "深圳市鹏城瑞泰投资有限公司",
+          safetyDeadline: "2019-08-31 00:00:00"
+        },
+        {
+          safetyId: 87,
+          status: 2,
+          safetyDescribe: "巡查整个工业区",
+          gradeName: "周计划",
+          areaName: "科伦特工业区",
+          hiddenName: "重点巡查排污管道",
+          initiatorTime: "2019-08-30",
+          rectifyName: "某某某",
+          constructionName: "深圳市鹏城瑞泰投资有限公司",
+          safetyDeadline: "2019-08-31 00:00:00"
+        },
+        {
+          safetyId: 87,
+          status: 3,
+          safetyDescribe: "巡查整个工业区",
+          gradeName: "日计划",
+          areaName: "科伦特工业区",
+          hiddenName: "重点巡查排污管道",
+          initiatorTime: "2019-08-30",
+          rectifyName: "某某某",
+          constructionName: "深圳市鹏城瑞泰投资有限公司",
+          safetyDeadline: "2019-08-31 00:00:00"
+        },
+        {
+          safetyId: 87,
+          status: 1,
+          safetyDescribe: "巡查整个工业区",
+          gradeName: "月计划",
+          areaName: "科伦特工业区",
+          hiddenName: "重点巡查排污管道",
+          initiatorTime: "2019-08-30",
+          rectifyName: "某某某",
+          constructionName: "深圳市鹏城瑞泰投资有限公司",
+          safetyDeadline: "2019-08-31 00:00:00"
+        },
         {
           safetyId: 87,
           status: 1,
@@ -613,7 +684,7 @@ export default {
             &:nth-child(6) {
               input {
                 border: none;
-                  width: 1.5rem;
+                width: 1.5rem;
               }
             }
           }
@@ -630,14 +701,14 @@ export default {
           .Btn {
             width: 1.61rem;
             height: 0.38rem;
-            margin-top: .1rem;
+            margin-top: 0.1rem;
             background-color: #ffd14f;
             border: 0.01rem solid #d4ad40;
             border-radius: 0.03rem;
             color: #fff;
             font-size: 0.2rem;
             text-align: center;
-            line-height: 0.40rem;
+            line-height: 0.4rem;
             cursor: pointer;
             &:hover {
               color: #fff;
