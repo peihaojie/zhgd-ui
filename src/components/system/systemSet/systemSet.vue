@@ -14,7 +14,7 @@
             to="/systemSet_workAreaSet"
             :class="activeShow=='/systemSet_workAreaSet'||activeShow=='/systemSet'?'active':''"
           >
-            <div class="icon"></div>
+            <div class="icon region"></div>
             <span>工区设置</span>
           </router-link>
         </li>
@@ -23,7 +23,7 @@
             to="/systemSet_unit"
             :class="activeShow == '/systemSet_unit'?'active':''"
           >
-            <div class="icon"></div>
+            <div class="icon unit"></div>
             <span>单位设置</span>
           </router-link>
         </li>
@@ -32,19 +32,19 @@
             to="/systemSet_equipmentSet"
             :class="activeShow.includes('/systemSet_equipmentSet')?'active':''"
           >
-            <div class="icon"></div>
+            <div class="icon device"></div>
             <span>设备设置</span>
           </router-link>
         </li>
         <li @click="permissionClick">
           <a :class="activeShow.includes('/systemSet_permission')?'active':''">
-            <div class="icon"></div>
+            <div class="icon authority"></div>
             <span>权限设置</span>
           </a>
         </li>
         <li>
           <a>
-            <div class="icon"></div>
+            <div class="icon operation"></div>
             <span>操作日志</span>
           </a>
         </li>
@@ -53,7 +53,7 @@
             to="/systemSet_epidemic"
             :class="activeShow.includes('/systemSet_epidemic')?'active':''"
           >
-            <div class="icon"></div>
+            <div class="icon epidemic"></div>
             <span>疫情设置</span>
           </router-link>
         </li>
@@ -122,6 +122,24 @@
             display: inline-block;
             background-repeat: no-repeat;
             background-position: center center;
+          }
+          .unit {
+            background-image: url('../../../../static/images/unit_setting.png');
+          }
+          .device {
+            background-image: url('../../../../static/images/device_setting.png');
+          }
+          .authority {
+            background-image: url('../../../../static/images/authority_setting.png');
+          }
+          .operation {
+            background-image: url('../../../../static/images/operation_log.png');
+          }
+          .epidemic {
+            background-image: url('../../../../static/images/setting-epidemic.png');
+          }
+          .region {
+            background-image: url('../../../../static/images/region_setting.png');
           }
           span {
             // width: 0.8rem;

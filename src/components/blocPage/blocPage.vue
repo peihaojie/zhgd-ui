@@ -178,11 +178,11 @@
               </div>
               <div>
                 <i class="on-line"></i>
-                <p>在线：{{plateNumberOnOff.onLine}}</p>
+                <p>在线：{{plateNumberOnOff.onLine ? plateNumberOnOff.onLine : 0}}</p>
               </div>
               <div>
                 <i class="off-line"></i>
-                <p>离线：{{plateNumberOnOff.offLine}}</p>
+                <p>离线：{{plateNumberOnOff.offLine ? plateNumberOnOff.offLine : 0}}</p>
               </div>
             </div>
             <div id="plate-number"></div>
@@ -1046,7 +1046,8 @@ export default {
         .then(res => {
           this.marginOnOff = res.data.data.margin
           this.electricityBoxOnOff = res.data.data.electricityBox
-          // this.plateNumberOnOff = res.data.data.plateNumber
+          // 车辆这里拿不到在线和离线的数量，只有总共的，其他的默认是0
+          this.plateNumberOnOff = res.data.data.plateNumber
           this.environmentOnOff = res.data.data.environment
           this.lifterOnOff = res.data.data.lifter
         })

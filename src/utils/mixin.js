@@ -118,5 +118,20 @@ export default {
       let day = temp.getDate()
       this.nowTime = temp.getFullYear() + '-' + (month < 10 ? ('0' + month) : month) + '-' + (day < 10 ? ('0' + day) : day)
     },
+
+    // elementUI表单校验
+    submitForm(formName) {
+      return new Promise((resolve) => {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log('submit!!')
+            resolve(true);
+          } else {
+            console.log('error submit!!');
+            resolve(false);
+          }
+        });
+      })
+    },
   }
 }
