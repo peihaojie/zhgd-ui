@@ -7,5 +7,5 @@
 #     "age":"26"
 # }
 
-POST http://localhost:3000/api/limitAge HTTP/1.1
+POST http://localhost:3000/api/AreaSettingAll HTTP/1.1
 content-type: application/json

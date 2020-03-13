@@ -1,7 +1,7 @@
 <!--
  * @Date         : 2020-02-28 16:39:54
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-02 21:50:09
+ * @LastEditTime : 2020-03-05 17:03:25
  * @FilePath     : /src/components/system/systemSet/systemSet_epidemic/setting_age.vue
  -->
 <template>
@@ -22,7 +22,7 @@
       </div>
       <div class="list">
         <template v-if="list.length">
-          <div class="item" v-for="item in list" :key="item.age">
+          <div class="item" v-for="item in list" :key="item.id">
             设定年龄：{{item.age}}
             <div class="switch">
               <span v-if="item.enter">禁止入内</span>
