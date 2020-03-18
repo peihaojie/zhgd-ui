@@ -1,16 +1,16 @@
 /*
  * @Date         : 2020-01-30 14:48:38
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-05 16:57:34
+ * @LastEditTime : 2020-03-13 20:35:50
  * @FilePath     : /src/utils/axios.js
  */
 /* jshint esversion: 6 */
 import axios from 'axios';
 
 // 模拟数据
-axios.defaults.baseURL = "http://localhost:3000";
+// axios.defaults.baseURL = "http://localhost:3000";
 // 超球
-// axios.defaults.baseURL = "http://192.168.1.17:8080";
+axios.defaults.baseURL = "http://192.168.1.55:8080";
 // 颜通
 // axios.defaults.baseURL = "http://192.168.1.117:8025";
 // 佳超
