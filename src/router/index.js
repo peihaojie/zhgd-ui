@@ -488,7 +488,11 @@ const router = new VueRouter({
         {
           path: '/setting_regional',
           component: resolve => require(['../components/system/systemSet/systemSet_epidemic/setting_regional.vue'], resolve)
-        }
+        },
+        {
+          path: '/systemSet_LocationSetting',
+          component: resolve => require(['../components/system/systemSet/systemSet_LocationSetting.vue'], resolve)
+        },
       ]
     },
     {
@@ -565,6 +569,10 @@ const router = new VueRouter({
           component: resolve => require(['../components/system/systemSafety/systemSafety_record.vue'], resolve)
         },
         {
+          path: '/systemSafety_record',
+          component: resolve => require(['../components/system/systemSafety/systemSafety_record.vue'], resolve)
+        },
+        {
           path: '/systemSafety_recordInfo',
           component: resolve => require(['../components/system/systemSafety/systemSafety_recordInfo.vue'], resolve)
         },
@@ -575,6 +583,10 @@ const router = new VueRouter({
         {
           path: '/systemSafety_manageInfo',
           component: resolve => require(['../components/system/systemSafety/systemSafety_manageInfo'], resolve)
+        },
+        {
+          path: '/systemSafety_TaskArrangement',
+          component: resolve => require(['../components/system/systemSafety/systemSafety_TaskArrangement.vue'], resolve)
         },
       ]
     },

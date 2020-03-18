@@ -160,12 +160,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="time" label="整改期限" width="180">
+          <el-table-column prop="time" label="整改期限" width="250">
             <template slot-scope="scope">
               <div class="time" style="line-height:0.7rem">{{scope.row.safetyDeadline}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="180">
+          <el-table-column prop="status" label="状态" width="248">
             <template slot-scope="scope">
               <div
                 class="status"

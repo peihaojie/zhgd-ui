@@ -56,6 +56,14 @@
             <div class="icon epidemic"></div>
             <span>疫情设置</span>
           </router-link>
+        <li @click="isActiveShow('/systemSet_LocationSetting')">
+          <router-link
+            to="/systemSet_LocationSetting"
+            :class="activeShow.includes('/systemSet_LocationSetting')?'active':''"
+          >
+            <div class="icon"></div>
+            <span>定位设置</span>
+          </router-link>
         </li>
       </ul>
     </div>
