@@ -1,8 +1,8 @@
 <!--
  * @Date         : 2020-02-18 11:08:51
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-02-20 21:17:05
- * @FilePath     : /src/components/temperatureAlarm/temperatureAlarm.vue
+ * @LastEditTime : 2020-03-19 19:16:44
+ * @FilePath     : \src\components\temperatureAlarm\temperatureAlarm.vue
  -->
 <template>
   <div class="body-wrap">
@@ -95,7 +95,7 @@ export default {
     return {
       titleName: "虎将科技，助力防疫，武汉加油！", // 提示语的名称
       search: "", // 搜索的内容
-      loading: true, // 转圈圈
+      loading: false, // 转圈圈
       dataList: [], // 左侧列表数据
       dialog: false, // 弹窗
       dialogTitle: "", // 弹窗显示的名称

@@ -1823,7 +1823,7 @@ export default {
 <style scoped lang="less">
 // @import "~@/assets/scrollBar.css";
 .content {
-  width: 19.2rem;
+  // width: 19.2rem;
   height: 10.8rem;
   box-sizing: border-box;
   padding: 0.5rem 0.25rem 0.25rem 0.25rem;

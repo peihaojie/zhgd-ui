@@ -1,3 +1,9 @@
+<!--
+ * @Date         : 2020-03-18 17:32:26
+ * @LastEditors  : HaoJie
+ * @LastEditTime : 2020-03-19 14:41:13
+ * @FilePath     : \src\components\safety\safety.vue
+ -->
 <template>
 
   <div id="safey">
@@ -24,9 +30,6 @@ export default {
     return {
         index:'/safety/elevator', // 当前页面的路由地址，根据此地址来判断当前处于哪个页面
     };
-  },
-  created() {
-    
   },
   methods: {
     // 设置路由地址

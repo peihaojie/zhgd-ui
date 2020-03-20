@@ -5,6 +5,7 @@
         <p class="company-name">{{companyName}}</p>
         <div class="wing left">
           <p>最省心的智慧工地平台</p>
+          <span @click="$router.go(-1)">返回</span>
         </div>
         <div class="wing right">
           <p>{{citySpace}}</p>
@@ -1137,6 +1138,21 @@ export default {
         padding-left: 1.1rem;
         position: relative;
         top: -0.1rem;
+      }
+      span {
+        color: #0061ef;
+        border: 1px solid #0061ef;
+        border-radius: .03rem;
+        padding: .01rem .05rem;
+        cursor: pointer;
+        position: absolute;
+        top: -0.1rem;
+        left: 0.5rem;
+        transition: .5s all;
+        &:hover {
+          background-color: #0061ef;
+          color: #fff;
+        }
       }
     }
     .right {

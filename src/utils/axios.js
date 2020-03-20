@@ -1,8 +1,8 @@
 /*
  * @Date         : 2020-01-30 14:48:38
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-18 14:50:16
- * @FilePath     : /src/utils/axios.js
+ * @LastEditTime : 2020-03-19 15:18:44
+ * @FilePath     : \src\utils\axios.js
  */
 /* jshint esversion: 6 */
 import axios from 'axios';
@@ -16,7 +16,7 @@ import axios from 'axios';
 // 佳超
 // axios.defaults.baseURL = "http://192.168.1.62:8080";
 // 李媛
-// axios.defaults.baseURL = "http://192.168.1.55:8080";
+// axios.defaults.baseURL = "http://192.168.1.11:8083";
 // 陈吕
 // axios.defaults.baseURL = "http://192.168.1.38:8080";
 // 生产环境

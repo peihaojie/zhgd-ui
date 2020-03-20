@@ -1,7 +1,8 @@
 <template>
   <div class="content">
-    <span class="backTo" v-if="$exe.installation" @click="backTo">返回</span>
-    <span class="reload" v-if="$exe.installation" @click="reload">刷新</span>
+    <!-- <span class="backTo" v-if="$exe.installation" @click="backTo">返回</span>
+    <span class="reload" v-if="$exe.installation" @click="reload">刷新</span> -->
+    <span class="backTo" @click="backTo">返回</span>
     <!-- 左侧视频列表 -->
     <ul class="video-list-wrap">
       <!-- 分区列表 -->
@@ -535,7 +536,7 @@ export default {
     // 获取对讲机列表
     talkback() {
       this.$axios
-        .post(`/api/sbGroupTalkback/getAccountList?cpid=${this.cid}&isIdType=2`)
+        .post(`/api/sbGroupTalkback/getAccountList?cpid=${this.pid}&isIdType=2`)
         .then(res => {
           if (res.data.length == 1) {
             this.interphoneList = res.data[0].atList;
@@ -1035,7 +1036,7 @@ export default {
 
     // 返回
     backTo() {
-      this.$router.push("/homePage");
+      this.$router.go(-1);
     },
 
     // 刷新
@@ -1835,7 +1836,7 @@ export default {
 <style scoped lang="less">
 // @import "~@/assets/scrollBar.css";
 .content {
-  width: 19.2rem;
+  // width: 19.2rem;
   height: 10.8rem;
   box-sizing: border-box;
   padding: 0.5rem 0.25rem 0.25rem 0.25rem;

@@ -27,7 +27,7 @@
                   <router-link to="/workerHome">产业工人</router-link>
                 </li>
                 <li>
-                  <a @click="unopenClick">危区检测</a>
+                  <router-link to="/temperatureAlarm" active-class="li-active">体温检测</router-link>
                 </li>
               </ul>
             </div>
@@ -48,9 +48,6 @@
                 </li>
                 <li>
                   <router-link to="/aiDiscern" active-class="li-active">AI识别</router-link>
-                </li>
-                <li>
-                  <router-link to="/temperatureAlarm" active-class="li-active">体温检测</router-link>
                 </li>
               </ul>
             </div>
@@ -118,7 +115,8 @@
                 </li>
                 <li>
                   <!-- <a @click="unopenClick">视频对讲</a> -->
-                  <router-link target="_blank" to="/videoIntercom" active-class="li-active">视频对讲</router-link>
+                  <!-- <router-link target="_blank" to="/videoIntercom" active-class="li-active">视频对讲</router-link> -->
+                  <router-link to="/videoIntercom" active-class="li-active">视频对讲</router-link>
                 </li>
                 <li>
                   <a @click="unopenClick">3D打印应用</a>

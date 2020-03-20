@@ -1,3 +1,9 @@
+/*
+ * @Date         : 2020-03-18 17:32:27
+ * @LastEditors  : HaoJie
+ * @LastEditTime : 2020-03-19 19:16:54
+ * @FilePath     : \src\installation.js
+ */
 /* jslint esversion: 6*/
 /*
  * File: installation.js
