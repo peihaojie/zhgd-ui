@@ -57,7 +57,8 @@
     "globals": {
       "EZUIPlayer": "writable",
       "AMap": "writable",
-      "ipcRenderer": "writable"
+      "ipcRenderer": "writable",
+      "VueAMap": "writable"
     },
     "parserOptions": {
       "parser": "babel-eslint"

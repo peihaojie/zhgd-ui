@@ -6,55 +6,54 @@
           <div class="button-box">
             <a
               class="add"
-              @click="isShow=true, titleNmae='添加工区',modify=false,Preservation=false,Delete=true"
+              @click="isShow=true, titleNmae='添加工区',modify=false,Delete=false,Preservation=true"
             >
               <i class="icon"></i>
               工区定位
             </a>
           </div>
           <div class="AddList-header">
-            <span style=" font-weight: 600;font-size:.18rem;">公区列表</span>
+            <span style=" font-weight: 550;font-size:.18rem;">公区列表</span>
             <span style="color:#0090ff;">▼</span>
           </div>
           <ul class="list-main">
-            <li v-for="(item,index) in WorkAreaList" :key="index">
+            <li v-for="(item) in WorkAreaList" :key="item.name">
               <span>{{item.name}}</span>
               <span
                 :longitude="item.longitude?item.longitude:'-'"
                 :latitude="item.latitude?item.latitude:'-'"
                 :radius="item.radius?item.radius:'-'"
-                @click="isShow=true,setWorkAreaFunc(item),modify=true,Preservation=true,Delete=false"
+                @click="isShow=true,setWorkAreaFunc(item),modify=true,Preservation=false,Delete=true"
               >设置</span>
             </li>
           </ul>
         </div>
         <div class="Map" id="Map">
-          <el-amap class="amap-box" :vid="'amap-vue'">
+          <el-amap class="amap-box" :zoom="zoom" :center="center">
             <div v-if="markerList.length != 0">
               <el-amap-marker
                 v-for="(marker, index) in markerList"
                 :key="index"
                 :position="marker.position"
-                :events="marker.events"
-                :icon="marker.icon"
-                :radius="marker.radius"
-                :fill-opacity="marker.fillOpacity"
                 animation="AMAP_ANIMATION_DROP"
               ></el-amap-marker>
               <el-amap-info-window
-                v-for="(window, index) in markerList"
-                :key="window.content+index"
-                :position="window.position"
-                :visible="window.visible"
-                :content="window.content"
-                :offset="window.offset"
+                v-for="(win, index) in markerList"
+                :key="win.content+index"
+                :position="win.position"
+                :visible="win.visible"
+                :content="win.content"
+                :offset="win.offset"
               ></el-amap-info-window>
               <el-amap-circle
-                v-for="(circle ,index) in markerList"
-                :key="index"
-                :radius="circle.circles[0].radius"
-                :center="circle.circles[0].center" 
-                :fill-opacity="circle.circles[0].fillOpacity"
+                v-for="(circle, index) in markerList"
+                :key="index+circle.position[0]"
+                :radius="circle.radius"
+                :center="circle.position"
+                :events="circle.events"
+                strokeColor="#4796ff"
+                fillColor="#4796ff"
+                :fillOpacity="0.2"
               ></el-amap-circle>
             </div>
           </el-amap>
@@ -66,7 +65,7 @@
           <div class="NewTask-header">
             <span></span>
             <span style="font-size:.20rem;">{{titleNmae}}</span>
-            <span style="font-size:.30rem;" @click="isShow=false">×</span>
+            <span style="font-size:.30rem;" @click="clear">×</span>
           </div>
           <div class="NewTask-main">
             <div class="item" style=" padding-left: 1rem;">
@@ -81,7 +80,7 @@
                 选择半径
                 <span style="color:red;">*</span>
               </div>
-              <el-select v-model="Radius" placeholder="请选择半径">
+              <el-select v-model="Radius" placeholder="请选择园区半径">
                 <el-option
                   v-for="(item, index) in RadiusList"
                   :label="item.label"
@@ -95,14 +94,14 @@
                 经度
                 <span style="color:red;">*</span>
               </div>
-              <el-input v-model="longitude" placeholder style="margin-left:.11rem;"></el-input>
+              <el-input v-model="longitude" style="margin-left:.11rem;"></el-input>
             </div>
             <div class="item" style=" padding-left: 1.06rem;">
               <div class="item-text">
                 纬度
                 <span style="color:red;">*</span>
               </div>
-              <el-input v-model="latitude" placeholder style="margin-left:.11rem;"></el-input>
+              <el-input v-model="latitude" style="margin-left:.11rem;"></el-input>
             </div>
             <div class="item" style=" padding-left: 1.06rem;">
               地图定位
@@ -110,7 +109,22 @@
               <span style="margin-left:.3rem;">请在地图上标记位置</span>
             </div>
             <div class="minMap">
-              <el-amap class="amap-box" :vid="'minMap-vue'" :events="events"></el-amap>
+              <el-amap class="amap-box" :events="events" :zoom="zoom" :center="Preservation ? addCenter : [longitude, latitude]">
+                <el-amap-marker
+                  v-if="longitude && latitude"
+                  :position="[longitude, latitude]"
+                  animation="AMAP_ANIMATION_DROP"
+                ></el-amap-marker>
+                <el-amap-circle
+                  v-if="longitude && latitude"
+                  :radius="Radius?Radius:0"
+                  :center="[longitude, latitude]"
+                  :events="events"
+                  strokeColor="#4796ff"
+                  fillColor="#4796ff"
+                  :fillOpacity="0.2"
+                ></el-amap-circle>
+              </el-amap>
             </div>
           </div>
           <div class="main-footer">
@@ -118,12 +132,12 @@
               class="Btn"
               v-show="modify"
               style="margin-right:.1rem;"
-              @click="isShow=false,modifyFunc()"
+              @click="modifyFunc"
             >修改</div>
-            <div class="Btn" v-show="Delete" @click="AddWorkAreaN(),isShow=false">保存</div>
+            <div class="Btn" v-show="Preservation" @click="AddWorkAreaN(),isShow=false">保存</div>
             <div
               class="Btn"
-              v-show="Preservation"
+              v-show="Delete"
               style="margin-left:.1rem;"
               @click="isShow=false,delectFunc()"
             >删除</div>
@@ -131,15 +145,15 @@
         </div>
       </div>
     </div>
-    <el-button :plain="true" @click="Success">成功</el-button>
-    <el-button :plain="true" @click="fail">错误</el-button>
-    <el-button :plain="true" @click="fails">错误</el-button>
   </div>
 </template>
 <script>
+let amapManager = new VueAMap.AMapManager();
 export default {
   data() {
     return {
+      amapManager,
+      zoom: 15,
       //是否显示新增任务弹框
       isShow: false,
       //是否显示修改按钮
@@ -161,7 +175,9 @@ export default {
       //获取项目id
       projectId: sessionStorage.getItem("pid"),
       //地图中心点
-      center: [114.083372, 22.544146],
+      center: [114.029333, 22.609693],
+      // 新增的中心点
+      addCenter: [114.029333, 22.609693],
       //地图事件对象
       events: {
         click: e => {
@@ -175,32 +191,32 @@ export default {
       //工区列表
       WorkAreaList: [],
       //工区半径
-      Radius: 50,
+      Radius: null,
       //工区半径下拉列表
       RadiusList: [
         {
           value: 50,
-          label: 50
+          label: "50米"
         },
         {
           value: 100,
-          label: 100
+          label: "100米"
         },
         {
           value: 200,
-          label: 200
+          label: "200米"
         },
         {
           value: 300,
-          label: 300
+          label: "300米"
         },
         {
           value: 400,
-          label: 400
+          label: "400米"
         },
         {
           value: 500,
-          label: 500
+          label: "500米"
         }
       ]
     };
@@ -214,45 +230,41 @@ export default {
     getWorkAreaList() {
       this.markerList = [];
       this.$axios
-        .post(
-          `http://localhost:3000/api/location/query?projectId=${this.projectId}`
-        )
+        .post(`/api/location/query?projectId=${this.projectId}`)
         .then(res => {
-          //将返回的工区列表数据赋值给对象渲染到页面左侧工区列表
-          this.WorkAreaList = res.data.data;
-          //将工区列表的数据添加到地图对象数组中渲染地图坐标点
-          this.WorkAreaList.forEach((item, key) => {
-            if (item.longitude && item.latitude) {
-              this.markerList.push({
-                position: [item.longitude, item.latitude],
-                content: `<div class='prompt'>${item.name}</div>`,
-                visible: false,
-                offset: [2, -15],
-                circles: [
-                  {
-                    center: [item.longitude, item.latitude],
-                    radius: item.radius,
-                    fillOpacity: 0.5,
-                    events: {
-                      click: () => {
-                        alert("click");
-                      }
-                    }
+          if (res.data.code == 0) {
+            //将返回的工区列表数据赋值给对象渲染到页面左侧工区列表
+            this.WorkAreaList = res.data.data;
+            //将工区列表的数据添加到地图对象数组中渲染地图坐标点
+            this.WorkAreaList.forEach((item, index) => {
+              if (item.longitude && item.latitude) {
+                this.markerList.push({
+                  position: [item.longitude, item.latitude],
+                  content: `<div class='prompt'>${item.name}</div>`,
+                  visible: false,
+                  offset: [2, -15],
+                  radius: item.radius,
+                  events: {
+                    mouseover: () => {
+                      this.markerList.forEach(a => {
+                        a.visible = false;
+                        this.markerList[index].visible = true;
+                      });
+                    },
+                    mouseout: () => (this.markerList[index].visible = false)
                   }
-                ]
-              });
-            }
-          });
-          this.markerList.forEach((item, key) => {
-            this.markerList[key].events = {
-              mouseover: () => {
-                this.markerList[key].visible = true;
-              },
-              mouseout: () => {
-                this.markerList[key].visible = false;
+                });
               }
-            };
-          });
+            });
+            if (this.WorkAreaList.length) {
+              this.center = [
+                this.WorkAreaList[0].longitude,
+                this.WorkAreaList[0].latitude
+              ];
+            } else {
+              this.center = [114.029333, 22.609693]
+            }
+          }
         });
     },
     //设置工区
@@ -267,84 +279,64 @@ export default {
       this.latitude = item.latitude;
       //获取id
       this.WorkAreaID = item.id;
+      // 获取工业区半径
+      this.Radius = item.radius
     },
     //添加工区
     AddWorkAreaN() {
-      var self = this;
-      if (
-        this.longitude != "" &&
-        this.longitude != "" &&
-        this.WorkAreaName != "" &&
-        this.Radius != ""
-      ) {
+      if (this.latitude && this.longitude && this.WorkAreaName && this.Radius) {
         this.$axios
-          .post("http://localhost:3000/api/location/insert", {
-            projectId: this.projectId,
-            longitude: this.longitude,
-            latitude: this.latitude,
-            name: this.WorkAreaName,
-            radius: this.Radius
-          })
-          .then(function(response) {
-            if (response.data.code == 0) {
+          .post(`/api/location/insert?projectId=${this.projectId}&longitude=${this.longitude}&latitude=${this.latitude}&name=${this.WorkAreaName}&radius=${this.Radius}`)
+          .then(res => {
+            if (res.data.code == 0) {
               //获取工区列表
-              self.getWorkAreaList();
-              self.Success();
-            } else {
-              self.fail();
+              this.clear();
+              this.Success();
+              this.getWorkAreaList();
             }
           });
       } else {
-        self.fails();
+        this.fails();
       }
     },
     //修改工区
     modifyFunc() {
-      var self = this;
-      if (
-        this.longitude != "" &&
-        this.longitude != "" &&
-        this.WorkAreaName != "" &&
-        this.Radius != ""
-      ) {
+      if (this.longitude && this.longitude && this.WorkAreaName && this.Radius) {
         this.$axios
-          .post("http://localhost:3000/api/location/modify", {
-            id: this.WorkAreaID,
-            projectId: this.projectId,
-            longitude: this.longitude,
-            latitude: this.latitude,
-            name: this.WorkAreaName,
-            radius: this.Radius
-          })
-          .then(function(response) {
-            if (response.data.code == 0) {
+          .post(`/api/location/modify?id=${this.WorkAreaID}&projectId=${this.projectId}&longitude=${this.longitude}&latitude=${this.latitude}&name=${this.WorkAreaName}&radius=${this.Radius}`)
+          .then(res => {
+            if (res.data.code == 0) {
               //获取工区列表
-              self.getWorkAreaList();
-              self.Success();
-            } else {
-              self.fail();
+              this.Success();
+              this.clear();
+              this.getWorkAreaList();
             }
           });
       } else {
-        self.fails();
+        this.fails();
       }
     },
     //删除工区
     delectFunc() {
-      var self = this;
       this.$axios
-        .post("http://localhost:3000/api/location/remove", {
-          id: this.WorkAreaID
-        })
-        .then(function(response) {
-          if (response.data.code == 0) {
+        .post(`/api/location/remove?id=${this.WorkAreaID}`)
+        .then(res => {
+          if (res.data.code == 0) {
             //获取工区列表
-            self.getWorkAreaList();
-            self.Success();
+            this.clear();
+            this.Success();
+            this.getWorkAreaList();
           } else {
-            self.fail();
+            this.fail();
           }
         });
+    },
+    clear() {
+      this.longitude = ''
+      this.latitude = ''
+      this.isShow = false
+      this.WorkAreaName = ''
+      this.Radius = ''
     },
     //操作成功弹框
     Success() {
@@ -370,6 +362,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less">
 #systemSafety_LocationSetting {
   .content-box {
@@ -438,8 +431,7 @@ export default {
         .list-main {
           width: 100%;
           height: 90%;
-          // overflow: hidden;
-          // overflow-y: scroll;
+          overflow-y: auto;
           li {
             width: 100%;
             padding: 0 5%;
@@ -463,18 +455,17 @@ export default {
       }
     }
     .mark-box {
-      position: absolute;
+      position: fixed;
       left: 0;
       top: 0;
       bottom: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1000;
       .NewTask-box {
         width: 7rem;
         height: 6rem;
-        margin-left: 4.5rem;
-        margin-top: 0.2rem;
+        margin: 1rem auto 0;
         .NewTask-header {
           width: 100%;
           padding: 0.1rem 0.2rem;

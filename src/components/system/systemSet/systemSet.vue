@@ -61,7 +61,7 @@
             to="/systemSet_LocationSetting"
             :class="activeShow.includes('/systemSet_LocationSetting')?'active':''"
           >
-            <div class="icon"></div>
+            <div class="icon location"></div>
             <span>定位设置</span>
           </router-link>
         </li>
@@ -148,6 +148,9 @@
           }
           .region {
             background-image: url('../../../../static/images/region_setting.png');
+          }
+          .location {
+            background-image: url('../../../../static/images/location.png');
           }
           span {
             // width: 0.8rem;

@@ -1,8 +1,8 @@
 /*
  * @Date         : 2020-01-30 14:48:38
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-02-14 10:32:39
- * @FilePath     : /src/main.js
+ * @LastEditTime : 2020-03-20 16:30:14
+ * @FilePath     : \src\main.js
  */
 /* jshint esversion: 6 */
 import Vue from 'vue';

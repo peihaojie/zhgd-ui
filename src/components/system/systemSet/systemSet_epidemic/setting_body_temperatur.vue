@@ -1,8 +1,8 @@
 <!--
  * @Date         : 2020-02-28 16:39:18
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-05 17:03:13
- * @FilePath     : /src/components/system/systemSet/systemSet_epidemic/setting_body_temperatur.vue
+ * @LastEditTime : 2020-03-21 16:18:56
+ * @FilePath     : \src\components\system\systemSet\systemSet_epidemic\setting_body_temperatur.vue
  -->
 <template>
   <div>
@@ -89,7 +89,8 @@ export default {
         temperature: [{ validator: checkAge }]
       },
       list: [],
-      active: 'setting'
+      active: 'setting',
+      projectId: sessionStorage.getItem("pid")
     };
   },
   components: {
@@ -133,12 +134,12 @@ export default {
       if (temp) {
         console.log("验证成功");
         this.$axios
-          .post(`/api/addTemperature?temperature=${this.ruleForm.temperature}`)
+          .post(`/api/addTemperature?temperature=${this.ruleForm.temperature}&pid=${this.projectId}`)
           .then(res => {
             if (res.data.code == 0 && res.data.data.code == 0) {
               this.messageBox("添加成功", 1);
             } else {
-              this.messageBox("修添加失败", 0);
+              this.messageBox("添加失败", 0);
             }
             this.geAgeList();
           });
@@ -150,7 +151,7 @@ export default {
     },
 
     forbid(id) {
-      this.$axios.post(`/api/forbidTemperature?id=${id}`).then(res => {
+      this.$axios.post(`/api/forbidTemperature?id=${id}pid=${this.projectId}`).then(res => {
         if (res.data.code == 0 && res.data.data.code == 0) {
           this.messageBox("修改成功", 1);
         } else {

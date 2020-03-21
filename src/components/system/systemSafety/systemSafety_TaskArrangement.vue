@@ -622,18 +622,17 @@ export default {
       bottom: 0.3rem;
     }
     .mark-box {
-      position: absolute;
+      position: fixed;
       left: 0;
       top: 0;
       bottom: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, .5);
       z-index: 1000;
       .NewTask-box {
         width: 7rem;
         height: 6rem;
-        margin-left: 4.5rem;
-        margin-top: 1rem;
+        margin: 1rem auto 0;
         .NewTask-header {
           width: 100%;
           padding: 0.1rem 0.2rem;

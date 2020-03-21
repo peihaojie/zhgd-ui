@@ -1,8 +1,8 @@
 <!--
  * @Date         : 2020-02-28 16:39:54
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-05 17:03:25
- * @FilePath     : /src/components/system/systemSet/systemSet_epidemic/setting_age.vue
+ * @LastEditTime : 2020-03-21 16:09:40
+ * @FilePath     : \src\components\system\systemSet\systemSet_epidemic\setting_age.vue
  -->
 <template>
   <div>
@@ -90,7 +90,8 @@ export default {
       rules: {
         age: [{ validator: checkAge }]
       },
-      list: []
+      list: [],
+      projectId: sessionStorage.getItem("pid")
     };
   },
   components: {
@@ -134,7 +135,7 @@ export default {
       if (temp) {
         console.log("验证成功");
         this.$axios
-          .post(`/api/addForbidAge?age=${this.ruleForm.age}`)
+          .post(`/api/addForbidAge?age=${this.ruleForm.age}&pid=${this.projectId}`)
           .then(res => {
             if (res.data.code == 0 && res.data.data.code == 0) {
               this.messageBox("添加成功", 1);
@@ -151,7 +152,7 @@ export default {
     },
 
     forbid(id) {
-      this.$axios.post(`/api/forbidAge?id=${id}`).then(res => {
+      this.$axios.post(`/api/forbidAge?id=${id}&pid=${this.projectId}`).then(res => {
         if (res.data.code == 0 && res.data.data.code == 0) {
           this.messageBox("修改成功", 1);
         } else {
