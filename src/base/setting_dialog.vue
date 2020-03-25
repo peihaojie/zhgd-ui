@@ -1,8 +1,8 @@
 <!--
  * @Date         : 2020-02-29 16:42:02
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-02 17:46:10
- * @FilePath     : /src/base/setting_dialog.vue
+ * @LastEditTime : 2020-03-25 15:24:37
+ * @FilePath     : \src\base\setting_dialog.vue
  * @说明          : 这个组件是疫情设置页面的弹窗
  -->
 <template>
@@ -12,6 +12,7 @@
       :visible.sync="visible"
       :width="width"
       @close="close"
+      :close-on-click-modal="background"
       center>
       <slot>
       </slot>
@@ -41,6 +42,10 @@ export default {
     width: {
       type: String,
       default: '50%'
+    },
+    background: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -98,7 +103,6 @@ export default {
   color: #fff
 }
 /deep/.el-dialog__footer {
-  height: .7rem;
   background-color: #f8f8f8;
   border-top: .01rem solid #dedede;
 }
@@ -106,15 +110,19 @@ export default {
   padding: .1rem;
 }
 .el-button {
-  width: 1.63rem;
-  height: .49rem;
+  width: 1rem;
   transition: all .5s;
   border-radius: .02rem;
   background-color: #ffd14f;
   border: .01rem solid #d9b759;
-  font-size: .2rem;
+  font-size: .16rem;
   text-align: center;
   color: #fff;
+  padding: .06rem 0;
+  transition: .5s all;
+  &:hover {
+    background-color: #d9b759;
+  }
 }
 /deep/.el-input {
   width: 4rem;

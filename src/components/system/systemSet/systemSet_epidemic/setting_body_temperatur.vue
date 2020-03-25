@@ -1,7 +1,7 @@
 <!--
  * @Date         : 2020-02-28 16:39:18
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-21 16:18:56
+ * @LastEditTime : 2020-03-25 16:38:05
  * @FilePath     : \src\components\system\systemSet\systemSet_epidemic\setting_body_temperatur.vue
  -->
 <template>
@@ -24,14 +24,14 @@
       <div class="list" v-show="active == 'setting'">
         <template v-if="list.length">
           <div class="item" v-for="item in list" :key="item.id">
-            设定温度：{{item.temperature}}
+            设定温度：{{item.temperature}}℃
             <div class="switch">
               <span v-if="item.enter">禁止入内</span>
               <el-switch
                 v-model="item.enter"
-                active-color="#ff4949"
+                active-color="#c3c3c3"
                 inactive-color="#0090ff"
-                @change="forbid(item.id)"
+                @change="forbid(item.id, item.enter)"
               ></el-switch>
               <span class="del" @click="deleteAge(item.id)">删除</span>
             </div>
@@ -101,14 +101,10 @@ export default {
   },
   methods: {
     geAgeList() {
-      this.$axios.post(`/api/temperatureList?pid=${this.projectId}`).then(res => {
+      this.$axios.post(`/api/temperature/temperatureList?pid=${this.projectId}`).then(res => {
         if (res.data.code == 0) {
-          this.list = res.data.data.list.map(a => {
-            return {
-              temperature: a.temperature,
-              enter: a.enter == 1
-            };
-          });
+          res.data.data.forEach(a => a.enter = a.enter == 1);
+          this.list = res.data.data
         }
       });
     },
@@ -127,16 +123,16 @@ export default {
 
     clear() {
       this.ruleForm.temperature = "";
+      this.$refs['ruleForm'].resetFields();
     },
 
     async confirm() {
       let temp = await this.submitForm("ruleForm");
       if (temp) {
-        console.log("验证成功");
         this.$axios
-          .post(`/api/addTemperature?temperature=${this.ruleForm.temperature}&pid=${this.projectId}`)
+          .post(`/api/temperature/addTemperature?temperature=${this.ruleForm.temperature}&pid=${this.projectId}`)
           .then(res => {
-            if (res.data.code == 0 && res.data.data.code == 0) {
+            if (res.data.code == 0) {
               this.messageBox("添加成功", 1);
             } else {
               this.messageBox("添加失败", 0);
@@ -150,9 +146,9 @@ export default {
       }
     },
 
-    forbid(id) {
-      this.$axios.post(`/api/forbidTemperature?id=${id}pid=${this.projectId}`).then(res => {
-        if (res.data.code == 0 && res.data.data.code == 0) {
+    forbid(id, enter) {
+      this.$axios.post(`/api/temperature/forbidTemperatures?id=${id}&pid=${this.projectId}&enter=${enter ? 1 : 0}`).then(res => {
+        if (res.data.code == 0) {
           this.messageBox("修改成功", 1);
         } else {
           this.messageBox("修改失败", 0);
@@ -162,8 +158,8 @@ export default {
     },
 
     deleteAge(id) {
-      this.$axios.post(`/api/deleteTemperature?id=${id}`).then(res => {
-        if (res.data.code == 0 && res.data.data.code == 0) {
+      this.$axios.post(`/api/temperature/deleteTemperature?id=${id}`).then(res => {
+        if (res.data.code == 0) {
           this.messageBox("删除成功", 1);
         } else {
           this.messageBox("删除失败", 0);
@@ -174,7 +170,7 @@ export default {
 
     keydown(e) {
       e.target.value = (e.target.value.match(/^\d*(\.?\d{0})/g)[0]) || null
-      this.ruleForm.temperature = e.target.valu
+      this.ruleForm.temperature = e.target.value
     }
   }
 };
