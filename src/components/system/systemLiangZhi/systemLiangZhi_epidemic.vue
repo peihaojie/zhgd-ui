@@ -25,7 +25,7 @@
       </div>
       <div class="body">
         <div class="btn">
-          <div class="click" @click="searchData('湖北省')">
+          <div class="click" @click="searchData(areaList)">
             <i class="particularly-area"></i>
             特殊地区
           </div>
@@ -51,7 +51,7 @@
             ref="table"
             :data="tableData"
 						v-loading="loading"
-						element-loading-text="玩命加载中..."
+						element-loading-text="拼命加载中..."
             style="width: 100%"
             stripe
             border
@@ -71,7 +71,7 @@
             </el-table-column>
             <el-table-column prop="idAddress" label="所属地区" sortable show-overflow-tooltip>
               <template slot-scope="scope">
-                <p style="color: #ffd14f" v-if="scope.row.idAddress.includes('湖北省')">{{scope.row.idAddress}}</p>
+                <p style="color: #ffd14f" v-if="areaColor(scope.row.idAddress)">{{scope.row.idAddress}}</p>
                 <p v-else>{{scope.row.idAddress}}</p>
               </template>
             </el-table-column>
@@ -119,12 +119,13 @@ export default {
       ], // 下拉框的选项
       tableData: [], // 表格数据
 			search: '', // 搜索地区
-      checkedScerch: '', // 点搜索时地区
+      checkedSearch: '', // 点搜索时地区
       searchName: '', // 搜索姓名
       checkedName: '', // 点搜索时姓名
 			idList: {}, // 选中的ID列表
       updateType: 2, // 上传类型（0是正常， 1是隔离）
       pageTurn: false, // 是否是翻页状态
+      areaList: [], // 特殊演示标注区域列表
     };
   },
   computed: {
@@ -132,18 +133,31 @@ export default {
       return (this.currentPage - 1) * 15;
     }
   },
-  mounted() {
+  async mounted() {
+    this.getAreaList()
 		this.getTableData()
 	},
   methods: {
+    // 获取设置的区域列表
+    getAreaList() {
+      return this.$axios
+        .post(`/api/hjarea/areaSettingList?pid=${this.projectId}`)
+        .then(res => {
+          if (res.data.code == 0) {
+            this.areaList = new Array();
+            res.data.data.forEach(a => this.areaList.push(a.title));
+          }
+        });
+    },
+
     // 翻页
     handleCurrentChange(val) {
       this.pageTurn = true
 			this.currentPage = val;
-      this.search = this.checkedScerch
+      this.search = this.checkedSearch
       this.searchName = this.checkedName
       let checked = []
-      this.getTableData(this.checkedScerch, this.searchState)
+      this.getTableData(this.checkedSearch, this.searchState, this.checkedName)
       setTimeout(() => {
         let checkedId = this.idList[`${this.currentPage}`]
 				if (checkedId) {
@@ -257,13 +271,13 @@ export default {
 
 		// 搜索
 		searchData(area) {
-			this.search = area ? area : this.search
-      this.checkedScerch = this.search
+			this.search = area ? area.join(",") : this.search
+      this.checkedSearch = this.search
       this.checkedName = this.searchName
 			this.currentPage = 1
 			this.updateType = 2
 			this.idList = {}
-			this.getTableData(this.checkedScerch, this.searchState, this.checkedName)
+			this.getTableData(this.checkedSearch, this.searchState, this.checkedName)
 		},
 
 		// 获取表格数据
@@ -306,7 +320,12 @@ export default {
 				default:
 					return true;
 			}
-		}
+    },
+
+    // 计算区域颜色
+    areaColor(area) {
+      return this.areaList.some(a => area.includes(a))
+    }
   }
 };
 </script>

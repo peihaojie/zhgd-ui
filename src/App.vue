@@ -111,7 +111,7 @@ body {
   /* min-height: 900px; */
   overflow-x: auto;
   /* overflow-x: hidden; */
-  user-select:none;
+  // user-select:none;
 }
 .el-table-column--selection .cell {
   padding-right: 0!important;

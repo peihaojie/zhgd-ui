@@ -72,10 +72,13 @@
             <span>黑&#8194;名&#8194;单</span>
           </router-link>
         </li>
-        <li @click="rewardClick">
-          <a :class="activeShow.includes('reward')?'active':''">
+        <li @click="isActiveShow('/systemLuabfZhi_reward_inquire')">
+        <!-- <li @click="rewardClick"> -->
+          <a class="tabs-wrap" :class="activeShow=='/systemLuabfZhi_reward_inquire' ?'active':''">
+          <!-- <a :class="activeShow.includes('reward')?'active':''"> -->
             <div class="icon reward"></div>
             <span>奖罚记录</span>
+            <tabs :data="rewardList" class="tabs"></tabs>
           </a>
         </li>
         <li @click="isActiveShow('/systemLiangZhi_salary')">
@@ -93,10 +96,13 @@
             <span>设备管理</span>
           </router-link>
         </li>
-        <li @click="fw('fw')">
-          <a :class="activeShow.includes('fw')?'active':''">
+        <!-- <li @click="fw('fw')"> -->
+        <li @click="isActiveShow('/systemLiangZhi_fw_one')">
+          <!-- <a :class="activeShow.includes('fw')?'active':''"> -->
+          <a class="tabs-wrap" :class="activeShow=='/systemLiangZhi_fw_one' ?'active':''">
             <div class="icon serve"></div>
             <span>两制服务</span>
+            <tabs :data="twoSystemsOptions" class="tabs"></tabs>
           </a>
         </li>
         <li @click="isActiveShow('/systemLiangZhi_epidemic')">
@@ -465,8 +471,40 @@ export default {
           name: "体温管理",
           url: "/systemLiangZhi_temperature"
         }
-      ], // 下属页面
+      ], // 疫情下属页面
       epidemicType: false, // 下拉框显示与否
+      twoSystemsOptions: [
+        {
+          name: '项目信息',
+          url: 'systemLiangZhi_fw_one'
+        },
+        {
+          name: '分包信息',
+          url: 'systemLiangZhi_fw_two'
+        },
+        {
+          name: '工人信息',
+          url: 'systemLiangZhi_fw_three'
+        },
+        {
+          name: '工作汇报',
+          url: 'systemLiangZhi_fw_four'
+        }
+      ], // 两制下拉
+      rewardList: [
+        {
+          name: '奖罚查询',
+          url: 'systemLuabfZhi_reward_inquire'
+        },
+        {
+          name: '奖罚记录',
+          url: 'systemLiangZhi_reward_record'
+        },
+        {
+          name: '奖罚类别',
+          url: 'systemLiangZhi_reward_category'
+        },
+      ], // 奖罚记录下拉
     };
   },
   components: {
@@ -563,7 +601,7 @@ export default {
       this.rewardShow = !this.rewardShow
       this.fwShow = false
     },
-    
+
     // 权限设置侧拉框
     permissionClick() {
       this.permissionShow = !this.permissionShow

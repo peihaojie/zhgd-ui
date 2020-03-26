@@ -1,7 +1,7 @@
 <!--
  * @Date         : 2020-02-28 16:37:57
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-25 16:35:00
+ * @LastEditTime : 2020-03-26 11:11:03
  * @FilePath     : \src\components\system\systemSet\systemSet_epidemic\setting_regional.vue
  -->
 <template>
@@ -96,26 +96,25 @@ export default {
               isid: a.isid
             };
           });
-          list
-            .filter(a => a.type === "PROVINCE")
-            .forEach(a => {
-              list.forEach(b => {
-                if (
-                  b.parentId == a.id &&
-                  b.id != 1001 &&
-                  b.id != 1002 &&
-                  b.id != 1073 &&
-                  b.id != 1234 &&
-                  b.id != 1343 &&
-                  b.id != 1344 &&
-                  b.id != 1345
-                ) {
-                  a.children = a.children ? a.children : new Array();
-                  a.children.push(b);
-                }
-              });
+          let parentList = list.filter(a => a.type === "PROVINCE");
+          parentList.forEach(a => {
+            list.forEach(b => {
+              if (
+                b.parentId == a.id &&
+                b.id != 1001 &&
+                b.id != 1002 &&
+                b.id != 1073 &&
+                b.id != 1234 &&
+                b.id != 1343 &&
+                b.id != 1344 &&
+                b.id != 1345
+              ) {
+                a.children = a.children ? a.children : new Array();
+                a.children.push(b);
+              }
             });
-          this.options = list;
+          });
+          this.options = parentList;
         }
       });
     },
@@ -125,7 +124,7 @@ export default {
         .post(`/api/hjarea/areaSettingList?pid=${this.projectId}`)
         .then(res => {
           if (res.data.code == 0) {
-            res.data.data.forEach(a => a.enter = a.enter == 1);
+            res.data.data.forEach(a => (a.enter = a.enter == 1));
             this.list = res.data.data;
           }
         });
@@ -174,7 +173,11 @@ export default {
 
     forbid(id, enter) {
       this.$axios
-        .post(`/api/hjarea/forbidAreaSetting?id=${id}&pid=${this.projectId}&enter=${enter ? 1 : 0}`)
+        .post(
+          `/api/hjarea/forbidAreaSetting?id=${id}&pid=${this.projectId}&enter=${
+            enter ? 1 : 0
+          }`
+        )
         .then(res => {
           if (res.data.code == 0) {
             this.messageBox("修改成功", 1);
@@ -186,14 +189,16 @@ export default {
     },
 
     deleteAge(id) {
-      this.$axios.post(`/api/hjarea/deleteAreaSetting?id=${id}&pid=${this.projectId}`).then(res => {
-        if (res.data.code == 0) {
-          this.messageBox("删除成功", 1);
-        } else {
-          this.messageBox("删除失败", 0);
-        }
-        this.getAgeList();
-      });
+      this.$axios
+        .post(`/api/hjarea/deleteAreaSetting?id=${id}&pid=${this.projectId}`)
+        .then(res => {
+          if (res.data.code == 0) {
+            this.messageBox("删除成功", 1);
+          } else {
+            this.messageBox("删除失败", 0);
+          }
+          this.getAgeList();
+        });
     },
 
     // 获取城市列表

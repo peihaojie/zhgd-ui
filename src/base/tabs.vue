@@ -1,8 +1,8 @@
 <!--
  * @Date         : 2020-02-24 16:35:32
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-02-25 11:19:41
- * @FilePath     : /src/base/tabs.vue
+ * @LastEditTime : 2020-03-25 17:14:31
+ * @FilePath     : \src\base\tabs.vue
  * @描述          : tab的弹出框
  * @用法          : wrap需添加position：relative定位，hover之后通过display控制显示
  * @参数          : data [{name: "显示的名称", url: "router.path"}]
@@ -48,6 +48,7 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   left: 1.75rem;
+  width: 2rem;
   .block {
     width: 0.25rem;
     height: 0.25rem;
@@ -58,19 +59,28 @@ export default {
     transform: translateY(-50%)rotate(45deg);
   }
   .list-warp {
-    padding: .15rem;
+    padding: .05rem;
     background-color: #1872ad;
     width: auto !important;
     .list {
-      width: 1.7rem;
       font-size: .18rem;
       color: #fff;
       height: .36rem !important;
+      margin-bottom: .05rem;
+      &:hover {
+        background-color: #54a4d7!important;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
       a {
         border-bottom: none !important;
-        padding-left: .1rem !important;
+        padding-left: .18rem !important;
         height: .36rem !important;
         line-height: .36rem !important;
+        &:hover {
+          background-color: #54a4d7!important;
+        }
       }
     }
   }
@@ -79,6 +89,7 @@ export default {
   position: absolute;
   top: 0;
   left: 1.75rem;
+  width: 2rem;
   .block {
     width: 0.25rem;
     height: 0.25rem;
@@ -89,19 +100,27 @@ export default {
     transform: translateY(-50%)rotate(45deg);
   }
   .list-warp {
-    padding: .15rem;
+    padding: .05rem;
     background-color: #1872ad;
     width: auto !important;
     .list {
-      width: 1.7rem;
       font-size: .18rem;
       color: #fff;
       height: .36rem !important;
+      &:hover {
+        background-color: #54a4d7!important;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
       a {
         border-bottom: none !important;
-        padding-left: .1rem !important;
+        padding-left: .18rem !important;
         height: .36rem !important;
         line-height: .36rem !important;
+        &:hover {
+          background-color: #54a4d7!important;
+        }
       }
     }
   }
@@ -110,6 +129,7 @@ export default {
   position: absolute;
   bottom: 0%;
   left: 1.75rem;
+  width: 2rem;
   .block {
     width: 0.25rem;
     height: 0.25rem;
@@ -120,19 +140,27 @@ export default {
     transform: translateY(50%)rotate(45deg);
   }
   .list-warp {
-    padding: .15rem;
+    padding: .05rem;
     background-color: #1872ad;
     width: auto !important;
     .list {
-      width: 1.7rem;
       font-size: .18rem;
       color: #fff;
       height: .36rem !important;
+      &:hover {
+        background-color: #54a4d7!important;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
       a {
         border-bottom: none !important;
-        padding-left: .1rem !important;
+        padding-left: .18rem !important;
         height: .36rem !important;
         line-height: .36rem !important;
+        &:hover {
+          background-color: #54a4d7!important;
+        }
       }
     }
   }

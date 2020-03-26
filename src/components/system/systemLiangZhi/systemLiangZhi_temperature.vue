@@ -1,8 +1,8 @@
 <!--
  * @Date         : 2020-02-24 16:47:57
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-02-25 17:50:00
- * @FilePath     : /src/components/system/systemLiangZhi/systemLiangZhi_temperature.vue
+ * @LastEditTime : 2020-03-26 16:59:07
+ * @FilePath     : \src\components\system\systemLiangZhi\systemLiangZhi_temperature.vue
  -->
 <template>
   <div>
@@ -22,8 +22,8 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             value-format="yyyy-MM-dd"
-            size="mini">
-          </el-date-picker>
+            size="mini"
+          ></el-date-picker>
         </div>
         <div class="state">
           状态：
@@ -40,11 +40,15 @@
       </div>
       <div class="body">
         <div class="btn">
-          <div class="click" @click="searchData('湖北省')">
+          <div class="click" @click="changeTemperature">
             <i class="particularly-area"></i>
-            发热筛选
+            {{clickTemperature ? "发热筛选" : "正常数据"}}
           </div>
-          <div class="click" v-if="updateType === 2 || updateType === 0" @click="updateQuarantine(1)">
+          <!-- <div
+            class="click"
+            v-if="updateType === 2 || updateType === 0"
+            @click="updateQuarantine(1)"
+          >
             <i class="observation-shield"></i>
             隔离观察
           </div>
@@ -52,42 +56,50 @@
             <i class="no-observation-shield"></i>
             隔离观察
           </div>
-          <div class="click" v-if="updateType === 2 || updateType === 1" @click="updateQuarantine(0)">
+          <div
+            class="click"
+            v-if="updateType === 2 || updateType === 1"
+            @click="updateQuarantine(0)"
+          >
             <i class="work"></i>
             恢复工作
           </div>
           <div class="no-click" v-else>
             <i class="no-work"></i>
             恢复工作
-          </div>
+          </div> -->
         </div>
         <div class="table-wrap">
           <el-table
             ref="table"
             :data="tableData"
-						v-loading="loading"
-						element-loading-text="玩命加载中..."
+            v-loading="loading"
+            element-loading-text="拼命加载中..."
             style="width: 100%"
             stripe
             border
             :header-cell-style="backHeaderCell"
             :cell-style="backCell"
             @selection-change="selectData"
-						@row-click="rowClick"
+            @row-click="rowClick"
           >
             <el-table-column type="selection" width="55" :selectable="selectable" align="center"></el-table-column>
             <el-table-column label="序号" width="55" type="index" :index="getIndex" align="center"></el-table-column>
             <el-table-column prop="empName" label="姓名" width="100" sortable></el-table-column>
+            <el-table-column prop="id" label="工号" width="100" sortable></el-table-column>
             <el-table-column prop="constructionName" label="所属参建单位" sortable show-overflow-tooltip></el-table-column>
-            <el-table-column prop="teamName" label="所属班组" width="120" sortable show-overflow-tooltip></el-table-column>
-            <el-table-column prop="title" label="工种" sortable></el-table-column>
-            <el-table-column label="班组长" width="100" align="center" sortable>
-              <template slot-scope="scope">{{scope.row.isTeam==1 ? '是' : '否'}}</template>
+            <el-table-column prop="title" label="工种" width="120" sortable show-overflow-tooltip></el-table-column>
+            <el-table-column prop="passedTime" label="打卡时间" sortable></el-table-column>
+            <el-table-column label="进出标识" width="120" align="center" sortable>
+              <template slot-scope="scope">{{scope.row.direction=='in' ? '进入' : '离开'}}</template>
             </el-table-column>
-            <el-table-column prop="idAddress" label="所属地区" sortable show-overflow-tooltip>
+            <el-table-column label="体温" width="100" sortable show-overflow-tooltip>
               <template slot-scope="scope">
-                <p style="color: #ffd14f" v-if="scope.row.idAddress.includes('湖北省')">{{scope.row.idAddress}}</p>
-                <p v-else>{{scope.row.idAddress}}</p>
+                <p
+                  style="color: #ffd14f"
+                  v-if="scope.row.temperature > setedTemperature && setedTemperature"
+                >{{scope.row.temperature}}</p>
+                <p v-else>{{scope.row.temperature}}</p>
               </template>
             </el-table-column>
             <el-table-column label="状态" width="100" sortable align="center">
@@ -133,13 +145,15 @@ export default {
         }
       ], // 下拉框的选项
       tableData: [], // 表格数据
-			search: '', // 搜索地区
-      checkedScerch: '', // 点搜索时地区
-      searchName: '', // 搜索姓名
-      checkedName: '', // 点搜索时姓名
-			idList: {}, // 选中的ID列表
+      search: "", // 搜索时间
+      checkedSearch: "", // 点搜索时间
+      searchName: "", // 搜索姓名
+      checkedName: "", // 点搜索时姓名
+      idList: {}, // 选中的ID列表
       updateType: 2, // 上传类型（0是正常， 1是隔离）
       pageTurn: false, // 是否是翻页状态
+      setedTemperature: "", // 设置的体温
+      clickTemperature: true // 切换体温切换状态
     };
   },
   computed: {
@@ -148,32 +162,48 @@ export default {
     }
   },
   mounted() {
-		this.getTableData()
-	},
+    this.getTemperature();
+    const date = new Date();
+    const firstDay = `${date.getFullYear()}-01-01`;
+    const now = `${date.getFullYear()}-${(date.getMonth() + 1) > 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1)}-${date.getDate() > 10 ? date.getDate() : '0' + date.getDate()}`;
+    this.search = this.checkedSearch = [firstDay, now];
+    this.getTableData(this.checkedSearch);
+  },
   methods: {
+    // 获取设置的体温
+    getTemperature() {
+      this.$axios
+        .post(`/api/temperature/temperatureList?pid=${this.projectId}`)
+        .then(res => {
+          if (res.data.code == 0 && res.data.data.length) {
+            this.setedTemperature = Number(res.data.data[0].temperature);
+          }
+        });
+    },
+
     // 翻页
     handleCurrentChange(val) {
-      this.pageTurn = true
-			this.currentPage = val;
-      this.search = this.checkedScerch
-      this.searchName = this.checkedName
-      let checked = []
-      this.getTableData(this.checkedScerch, this.searchState)
+      this.pageTurn = true;
+      this.currentPage = val;
+      this.search = this.checkedSearch;
+      this.searchName = this.checkedName;
+      let checked = [];
+      this.getTableData(this.checkedSearch, this.searchState, this.checkedName);
       setTimeout(() => {
-        let checkedId = this.idList[`${this.currentPage}`]
-				if (checkedId) {
-					checkedId.forEach(id => {
-						this.tableData.forEach(data => {
-							if (data.id == id) {
-								checked.push(data)
-							}
-						})
-					})
-					checked.forEach(row => {
-						this.$refs.table.toggleRowSelection(row)
-          })
+        let checkedId = this.idList[`${this.currentPage}`];
+        if (checkedId) {
+          checkedId.forEach(id => {
+            this.tableData.forEach(data => {
+              if (data.id == id) {
+                checked.push(data);
+              }
+            });
+          });
+          checked.forEach(row => {
+            this.$refs.table.toggleRowSelection(row);
+          });
         }
-        this.pageTurn = false
+        this.pageTurn = false;
       }, 500);
     },
 
@@ -215,113 +245,167 @@ export default {
             fontSize: ".14rem"
           };
       }
-		},
+    },
 
-		// selec勾选的时候触发
-		selectData(obj) {
+    // selec勾选的时候触发
+    selectData(obj) {
       // 将ID取出保存起来
       if (!this.pageTurn) {
-        let temp = []
-        obj.forEach(a => temp.push(a.id))
+        let temp = [];
+        obj.forEach(a => temp.push(a.id));
         this.idList[`${this.currentPage}`] = temp;
         // 判断选中状态
-        let keys = Object.keys(this.idList)
+        let keys = Object.keys(this.idList);
         if (keys.every(a => this.idList[a].length == 0)) {
-          this.updateType = 2
+          this.updateType = 2;
         } else {
-          let id = this.idList[`${this.currentPage}`][0]
-          let quarantine = id ? this.tableData.filter(a => a.id == id)[0].quarantine : this.updateType
-          this.updateType = Number(quarantine)
+          let id = this.idList[`${this.currentPage}`][0];
+          let quarantine = id
+            ? this.tableData.filter(a => a.id == id)[0].quarantine
+            : this.updateType;
+          this.updateType = Number(quarantine);
         }
       }
-		},
+    },
 
-		// 修改人员状态
-		updateQuarantine(tag) {
-			let ids = ''
-			let keys = Object.keys(this.idList);
-			if (keys.length && keys.every(a => this.idList[a].length != 0)) {
-				keys.forEach(key => {
-					ids = ids + this.idList[key].join(',') + ','
-				})
-        ids = ids.substr(0, ids.length-1)
+    // 修改人员状态
+    updateQuarantine(tag) {
+      let ids = "";
+      let keys = Object.keys(this.idList);
+      if (keys.length && keys.every(a => this.idList[a].length != 0)) {
+        keys.forEach(key => {
+          ids = ids + this.idList[key].join(",") + ",";
+        });
+        ids = ids.substr(0, ids.length - 1);
         this.loading = true;
-				this.$axios
-					.post(`/api/pc/projectWorkersApi/updateQuarantine?tag=${tag}&ids=${ids}`)
-					.then(res => {
+        this.$axios
+          .post(
+            `/api/pc/projectWorkersApi/updateQuarantine?tag=${tag}&ids=${ids}`
+          )
+          .then(res => {
             if (res.data.code == 0) {
               this.$message({
-                type: 'success',
-                message: `${this.updateType == 1 ? '恢复' : this.updateType == 0 ? '隔离' : ''}成功！`
-              })
-              this.searchData()
+                type: "success",
+                message: `${
+                  this.updateType == 1
+                    ? "恢复"
+                    : this.updateType == 0
+                    ? "隔离"
+                    : ""
+                }成功！`
+              });
+              this.searchData();
             } else {
               this.$message({
-                type: 'warning',
-                message: `${this.updateType == 1 ? '恢复' : this.updateType == 0 ? '隔离' : ''}失败！`
-              })
+                type: "warning",
+                message: `${
+                  this.updateType == 1
+                    ? "恢复"
+                    : this.updateType == 0
+                    ? "隔离"
+                    : ""
+                }失败！`
+              });
             }
-          })
-			} else {
-				this.$message({
-					type: 'warning',
-					message: '请选择人员!'
-				})
-			}
-		},
+          });
+      } else {
+        this.$message({
+          type: "warning",
+          message: "请选择人员!"
+        });
+      }
+    },
 
-		// 搜索
-		searchData(area) {
-			this.search = area ? area : this.search
-      this.checkedScerch = this.search
-      this.checkedName = this.searchName
-			this.currentPage = 1
-			this.updateType = 2
-			this.idList = {}
-			this.getTableData(this.checkedScerch, this.searchState, this.checkedName)
-		},
+    // 搜索
+    searchData(temperature) {
+      this.checkedSearch = this.search;
+      this.checkedName = this.searchName;
+      this.currentPage = 1;
+      this.updateType = 2;
+      this.idList = {};
+      this.getTableData(
+        this.checkedSearch,
+        this.searchState,
+        this.checkedName,
+        !this.clickTemperature ? temperature : ""
+      );
+    },
 
-		// 获取表格数据
-		getTableData(search='', quarantine='', checkedName='') {
-			this.loading = true;
-			this.$axios
-				.post(`/api/pc/projectWorkersApi/quarantineList?projectId=${this.projectId}&pageNum=${this.currentPage}&pageSize=${this.pageSize}&quarantine=${quarantine}&idAddress=${search}&empName=${checkedName}`)
-				.then(res => {
+    // 获取表格数据
+    getTableData(
+      search = [],
+      quarantine = "",
+      checkedName = "",
+      temperature = ""
+    ) {
+      this.loading = true;
+      this.$axios
+        .post(
+          `/api/personnelTemperature/personnelTemperatureList?projectId=${
+            this.projectId
+          }&pageNum=${this.currentPage}&pageSize=${
+            this.pageSize
+          }&quarantine=${quarantine}&empName=${checkedName}&startDate=${
+            search.length ? search[0] : ""
+          }&endDate=${
+            search.length ? search[1] : ""
+          }&temperature=${temperature}`
+        )
+        .then(res => {
           this.loading = false;
           if (res.data.code == 0) {
-            this.total = res.data.data.total
-            this.tableData = res.data.data.rows
-            document.getElementsByClassName('el-checkbox__inner')[0].style.display = 'none'
-            if (!this.tableData && search || !this.tableData && quarantine || !this.tableData && checkedName) {
-              this.messageBox('抱歉没有数据！', 0)
+            this.total = res.data.data.total;
+            this.tableData = res.data.data.rows;
+            document.getElementsByClassName(
+              "el-checkbox__inner"
+            )[0].style.display = "none";
+            if (
+              (!this.tableData && search) ||
+              (!this.tableData && quarantine) ||
+              (!this.tableData && checkedName)
+            ) {
+              this.messageBox("抱歉没有数据！", 0);
             }
             if (quarantine === 0 || quarantine === 1) {
-              document.getElementsByClassName('el-checkbox__inner')[0].style.display = 'inline-block'
+              document.getElementsByClassName(
+                "el-checkbox__inner"
+              )[0].style.display = "inline-block";
             }
           }
-				})
-		},
+        });
+    },
 
-		// 表格点击行触发选中当前行
-		rowClick(row) {
-			let table = this.$refs.table
-			if (this.updateType == 2 || this.updateType == row.quarantine) {
-				table.toggleRowSelection(row)
-			} else {
-				return
-			}
-		},
+    // 表格点击行触发选中当前行
+    rowClick(row) {
+      let table = this.$refs.table;
+      if (this.updateType == 2 || this.updateType == row.quarantine) {
+        table.toggleRowSelection(row);
+      } else {
+        return;
+      }
+    },
 
-		// 表格是否可选
-		selectable(row) {
-			let type = this.updateType === 0 ? 1 : this.updateType === 1 ? 0 : this.updateType
-			switch (Number(row.quarantine)) {
-				case type:
-					return false;
-				default:
-					return true;
-			}
-		}
+    // 表格是否可选
+    selectable(row) {
+      let type =
+        this.updateType === 0 ? 1 : this.updateType === 1 ? 0 : this.updateType;
+      switch (Number(row.quarantine)) {
+        case type:
+          return false;
+        default:
+          return true;
+      }
+    },
+
+    // 切换搜索状态
+    changeTemperature() {
+      if (this.setedTemperature) {
+        this.clickTemperature = !this.clickTemperature
+        this.searchData(this.setedTemperature)
+      } else {
+        this.messageBox("未设置体温预警！", 0);
+      }
+    }
   }
 };
 </script>
@@ -350,10 +434,10 @@ export default {
       display: inline-block;
       border: 0.01rem solid #b6b6b6;
       border-radius: 0.05rem;
-		}
-		.el-input--mini {
-			width: 2rem;
-		}
+    }
+    .el-input--mini {
+      width: 2rem;
+    }
     .state {
       margin-left: 0.2rem;
     }
@@ -409,19 +493,19 @@ export default {
           color: #fff;
           box-shadow: 1px 1px 3px 1px #c0c4cc;
           .particularly-area {
-						background-image: url('../../../../static/images/particularly-area-hover.png');
-						background-size: 100% 100%;
-						background-repeat: no-repeat;
+            background-image: url("../../../../static/images/particularly-area-hover.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
           }
           .observation-shield {
-						background-image: url('../../../../static/images/observation-shield-hover.png');
-						background-size: 100% 100%;
-						background-repeat: no-repeat;
+            background-image: url("../../../../static/images/observation-shield-hover.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
           }
           .work {
-						background-image: url('../../../../static/images/back-work-hover.png');
-						background-size: 100% 100%;
-						background-repeat: no-repeat;
+            background-image: url("../../../../static/images/back-work-hover.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
           }
         }
         i {
