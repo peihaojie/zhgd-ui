@@ -858,6 +858,7 @@ export default {
       tcLoadCapacity: '', // 最大载重
       tcLoadMoment: '', // 起重力矩
       installCompany: '', // 设备安装单位
+      gctype: '', // 区管市管
     };
   },
   mounted() {
@@ -915,6 +916,7 @@ export default {
             this.xmid = res.data.xmid || ''
             this.subId = res.data.subId || ''
             this.editTower.jdbh = res.data.jdbh || ''
+            this.gctype = res.data.gctype || ''
           })
       }
     },
@@ -1042,7 +1044,7 @@ export default {
           this.craneName = this.craneName.replace(/#/, '%23')
         }
         this.$axios
-          .post(`/api/OptionsCraneApi/insertCrane?craneName=${this.craneName}&hxzId=${this.hxzId}&projectId=${this.projectId}&scznl=${this.scznl}&manufacturerId=${this.manufacturerId}&serialNum=${this.serialNum}&tcMaxScope=${this.tcMaxScope}&tcMaxHeight=${this.tcMaxHeight}&tcLoadCapacity=${this.tcLoadCapacity}&tcLoadMoment=${this.tcLoadMoment}&jdbh=${this.jdbh}&xmid=${this.xmid}&subId=${this.subId}&installCompany=${this.installCompany}`)
+          .post(`/api/OptionsCraneApi/insertCrane?craneName=${this.craneName}&hxzId=${this.hxzId}&projectId=${this.projectId}&scznl=${this.scznl}&manufacturerId=${this.manufacturerId}&serialNum=${this.serialNum}&tcMaxScope=${this.tcMaxScope}&tcMaxHeight=${this.tcMaxHeight}&tcLoadCapacity=${this.tcLoadCapacity}&tcLoadMoment=${this.tcLoadMoment}&jdbh=${this.jdbh}&xmid=${this.xmid}&subId=${this.subId}&installCompany=${this.installCompany}&gctype=${this.gctype}`)
           .then(res => {
             if (res.data.code == 0) {
               this.$message({

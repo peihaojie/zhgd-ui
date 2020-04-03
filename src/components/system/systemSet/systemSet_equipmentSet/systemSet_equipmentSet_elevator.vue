@@ -770,44 +770,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      tableData: [
-        {
-          number: 1, // 序号
-          account: "aqwer111", // 账号
-          name: "某某某", // 姓名
-          phone: "12345678978", // 手机号
-          post: "安全员", // 岗位
-          company: "深圳市市政有限公司", // 公司
-          id: 1 // 人员id
-        },
-        {
-          number: 2, // 序号
-          account: "aqwer111", // 账号
-          name: "某某某", // 姓名
-          phone: "12345678978", // 手机号
-          post: "安全员", // 岗位
-          company: "深圳市市政有限公司", // 公司
-          id: 1 // 人员id
-        }
-      ], // 列表数据
-      tableData2: [
-        {
-          number: 1, // 序号
-          account: "aqwer111", // 账号
-          name: "某某某", // 姓名
-          phone: "12345678978", // 手机号
-          post: "安全员", // 岗位
-          id: 1 // 人员id
-        },
-        {
-          number: 2, // 序号
-          account: "aqwer111", // 账号
-          name: "某某某", // 姓名
-          phone: "12345678978", // 手机号
-          post: "安全员", // 岗位
-          id: 1 // 人员id
-        }
-      ], // 添加人员列表数据
+      tableData: [], // 添加人员列表数据
       navState: true, // 当前模块
       dialogShow: false, // 新增设备对话框
       compileShow: false, // 编辑对话框
@@ -837,7 +800,8 @@ export default {
       deleteShow: false, // 删除弹窗
       deleteTime: '', // 删除的时间
       deleteId: '', // 删除的ID
-      installCompany: '' // 设备安装单位
+      installCompany: '', // 设备安装单位
+      gctype: '', // 区管市管
     };
   },
   mounted() {
@@ -876,6 +840,7 @@ export default {
       this.height = ''
       this.jdbh = ''
       this.hxzId = ''
+      this.gctype = ''
     },
 
     // 获取项目监督编号
@@ -884,6 +849,7 @@ export default {
       this.xmid = ''
       this.subId = ''
       this.editTower.jdbh = ''
+      this.gctype = ''
       if (this.editTower.scznl == 'CAY' || this.scznl == 'CAY') {
         this.$axios
           .post(`/api/cay?projectId=${this.projectId}`)
@@ -892,6 +858,7 @@ export default {
             this.xmid = res.data.xmid || ''
             this.subId = res.data.subId || ''
             this.editTower.jdbh = res.data.jdbh || ''
+            this.gctype = res.data.gctype || ''
           })
       }
     },
@@ -1017,7 +984,7 @@ export default {
           this.craneName = this.craneName.replace(/#/, '%23')
         }
         this.$axios
-          .post(`/api/OptionsElevatorApi/insertElevator?elevatorName=${this.craneName}&hxzId=${this.hxzId}&projectId=${this.projectId}&serialNum=${this.serialNum}&capacity=${this.capacity}&height=${this.height}&jdbh=${this.jdbh}&xmid=${this.xmid}&subId=${this.subId}&scznl=${this.scznl}&manufacturerId=${this.manufacturerId}&installCompany=${this.installCompany}`)
+          .post(`/api/OptionsElevatorApi/insertElevator?elevatorName=${this.craneName}&hxzId=${this.hxzId}&projectId=${this.projectId}&serialNum=${this.serialNum}&capacity=${this.capacity}&height=${this.height}&jdbh=${this.jdbh}&xmid=${this.xmid}&subId=${this.subId}&scznl=${this.scznl}&manufacturerId=${this.manufacturerId}&installCompany=${this.installCompany}&gctype=${this.gctype}`)
           .then(res => {
             if (res.data.code == 0) {
               this.$message({

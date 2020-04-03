@@ -1,7 +1,7 @@
 /*
  * @Date         : 2020-01-30 14:48:38
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-03-25 20:50:49
+ * @LastEditTime : 2020-04-03 15:11:13
  * @FilePath     : \src\utils\axios.js
  */
 /* jshint esversion: 6 */
@@ -10,15 +10,15 @@ import axios from 'axios';
 // 模拟数据
 // axios.defaults.baseURL = "http://localhost:3000";
 // 超球
-// axios.defaults.baseURL = "http://192.168.1.55:8080";
+// axios.defaults.baseURL = "http://192.168.1.40:8080";
 // 李媛
 // axios.defaults.baseURL = "http://192.168.1.11:8083";
 // 陈吕
 // axios.defaults.baseURL = "http://192.168.1.38:8080";
 // 谢亚
-axios.defaults.baseURL = "http://192.168.1.41:8080";
+// axios.defaults.baseURL = "http://192.168.1.8:8080";
 // 生产环境
-// axios.defaults.baseURL = "http://47.106.71.3:8080";
+axios.defaults.baseURL = "http://47.106.71.3:8080";
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
