@@ -3,43 +3,12 @@
   <div class="main" id="main">
     <!-- 导航栏 -->
     <div class="nav">
-      <div class="nav-logo">
-        <div class="logo-img"></div>
-        <div class="logo-URL">
-          <p>工地系统云平台</p>
-          <span>gd.hj-tec.com</span>
-        </div>
-        <span>智慧工地第一品牌</span>
+      <div class="logo-img"></div>
+      <div class="logo-URL">
+        <p>工地系统云平台</p>
+        <span>gd.hj-tec.com</span>
       </div>
-      <ul>
-        <li>
-          <a>企业邮箱</a>
-        </li>
-        <li>
-          <a>VIP邮箱</a>
-        </li>
-        <li>
-          <a>国外用户登录</a>
-        </li>
-        <li>
-          <a>手机版</a>
-        </li>
-        <li>
-          <a>电脑版</a>
-        </li>
-        <li>
-          <a>帮助</a>
-        </li>
-        <li>
-          <a>常见问题</a>
-        </li>
-        <li>
-          <a>私人助理</a>
-        </li>
-        <li>
-          <a>登录反馈</a>
-        </li>
-      </ul>
+      <p>最省心的智慧工地综合服务商</p>
     </div>
     <!-- 主体内容 -->
     <div class="content">
@@ -48,63 +17,47 @@
         <div class="login-title">用户登录</div>
         <div class="from">
           <i class="user"></i>
-          <input type="text" placeholder="请输入账号" v-model="user_name" @keyup.enter="login">
+          <input type="text" placeholder="请输入账号" v-model="user_name" @keyup.enter="login" />
           <i class="password"></i>
-          <input type="password" placeholder="请输入密码" v-model="pwd" @keyup.enter="login" ref="passWord">
+          <input
+            type="password"
+            placeholder="请输入密码"
+            v-model="pwd"
+            @keyup.enter="login"
+            ref="passWord"
+          />
           <el-tooltip effect="dark" content="记住密码" placement="right">
             <el-checkbox v-model="save"></el-checkbox>
           </el-tooltip>
           <a @click="login"></a>
         </div>
         <div class="logo"></div>
-        <!-- <div class="copyright">虎匠公司版权所有©1997-2019</div> -->
-        <div class="light"></div>
       </div>
     </div>
     <!-- 底部通栏 -->
     <div class="bottom">
       <ul>
         <li>
-            <img src="../../../static/images/login1.png" alt="">
-            <p class="title">
-                集成管理
-            </p>
-            <p class="text">
-                实现智慧工地统一部署、统一维护、统一运行监控、统一集成展现
-            </p>
+          <img src="../../../static/images/login1.png" alt />
+          <p class="title">关于虎匠</p>
         </li>
         <li>
-            <img src="../../../static/images/login2.png" alt="">
-            <p class="title">
-                集成管理
-            </p>
-            <p class="text">
-                实现智慧工地统一部署、统一维护、统一运行监控、统一集成展现
-            </p>
+          <img src="../../../static/images/login2.png" alt />
+          <p class="title">产品介绍</p>
         </li>
         <li>
-            <img src="../../../static/images/login3.png" alt="">
-            <p class="title">
-                集成管理
-            </p>
-            <p class="text">
-                实现智慧工地统一部署、统一维护、统一运行监控、统一集成展现
-            </p>
+          <img src="../../../static/images/login3.png" alt />
+          <p class="title">经典案例</p>
         </li>
         <li>
-            <img src="../../../static/images/login4.png" alt="">
-            <p class="title">
-                集成管理
-            </p>
-            <p class="text">
-                实现智慧工地统一部署、统一维护、统一运行监控、统一集成展现
-            </p>
+          <img src="../../../static/images/login4.png" alt />
+          <p class="title">联系我们</p>
         </li>
       </ul>
-      <div class="registration-number">
-        <p>Copyright © 2018 - 2020 深圳市虎匠科技投资发展有限公司版权所有</p>
-        <a data-v-7cc8a79a="" href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备18104689号</a>
-      </div>
+    </div>
+    <div class="registration-number">
+      <p>Copyright © 2018 - 2020 深圳市虎匠科技投资发展有限公司版权所有</p>
+      <a data-v-7cc8a79a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备18104689号</a>
     </div>
   </div>
 </template>
@@ -141,52 +94,58 @@ export default {
 
     // 2.0登录
     login() {
-      if (this.user_name==''||this.pwd=='') {
+      if (this.user_name == "" || this.pwd == "") {
         this.$message({
-          type: 'warning',
-          message: '账号或密码不得为空'
-        })
+          type: "warning",
+          message: "账号或密码不得为空"
+        });
       } else {
-        this.$axios.post(`/api/system/computer/login?userAccount=${this.user_name}&userPassword=${this.$md5(this.pwd)}&entry=1`).then(res => {
-          if (res.data.code == -1) {
-            this.$message({
-            type: 'warning',
-            message: '账号或密码错误！请重新输入'
-          })
-            this.pwd = ""
-            this.$refs.passWord.focus()
-          } else {
-            if (this.save) {
-              localStorage.setItem("userAccount", this.user_name)
-              localStorage.setItem("userPassword", this.pwd)
-            }
-            sessionStorage.setItem("islogin", "true")
-            sessionStorage.setItem("pid", res.data.data.projectId)
-            sessionStorage.setItem("cid", res.data.data.companyId)
-            sessionStorage.setItem("userType", res.data.data.userType)
-            sessionStorage.setItem("userId", res.data.data.id)
-            sessionStorage.setItem("userAccount",res.data.data.userAccount)
-            sessionStorage.setItem('userName',res.data.data.userName)
-            localStorage.setItem("pid", 2977)
-            localStorage.setItem("islogin", "true")
-            if (res.data.data.userType == 2) {
-              this.$router.push({ path: "/systemHome" })
-              // this.$router.push({ path: "/systemLiangZhi" })
+        this.$axios
+          .post(
+            `/api/system/computer/login?userAccount=${
+              this.user_name
+            }&userPassword=${this.$md5(this.pwd)}&entry=1`
+          )
+          .then(res => {
+            if (res.data.code == -1) {
+              this.$message({
+                type: "warning",
+                message: "账号或密码错误！请重新输入"
+              });
+              this.pwd = "";
+              this.$refs.passWord.focus();
             } else {
-              this.$router.push({ path: "/homePage" })
+              if (this.save) {
+                localStorage.setItem("userAccount", this.user_name);
+                localStorage.setItem("userPassword", this.pwd);
+              }
+              sessionStorage.setItem("islogin", "true");
+              sessionStorage.setItem("pid", res.data.data.projectId);
+              sessionStorage.setItem("cid", res.data.data.companyId);
+              sessionStorage.setItem("userType", res.data.data.userType);
+              sessionStorage.setItem("userId", res.data.data.id);
+              sessionStorage.setItem("userAccount", res.data.data.userAccount);
+              sessionStorage.setItem("userName", res.data.data.userName);
+              localStorage.setItem("pid", 2977);
+              localStorage.setItem("islogin", "true");
+              if (res.data.data.userType == 2) {
+                this.$router.push({ path: "/systemHome" });
+                // this.$router.push({ path: "/systemLiangZhi" })
+              } else {
+                this.$router.push({ path: "/homePage" });
+              }
             }
-          }
-        })
+          });
       }
     },
 
     // 是否保存了密码
     hasPassWord() {
-      let userName = localStorage.getItem("userAccount")
-      let passWord = localStorage.getItem("userPassword")
+      let userName = localStorage.getItem("userAccount");
+      let passWord = localStorage.getItem("userPassword");
       if (userName && passWord) {
-        this.user_name = userName
-        this.pwd = passWord
+        this.user_name = userName;
+        this.pwd = passWord;
       }
     },
 
@@ -194,253 +153,221 @@ export default {
     header() {
       // this.$store.commit('changeSystemHeader', false)
       // this.$store.commit('changeHeader', false)
-    },
+    }
   },
   mounted() {
-    localStorage.setItem('home', false)
-    localStorage.setItem('system', false)
-    this.hasPassWord()
-    this.header()
+    localStorage.setItem("home", false);
+    localStorage.setItem("system", false);
+    this.hasPassWord();
+    this.header();
   }
-}
+};
 </script>
 
 <style lang="less">
 #main {
-  // height: 9.8rem;
+  height: 100vh;
+  min-height: 9.6rem;
   background-color: #fff;
+  user-select: none;
+  position: relative;
   .nav {
-    // height: 1.65rem;
-    height: .9rem;
-    padding: .2rem 0;
+    padding: 0.2rem 0;
+    margin-left: 3.2rem;
+    > div {
+      display: inline-block;
+    }
+    .logo-img {
+      width: 0.88rem;
+      height: 0.4rem;
+      background-image: url("../../../static/images/login_zh.png");
+      background-size: contain;
+    }
+    .logo-URL {
+      height: 0.4rem;
+      padding-right: 0.16rem;
+      border-right: 0.01rem solid #848484;
+      margin-left: 0.05rem;
+      margin-right: 0.17rem;
+      line-height: 0.2rem;
+      color: #848484;
+      vertical-align: top;
+      > p {
+        font-size: 0.18rem;
+        font-weight: 500;
+      }
+      > span {
+        font-size: 0.16rem;
+      }
+    }
+    > p {
+      display: inline-block;
+      color: #848484;
+      line-height: 0.4rem;
+      vertical-align: top;
+      font-size: 0.15rem;
+    }
   }
   .bottom {
-    height: 2.4rem;
-    padding: .3rem 2rem 0;
-    position: relative;
-    ul{
+    padding: 0.2rem 2rem;
+    ul {
       background-color: #fff;
       display: flex;
       justify-content: space-around;
-      li{
+      li {
         width: 2.9rem;
         text-align: center;
-        img{
+        img {
           width: 1.02rem;
           height: 1.02rem;
         }
-        .title{
-          font-size: .2rem;
+        .title {
+          font-size: 0.2rem;
           color: #048fe8;
-          margin-top: .13rem;
-        }
-        .text{
-          display: none;
-          font-size: .16rem;
-          margin-top: .1rem;
-          color: #848484;
+          margin-top: 0.13rem;
         }
       }
     }
-    .registration-number {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: .55rem;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      font-size: .16rem;
-      p {
-        margin-right: .1rem;
-      }
+  }
+  .registration-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 0.45rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    font-size: 0.16rem;
+    p {
+      margin-right: 0.1rem;
+    }
+    a {
+      font-size: 0.12rem;
     }
   }
   .content {
-    // width: 19.2rem;
-    height: 7.5rem;
-    background-image: url("../../../static/images/login_bg.png");
+    height: 6.5rem;
+    background-image: url("../../../static/images/login_light.png"), url("../../../static/images/login_bg.png");
     background-size: cover;
     position: relative;
-    // margin-top: -0.8rem;
-  }
-  /* 登录框样式 */
-  .content .login {
-    width: 3.99rem;
-    height: 4.17rem;
-    background-image: url("../../../static/images/login_border.png");
-    background-size: contain;
-    position: absolute;
-    right: 15%;
-    top: 50%;
-    transform: translateY(-50%);
-    padding-top: 0.38rem;
-  }
-  .content .login-title {
-    color: #fff;
-    font-size: 0.31rem;
-    font-weight: bolder;
-    line-height: 0.31rem;
-    text-align: center;
-  }
-  .content .from {
-    margin-top: 0.52rem;
-    position: relative;
-    /deep/.el-checkbox__inner {
-      width: .14rem;
-      height: .14rem;
+    background-position: center;
+    .login {
+      width: 3.99rem;
+      height: 4.17rem;
+      background-image: url("../../../static/images/login_border.png");
+      background-size: contain;
+      position: absolute;
+      right: 15%;
+      top: 50%;
+      transform: translateY(-50%);
+      padding-top: 0.38rem;
+      .login-title {
+        color: #fff;
+        font-size: 0.31rem;
+        font-weight: bolder;
+        line-height: 0.31rem;
+        text-align: center;
+      }
+      .from {
+        margin-top: 0.52rem;
+        position: relative;
+        /deep/.el-checkbox__inner {
+          width: 0.14rem;
+          height: 0.14rem;
+        }
+        .user {
+          background-image: url("../../../static/images/login_user.png");
+          left: 0.68rem;
+          top: 0.11rem;
+          z-index: 99;
+        }
+        i {
+          position: absolute;
+          width: 0.15rem;
+          height: 0.15rem;
+          background-size: contain;
+        }
+        input {
+          width: 2.92rem;
+          height: 0.38rem;
+          background-image: url("../../../static/images/login_input.png");
+          background-size: contain;
+          padding-left: 0.43rem;
+          position: absolute;
+          z-index: 10;
+          left: 50%;
+          transform: translate(-50%);
+          &:nth-child(4) {
+            margin-top: 0.63rem;
+          }
+        }
+        .password {
+          background-image: url("../../../static/images/login_password.png");
+          left: 0.68rem;
+          top: 0.77rem;
+          z-index: 99;
+        }
+        a {
+          width: 2.92rem;
+          height: 0.38rem;
+          background-image: url("../../../static/images/login_button.png");
+          background-size: contain;
+          position: absolute;
+          z-index: 10;
+          left: 50%;
+          transform: translate(-50%);
+          margin-top: 1.27rem;
+          overflow: hidden;
+          &:before {
+            content: "";
+            background-color: #fff;
+            opacity: 0.5;
+            display: block;
+            height: 100%;
+            width: 0.5rem;
+            transform: skewX(-45deg) translateX(0);
+            position: absolute;
+            top: 0;
+            left: -0.7rem;
+          }
+          &:hover {
+            &:before {
+              transform: skewX(-45deg) translateX(3.8rem);
+              transition: all 0.5s ease-in-out;
+            }
+          }
+          &:active {
+            opacity: 0.5;
+            transition: all 0.2s ease-in-out;
+          }
+        }
+      }
+      .logo {
+        width: 1.5rem;
+        height: 0.6rem;
+        bottom: 0.3rem;
+        background-image: url("../../../static/images/yzt-whiteLogo.png");
+        // background-image: url("../../../static/images/lbrj_login.png");
+        // background-image: url("../../../static/images/hj_login.png");
+        background-size: contain;
+        position: absolute;
+        z-index: 10;
+        left: 50%;
+        transform: translate(-50%);
+      }
     }
   }
-  .content .from input {
-    width: 2.92rem;
-    height: 0.38rem;
-    background-image: url("../../../static/images/login_input.png");
-    background-size: contain;
-    padding-left: 0.43rem;
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    transform: translate(-50%);
-  }
-  .content .from input:nth-child(4) {
-    margin-top: 0.63rem;
-  }
-  .content .from a {
-    width: 2.92rem;
-    height: 0.38rem;
-    background-image: url("../../../static/images/login_button.png");
-    background-size: contain;
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    transform: translate(-50%);
-    margin-top: 1.27rem;
-  }
-  .content .from i {
-    position: absolute;
-    width: 0.15rem;
-    height: 0.15rem;
-    background-size: contain;
-  }
-  .content .from .user {
-    background-image: url("../../../static/images/login_user.png");
-    left: 0.68rem;
-    top: 0.11rem;
-    z-index: 99;
-  }
-  .content .from .password {
-    background-image: url("../../../static/images/login_password.png");
-    left: 0.68rem;
-    top: 0.77rem;
-    z-index: 99;
-  }
-  .content .logo {
-    width: 1.5rem;
-    height: 0.6rem;
-    bottom: .3rem;
-    background-image: url("../../../static/images/yzt-whiteLogo.png");
-    // background-image: url("../../../static/images/lbrj_login.png");
-    // background-image: url("../../../static/images/hj_login.png");
-    background-size: contain;
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    transform: translate(-50%);
-  }
-  .content .copyright {
-    font-size: 0.12rem;
-    text-align: center;
-    color: #d6d8de;
-    line-height: 0.12rem;
-    margin-top: 2.48rem;
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    transform: translate(-50%);
-  }
-  .content .light {
-    // width: 19.2rem;
-    height: 7.5rem;
-    background-image: url("../../../static/images/login_light.png");
-    background-size: contain;
-    position: absolute;
-    top: -1.44rem;
-    right: -4.2rem;
-    z-index: 1;
-  }
-  /* 导航栏样式 */
-  .nav .nav-logo {
-    float: left;
-    height: 0.4rem;
-    margin-left: 4.2rem;
-  }
-  .nav .nav-logo > div {
-    float: left;
-  }
-  .nav .logo-img {
-    width: 0.88rem;
-    height: 0.4rem;
-    background-image: url("../../../static/images/login_zh.png");
-    background-size: contain;
-  }
-  .nav .logo-URL {
-    height: 0.4rem;
-    padding-right: 0.16rem;
-    border-right: 0.01rem solid #848484;
-    margin-left: 0.05rem;
-    margin-right: 0.17rem;
-  }
-  .nav .logo-URL p {
-    font-size: 0.18rem;
-    color: #848484;
-    height: 0.2rem;
-    font-weight: 500;
-  }
-  .nav .logo-URL span {
-    font-size: 0.16rem;
-    color: #848484;
-  }
-  .nav .nav-logo > span {
-    font-size: 0.15rem;
-    color: #848484;
-    line-height: 0.4rem;
-  }
-  .nav ul {
-    padding-top: 0.2rem;
-    float: left;
-    margin-left: 1.82rem;
-  }
-  .nav ul li {
-    float: left;
-    margin-left: 0.15rem;
-  }
-  .nav ul li a {
-    color: #848484;
-    font-size: 0.13rem;
-  }
-  /* 占位符样式 */
-  ::-webkit-input-placeholder {
-    color: #848484;
-  }
-  ::-moz-placeholder {
-    color: #848484;
-  } /* firefox 19+ */
-  :-ms-input-placeholder {
-    color: #848484;
-  } /* Internet Explorer 10+ */
-  :-moz-placeholder {
-    color: #848484;
-  } /* firefox 14-18 */
   .el-checkbox {
     position: absolute;
-    top: .7rem;
-    right: .7rem;
+    top: 0.7rem;
+    right: 0.7rem;
     z-index: 20;
     .el-checkbox__inner {
       border: 1px solid #333;
     }
-    .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+    .el-checkbox__input.is-checked .el-checkbox__inner,
+    .el-checkbox__input.is-indeterminate .el-checkbox__inner {
       border: 1px solid #409eff;
     }
     input {

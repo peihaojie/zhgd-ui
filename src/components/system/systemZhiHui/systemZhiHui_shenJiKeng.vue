@@ -6,7 +6,11 @@
         <!-- 按钮区域 -->
         <div class="button-box">
           <div class="top-button">
-            <a class="history" @click="alarmShow=false;historyShow=true,historyClick()" v-show="!historyShow">
+            <a
+              class="history"
+              @click="alarmShow=false;historyShow=true,historyClick()"
+              v-show="!historyShow"
+            >
               <i class="icon"></i>
               历史记录
             </a>
@@ -34,7 +38,7 @@
         <div class="alarm-box">
           <div class="title">
             <span style="font-weight: bolder;">警报状态</span>
-            <span>报警数：{{allOfAlarm}}</span>
+            <span>报警数：{{allOfAlarm ? allOfAlarm : 0}}</span>
           </div>
           <div class="alarm-chart" id="alarmChart"></div>
           <div class="list-box">
@@ -57,7 +61,7 @@
               <i class="icon"></i>
               {{ deviceName }}
             </div>
-            <div class="rank">
+            <!-- <div class="rank">
               <i class="dot"></i>
               暂无数据
             </div>
@@ -76,7 +80,7 @@
             <div class="rank">
               <i class="dot one"></i>
               一级预警
-            </div>
+            </div>-->
           </div>
           <!-- 导航栏 -->
           <div class="nav">
@@ -100,7 +104,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="stageListChild" placeholder="请选择" @change="getStage(1, 4),getStageFourHoverList(),getStageMax()">
+                <el-select
+                  v-model="stageListChild"
+                  placeholder="请选择"
+                  @change="getStage(1, 4),getStageFourHoverList(),getStageMax()"
+                >
                   <el-option
                     v-for="item in stageList"
                     :key="item.id"
@@ -109,111 +117,43 @@
                   ></el-option>
                 </el-select>
               </div>
-              <!-- <div class="right-search">
-                <div class="input-box">
-                  <input type="text" placeholder="请输入测点名称搜索" />
-                  <a class="el-icon-search"></a>
-                </div>
-              </div> -->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
                 <span>检测点</span>
-                <span>当日数据趋势图</span>
-                <span style="width:2.4rem;">当日数据列表</span>
+                <span style="margin-right: 4rem;">当日数据趋势图</span>
               </div>
               <div class="top-box">
                 <!-- 检测点 -->
-                <div class="left-box">
-                  <div class="name">
-                    {{filterStage(stageListChild)}}
-                  </div>
+                <div class="left-box" style="width: 1.8rem;">
+                  <div class="name">{{filterStage(stageListChild)}}</div>
                   <ul>
                     <li>基坑：{{deviceName}}</li>
-                    <li>最大值：{{stageMaxList.max}}m</li>
-                    <li>最小值：{{stageMaxList.min}}m</li>
-                    <li>平均值：{{stageMaxList.avg}}m</li>
+                    <li>最大值：{{stageMaxList.max ? stageMaxList.max : 0}}m</li>
+                    <li>最小值：{{stageMaxList.min ? stageMaxList.min : 0}}m</li>
+                    <li>平均值：{{stageMaxList.avg ? parseFloat(stageMaxList.avg).toFixed(3) : 0}}m</li>
                   </ul>
                 </div>
                 <!-- 当日数据趋势图 -->
                 <div class="line-chart" id="oneChart"></div>
-                <!-- 当日数据列表 -->
-                <div class="right-box">
-                  <ul>
-                    <li>
-                      <span style="width:1.4rem;">时间</span>
-                      <span style="width:2rem;">地下水位(m)</span>
-                      <!-- <span style="width:.4rem;">状态</span> -->
-                    </li>
-                    <li>
-                      <span style="width:1.4rem;">00:00</span>
-                      <span style="width:2rem;">{{stageFourHoverList[0]}}</span>
-                    </li>
-                    <li>
-                      <span style="width:1.4rem;">04:00</span>
-                      <span style="width:2rem;">{{stageFourHoverList[1]}}</span>
-                    </li>
-                    <li>
-                      <span style="width:1.4rem;">08:00</span>
-                      <span style="width:2rem;">{{stageFourHoverList[2]}}</span>
-                    </li>
-                    <li>
-                      <span style="width:1.4rem;">12:00</span>
-                      <span style="width:2rem;">{{stageFourHoverList[3]}}</span>
-                    </li>
-                    <li>
-                      <span style="width:1.4rem;">16:00</span>
-                      <span style="width:2rem;">{{stageFourHoverList[4]}}</span>
-                    </li>
-                    <li>
-                      <span style="width:1.4rem;">20:00</span>
-                      <span style="width:2rem;">{{stageFourHoverList[5]}}</span>
-                    </li>
-                    <!-- <li>
-                      <span style="width:2rem;">0.63</span>
-                      <span style="width:1rem;">12:12</span>
-                      <span style="width:.4rem;">
-                        <i class="dot"></i>
-                      </span>
-                    </li>
-                    <li>
-                      <span style="width:2rem;">0.5</span>
-                      <span style="width:1rem;">13:13</span>
-                      <span style="width:.4rem;">
-                        <i class="dot"></i>
-                      </span>
-                    </li> -->
-                  </ul>
-                </div>
               </div>
               <div class="table-height">
-                <span style="width:33%;">检测点</span>
-                <span style="width:33%;">地下水位(m)</span>
-                <span style="width:33%;">采集时间</span>
+                <span style="width: 33%;">检测点</span>
+                <span style="width: 33%;">地下水位(m)</span>
+                <span style="width: 33%;">采集时间</span>
               </div>
               <div class="bottom-box">
                 <ul>
-                  <li v-for="(item, index) in stageTable" :key="item.id" :class="{'even':index%2!=0}">
+                  <li
+                    v-for="(item, index) in stageTable"
+                    :key="item.id"
+                    :class="{'even':index%2!=0}"
+                  >
                     <span style="width:33%;">{{filterStage(item.factorId)}}</span>
                     <span style="width:33%;">{{item.waterLevel}}</span>
                     <span style="width:33%;">{{item.creation}}</span>
                   </li>
-                  <!-- <li class="even">
-                    <span style="width:33%;">JH-01</span>
-                    <span style="width:33%;">0.5</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li>
-                  <li>
-                    <span style="width:33%;">JW-01</span>
-                    <span style="width:33%;">1.2</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li>
-                  <li class="even">
-                    <span style="width:33%;">WU-01</span>
-                    <span style="width:33%;">0.5</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li> -->
                 </ul>
               </div>
             </div>
@@ -224,7 +164,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="offsetListChild" placeholder="请选择" @change="getOffset(1, 4),getOffsetFourHoverList()">
+                <el-select
+                  v-model="offsetListChild"
+                  placeholder="请选择"
+                  @change="getOffset(1, 4),getOffsetFourHoverList()"
+                >
                   <el-option
                     v-for="item in offsetList"
                     :key="item.id"
@@ -238,7 +182,7 @@
                   <input type="text" placeholder="请输入测点名称搜索" />
                   <a class="el-icon-search"></a>
                 </div>
-              </div> -->
+              </div>-->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
@@ -250,9 +194,7 @@
               <div class="top-box">
                 <!-- 检测点 -->
                 <div class="left-box">
-                  <div class="name">
-                    {{filterOffset(offsetListChild)}}
-                  </div>
+                  <div class="name">{{filterOffset(offsetListChild)}}</div>
                   <ul v-if="offsetTable.length>0">
                     <li>基坑：{{deviceName}}</li>
                     <li>X方向累计位移：{{offsetTable[offsetTable.length-1].levelAccumulateX}}mm</li>
@@ -314,7 +256,7 @@
                       <span style="width:.4rem;">
                         <i class="dot"></i>
                       </span>
-                    </li> -->
+                    </li>-->
                   </ul>
                 </div>
               </div>
@@ -326,7 +268,11 @@
               </div>
               <div class="bottom-box">
                 <ul>
-                  <li v-for="(item, index) in offsetTable" :key="item.id" :class="{'even':index%2!=0}">
+                  <li
+                    v-for="(item, index) in offsetTable"
+                    :key="item.id"
+                    :class="{'even':index%2!=0}"
+                  >
                     <span style="width:25%;">{{filterOffset(item.factorId)}}</span>
                     <span style="width:25%;">{{item.levelX}}</span>
                     <span style="width:25%;">{{item.levelY}}</span>
@@ -346,7 +292,7 @@
                     <span style="width:33%;">WU-01</span>
                     <span style="width:33%;">25</span>
                     <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li> -->
+                  </li>-->
                 </ul>
               </div>
             </div>
@@ -357,7 +303,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="subsideListChild" placeholder="请选择" @change="getSubside(1, 4),getSubsideFourHoverList(),getSubsideMax()">
+                <el-select
+                  v-model="subsideListChild"
+                  placeholder="请选择"
+                  @change="getSubside(1, 4),getSubsideFourHoverList(),getSubsideMax()"
+                >
                   <el-option
                     v-for="item in subsideList"
                     :key="item.id"
@@ -371,7 +321,7 @@
                   <input type="text" placeholder="请输入测点名称搜索" />
                   <a class="el-icon-search"></a>
                 </div>
-              </div> -->
+              </div>-->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
@@ -383,9 +333,7 @@
               <div class="top-box">
                 <!-- 检测点 -->
                 <div class="left-box">
-                  <div class="name">
-                    {{filterSubside(subsideListChild)}}
-                  </div>
+                  <div class="name">{{filterSubside(subsideListChild)}}</div>
                   <ul>
                     <li>基坑：{{deviceName}}</li>
                     <li>最大值：{{subsideMaxList.max}}mm</li>
@@ -439,7 +387,7 @@
                       <span style="width:.4rem;">
                         <i class="dot"></i>
                       </span>
-                    </li> -->
+                    </li>-->
                   </ul>
                 </div>
               </div>
@@ -450,7 +398,11 @@
               </div>
               <div class="bottom-box">
                 <ul>
-                  <li v-for="(item, index) in subsideTable" :key="item.id" :class="{'even':index%2!=0}">
+                  <li
+                    v-for="(item, index) in subsideTable"
+                    :key="item.id"
+                    :class="{'even':index%2!=0}"
+                  >
                     <span style="width:33%;">{{filterSubside(item.factorId)}}</span>
                     <span style="width:33%;">{{item.subside}}</span>
                     <span style="width:33%;">{{item.creation}}</span>
@@ -469,7 +421,7 @@
                     <span style="width:33%;">WU-01</span>
                     <span style="width:33%;">25</span>
                     <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li> -->
+                  </li>-->
                 </ul>
               </div>
             </div>
@@ -494,7 +446,7 @@
                   <input type="text" placeholder="请输入测点名称搜索" />
                   <a class="el-icon-search"></a>
                 </div>
-              </div> -->
+              </div>-->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
@@ -588,7 +540,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="productListChild" placeholder="请选择" @change="getProduct(1, 4),getProductFourHoverList()">
+                <el-select
+                  v-model="productListChild"
+                  placeholder="请选择"
+                  @change="getProduct(1, 4),getProductFourHoverList()"
+                >
                   <el-option
                     v-for="item in productList"
                     :key="item.id"
@@ -602,7 +558,7 @@
                   <input type="text" placeholder="请输入测点名称搜索" />
                   <a class="el-icon-search"></a>
                 </div>
-              </div> -->
+              </div>-->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
@@ -614,9 +570,7 @@
               <div class="top-box">
                 <!-- 检测点 -->
                 <div class="left-box">
-                  <div class="name">
-                    {{filterProduct(productListChild)}}
-                  </div>
+                  <div class="name">{{filterProduct(productListChild)}}</div>
                   <ul v-if="productTable.length>0">
                     <li>基坑：{{deviceName}}</li>
                     <li>实时频率：{{productTable[productTable.length-1].strainFrequency}}HZ</li>
@@ -628,7 +582,7 @@
                 <!-- 当日数据列表 -->
                 <!-- <div class="right-box"> -->
                 <div class="line-chart" id="structureTemperature"></div>
-                  <!-- <ul>
+                <!-- <ul>
                     <li>
                       <span style="width:2rem;">支撑轴力(FN)</span>
                       <span style="width:1rem;">时间</span>
@@ -655,7 +609,7 @@
                         <i class="dot"></i>
                       </span>
                     </li>
-                  </ul> -->
+                </ul>-->
                 <!-- </div> -->
               </div>
               <div class="table-height">
@@ -666,7 +620,11 @@
               </div>
               <div class="bottom-box">
                 <ul>
-                  <li v-for="(item, index) in productTable" :key="item.id" :class="{'even':index%2!=0}">
+                  <li
+                    v-for="(item, index) in productTable"
+                    :key="item.id"
+                    :class="{'even':index%2!=0}"
+                  >
                     <span style="width:25%;">{{filterProduct(item.factorId)}}</span>
                     <span style="width:25%;">{{item.strainFrequency}}</span>
                     <span style="width:25%;">{{item.strainTemperature}}</span>
@@ -686,7 +644,7 @@
                     <span style="width:33%;">WU-01</span>
                     <span style="width:33%;">25%</span>
                     <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li> -->
+                  </li>-->
                 </ul>
               </div>
             </div>
@@ -711,7 +669,7 @@
                   <input type="text" placeholder="请输入测点名称搜索" />
                   <a class="el-icon-search"></a>
                 </div>
-              </div> -->
+              </div>-->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
@@ -723,9 +681,7 @@
               <div class="top-box">
                 <!-- 检测点 -->
                 <div class="left-box">
-                  <div class="name">
-                    {{filterBias(biasListChild)}}
-                  </div>
+                  <div class="name">{{filterBias(biasListChild)}}</div>
                   <ul v-if="biasTable.length>0">
                     <li>基坑：{{deviceName}}</li>
                     <li>X轴方向倾斜：{{biasTable[biasTable.length-1].tiltX}}°</li>
@@ -765,7 +721,7 @@
                       </span>
                     </li>
                   </ul>
-                </div> -->
+                </div>-->
               </div>
               <div class="table-height">
                 <span style="width:25%;">检测点</span>
@@ -775,7 +731,11 @@
               </div>
               <div class="bottom-box">
                 <ul>
-                  <li v-for="(item, index) in biasTable" :key="item.id" :class="{'even':index%2!=0}">
+                  <li
+                    v-for="(item, index) in biasTable"
+                    :key="item.id"
+                    :class="{'even':index%2!=0}"
+                  >
                     <span style="width:25%;">{{filterBias(item.factorId)}}</span>
                     <span style="width:25%;">{{item.tiltX}}</span>
                     <span style="width:25%;">{{item.tiltY}}</span>
@@ -795,7 +755,7 @@
                     <span style="width:33%;">WU-01</span>
                     <span style="width:33%;">25%</span>
                     <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li> -->
+                  </li>-->
                 </ul>
               </div>
             </div>
@@ -807,7 +767,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="stageListChild" placeholder="请选择" @change="getStageHistory('today')">
+                <el-select
+                  v-model="stageListChild"
+                  placeholder="请选择"
+                  @change="getStageHistory('today')"
+                >
                   <el-option
                     v-for="item in stageList"
                     :key="item.id"
@@ -828,9 +792,9 @@
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
-                <span> </span>
+                <span></span>
                 <span>当日数据趋势图</span>
-                <span> </span>
+                <span></span>
               </div>
               <div class="top-box">
                 <!-- 当日数据趋势图 -->
@@ -842,9 +806,7 @@
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
                     <el-table-column label="检测点">
-                      <template slot-scope="scope">
-                        {{filterStage(scope.row.factorId)}}
-                      </template>
+                      <template slot-scope="scope">{{filterStage(scope.row.factorId)}}</template>
                     </el-table-column>
                     <el-table-column prop="waterLevel" label="地下水位（m）"></el-table-column>
                     <!-- <el-table-column>
@@ -853,7 +815,7 @@
                           :style="`color:${scope.row.status==0?'#fe8990':'#58de87'}`"
                         >{{scope.row.status==0?'不合格':'合格'}}</div>
                       </template>
-                    </el-table-column> -->
+                    </el-table-column>-->
                     <el-table-column prop="creation" label="时间"></el-table-column>
                   </el-table>
                   <el-pagination
@@ -867,7 +829,11 @@
                 </div>
                 <div class="seeMore" v-show="seeMore"></div>
               </div>
-              <div class="seeMoreClick" @click="historyTableChangeHeight('add')" v-show="seeMore">查看更多数据</div>
+              <div
+                class="seeMoreClick"
+                @click="historyTableChangeHeight('add')"
+                v-show="seeMore"
+              >查看更多数据</div>
             </div>
           </div>
           <!-- 水平位移历史数据 -->
@@ -876,7 +842,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="offsetListChild" placeholder="请选择" @change="getOffsetHistory('today')">
+                <el-select
+                  v-model="offsetListChild"
+                  placeholder="请选择"
+                  @change="getOffsetHistory('today')"
+                >
                   <el-option
                     v-for="item in offsetList"
                     :key="item.id"
@@ -897,9 +867,9 @@
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
-                <span> </span>
+                <span></span>
                 <span>当日数据趋势图</span>
-                <span> </span>
+                <span></span>
               </div>
               <div class="top-box">
                 <!-- 当日数据趋势图 -->
@@ -911,9 +881,7 @@
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
                     <el-table-column label="检测点" width="150">
-                      <template slot-scope="scope">
-                        {{filterOffset(scope.row.factorId)}}
-                      </template>
+                      <template slot-scope="scope">{{filterOffset(scope.row.factorId)}}</template>
                     </el-table-column>
                     <el-table-column prop="levelX" label="X轴位移（mm）" width="150"></el-table-column>
                     <el-table-column prop="levelY" label="Y轴位移（mm）" width="150"></el-table-column>
@@ -932,7 +900,11 @@
                 </div>
                 <div class="seeMore" v-show="seeMore"></div>
               </div>
-              <div class="seeMoreClick" @click="historyTableChangeHeight('add')" v-show="seeMore">查看更多数据</div>
+              <div
+                class="seeMoreClick"
+                @click="historyTableChangeHeight('add')"
+                v-show="seeMore"
+              >查看更多数据</div>
             </div>
           </div>
           <!-- 周边沉降历史数据 -->
@@ -941,7 +913,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="subsideListChild" placeholder="请选择" @change="getSubsideHistory('today')">
+                <el-select
+                  v-model="subsideListChild"
+                  placeholder="请选择"
+                  @change="getSubsideHistory('today')"
+                >
                   <el-option
                     v-for="item in subsideList"
                     :key="item.id"
@@ -962,9 +938,9 @@
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
-                <span> </span>
+                <span></span>
                 <span>当日数据趋势图</span>
-                <span> </span>
+                <span></span>
               </div>
               <div class="top-box">
                 <!-- 当日数据趋势图 -->
@@ -976,9 +952,7 @@
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
                     <el-table-column label="检测点" width="150">
-                      <template slot-scope="scope">
-                        {{filterSubside(scope.row.factorId)}}
-                      </template>
+                      <template slot-scope="scope">{{filterSubside(scope.row.factorId)}}</template>
                     </el-table-column>
                     <el-table-column prop="subside" label="周边沉降(mm)" width="150"></el-table-column>
                     <el-table-column prop="creation" label="时间"></el-table-column>
@@ -994,7 +968,11 @@
                 </div>
                 <div class="seeMore" v-show="seeMore"></div>
               </div>
-              <div class="seeMoreClick" @click="historyTableChangeHeight('add')" v-show="seeMore">查看更多数据</div>
+              <div
+                class="seeMoreClick"
+                @click="historyTableChangeHeight('add')"
+                v-show="seeMore"
+              >查看更多数据</div>
             </div>
           </div>
           <!-- 支撑轴力历史数据 暂时未开发 -->
@@ -1060,7 +1038,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="productListChild" placeholder="请选择" @change="getProductHistory('today')">
+                <el-select
+                  v-model="productListChild"
+                  placeholder="请选择"
+                  @change="getProductHistory('today')"
+                >
                   <el-option
                     v-for="item in productList"
                     :key="item.id"
@@ -1081,9 +1063,9 @@
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
-                <span> </span>
+                <span></span>
                 <span>当日数据趋势图</span>
-                <span> </span>
+                <span></span>
               </div>
               <div class="top-box">
                 <!-- 当日数据趋势图 -->
@@ -1095,9 +1077,7 @@
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
                     <el-table-column label="检测点" width="150">
-                      <template slot-scope="scope">
-                        {{filterProduct(scope.row.factorId)}}
-                      </template>
+                      <template slot-scope="scope">{{filterProduct(scope.row.factorId)}}</template>
                     </el-table-column>
                     <el-table-column prop="strainFrequency" label="应变频率（HZ）" width="150"></el-table-column>
                     <el-table-column prop="strainTemperature" label="应变温度（℃）" width="150"></el-table-column>
@@ -1114,7 +1094,11 @@
                 </div>
                 <div class="seeMore" v-show="seeMore"></div>
               </div>
-              <div class="seeMoreClick" @click="historyTableChangeHeight('add')" v-show="seeMore">查看更多数据</div>
+              <div
+                class="seeMoreClick"
+                @click="historyTableChangeHeight('add')"
+                v-show="seeMore"
+              >查看更多数据</div>
             </div>
           </div>
           <!-- 建筑倾斜历史数据 -->
@@ -1123,7 +1107,11 @@
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="biasListChild" placeholder="请选择" @change="getBiasHistory('today')">
+                <el-select
+                  v-model="biasListChild"
+                  placeholder="请选择"
+                  @change="getBiasHistory('today')"
+                >
                   <el-option
                     v-for="item in biasList"
                     :key="item.id"
@@ -1144,9 +1132,9 @@
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
-                <span> </span>
+                <span></span>
                 <span>当日数据趋势图</span>
-                <span> </span>
+                <span></span>
               </div>
               <div class="top-box">
                 <!-- 当日数据趋势图 -->
@@ -1158,9 +1146,7 @@
                     <el-table-column type="selection" width="40"></el-table-column>
                     <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
                     <el-table-column label="检测点" width="150">
-                      <template slot-scope="scope">
-                        {{filterBias(scope.row.factorId)}}
-                      </template>
+                      <template slot-scope="scope">{{filterBias(scope.row.factorId)}}</template>
                     </el-table-column>
                     <el-table-column prop="tiltX" label="X方向倾斜(°)" width="150"></el-table-column>
                     <el-table-column prop="tiltY" label="Y方向倾斜(°)" width="150"></el-table-column>
@@ -1177,7 +1163,11 @@
                 </div>
                 <div class="seeMore" v-show="seeMore"></div>
               </div>
-              <div class="seeMoreClick" @click="historyTableChangeHeight('add')" v-show="seeMore">查看更多数据</div>
+              <div
+                class="seeMoreClick"
+                @click="historyTableChangeHeight('add')"
+                v-show="seeMore"
+              >查看更多数据</div>
             </div>
           </div>
         </div>
@@ -1192,7 +1182,7 @@
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
-              </el-select> -->
+              </el-select>-->
               <el-radio v-model="radio" label="1">实时</el-radio>
               <el-radio v-model="radio" label="2">历史</el-radio>
               <!-- <input type="text" placeholder="请输入测点名称搜索" /> -->
@@ -1221,7 +1211,7 @@
                 <template>
                   <a>确认</a>
                 </template>
-              </el-table-column> -->
+              </el-table-column>-->
             </el-table>
           </div>
           <div class="paging-box">
@@ -1247,9 +1237,9 @@
           <el-select v-if="handOverList.length>0" v-model="structureIdChange">
             <el-option
               v-for="item in handOverList"
-              :label = item.label
-              :value = item.value
-              :key = item.value
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
             ></el-option>
           </el-select>
         </div>
@@ -1263,7 +1253,7 @@
 </template>
 
 <style lang="less" scoped>
-@import '~@/assets/current';
+@import "~@/assets/current";
 #systemZhiHui_shenJiKeng {
   width: 100%;
   .content {
@@ -1277,7 +1267,7 @@
       border-right: 0.1rem solid #f7f7f7;
       .button-box {
         height: 1.45rem;
-        padding: 0.25rem .1rem;
+        padding: 0.25rem 0.1rem;
         border-bottom: 0.1rem solid #f7f7f7;
         .botton-button {
           margin-top: 0.25rem;
@@ -1417,7 +1407,7 @@
             }
           }
           .rank {
-            float:right;
+            float: right;
             height: 0.75rem;
             color: #4a4a4a;
             font-size: 0.18rem;
@@ -1479,8 +1469,11 @@
               }
             }
           }
-          .scroll-wrap::-webkit-scrollbar { width: 0 !important }
-          .el-icon-arrow-left, .el-icon-arrow-right {
+          .scroll-wrap::-webkit-scrollbar {
+            width: 0 !important;
+          }
+          .el-icon-arrow-left,
+          .el-icon-arrow-right {
             font-size: 0.3rem;
             position: absolute;
             line-height: 0.75rem;
@@ -1491,7 +1484,8 @@
           .el-icon-arrow-right {
             right: 0.3rem;
           }
-          .el-icon-arrow-left:hover, .el-icon-arrow-right:hover {
+          .el-icon-arrow-left:hover,
+          .el-icon-arrow-right:hover {
             text-shadow: 2px 2px 4px #000;
             cursor: pointer;
           }
@@ -1673,7 +1667,7 @@
                 /deep/.el-table {
                   height: 5.5rem;
                   margin-bottom: 0.1rem;
-                  content:'';
+                  content: "";
                   clear: both;
                   display: block;
                   width: 100%;
@@ -1716,14 +1710,14 @@
                 }
               }
               .seeMore {
-                  position: absolute;
-                  bottom: 0rem;
-                  height: 0.3rem;
-                  width: 100%;
-                  z-index: 10;
-                  background: #464646;
-                  filter: blur(40px);
-                }
+                position: absolute;
+                bottom: 0rem;
+                height: 0.3rem;
+                width: 100%;
+                z-index: 10;
+                background: #464646;
+                filter: blur(40px);
+              }
             }
             .seeMoreClick {
               line-height: 0.3rem;
@@ -1846,11 +1840,11 @@
 </style>
 
 <script>
-import mixin from '@/utils/mixin'
+import mixin from "@/utils/mixin";
 export default {
-  mixins:[mixin],
+  mixins: [mixin],
   data() {
-    var scrollWrap =  document.getElementById('scrollWrap')
+    var scrollWrap = document.getElementById("scrollWrap");
     return {
       selectShow: 1, // 当前模块
       alarmShow: false, // 警报模块状态
@@ -2084,7 +2078,7 @@ export default {
           level: 0.5, // 水平位移
           status: 1, // 状态
           time: "2019-10-10 19:19:19" // 时间
-        },
+        }
       ], // 水平位移历史数据列表
       date3: "", // 周边沉降历史数据起止时间
       historyTableData3: [
@@ -2176,29 +2170,29 @@ export default {
           time: "2019-10-10 19:19:19"
         }
       ], // 支撑轴力历史数据列表
-      deviceName: '', // 基坑名称
-      structureId: '', // 基坑ID
+      deviceName: "", // 基坑名称
+      structureId: "", // 基坑ID
       handOverList: [], // 切换设备列表
       showBackGround: false, // 显示弹窗背景
       dialog: false, // 弹窗的显示
-      structureIdChange: '', // 切换的列表发生变化
-      nowTime: '', // 当前的时间
+      structureIdChange: "", // 切换的列表发生变化
+      nowTime: "", // 当前的时间
       factorList: [], // 因素列表
-      stage: '', // 水位ID
-      offset: '', // 位移ID
-      subside: '', // 沉降ID
-      product: '', // 结构应变ID
-      bias: '', // 倾斜ID
+      stage: "", // 水位ID
+      offset: "", // 位移ID
+      subside: "", // 沉降ID
+      product: "", // 结构应变ID
+      bias: "", // 倾斜ID
       stageList: [], // 水位监测点列表
       offsetList: [], // 位移监测点列表
       subsideList: [], // 沉降监测点列表
       productList: [], // 结构监测点列表
       biasList: [], // 倾斜监测点列表
-      stageListChild: '', // 水位监测点列表的选项
-      offsetListChild: '', // 位移监测点列表的选项
-      subsideListChild: '', // 沉降监测点列表的选项
-      productListChild: '', // 结构监测点列表的选项
-      biasListChild: '', // 倾斜监测点列表的选项
+      stageListChild: "", // 水位监测点列表的选项
+      offsetListChild: "", // 位移监测点列表的选项
+      subsideListChild: "", // 沉降监测点列表的选项
+      productListChild: "", // 结构监测点列表的选项
+      biasListChild: "", // 倾斜监测点列表的选项
       pageSize: 14, // 历史记录表格显示条数
       pageNum: 1, // 历史记录的页码
       stageTable: [], // 水位监测点表格
@@ -2237,7 +2231,7 @@ export default {
       stageMaxList: {}, // 获取地下水位最大值列表
       subsideMaxList: {}, // 获取周边沉降最大值列表
       biasMaxList: {}, // 获取倾斜最大值列表
-      searchTime: '', // 搜索的时间
+      searchTime: "", // 搜索的时间
       alarmList: [], // 当天报警状态列表
       allAlarmList: [], // 所有报警列表
       alarmSize: 15, // 报警状态条数
@@ -2245,15 +2239,26 @@ export default {
       allOfAlarm: 0, // 总共的报警次数
       alarmListTotal: 0, // 报警表格数据总数
       alarmEchats: [], // 报警图表数据
-      stationList: [], // 报警搜索的测点显示
+      stationList: [] // 报警搜索的测点显示
     };
   },
   mounted() {
-    this.getTime()
-    this.getSelectStructure()
+    this.getTime();
+    this.getSelectStructure();
     // this.selectUserAlarms()
     // this.alarmChart();
     this.ifCart();
+    if (this.upDateDate) {
+      clearInterval(this.upDateDate);
+    }
+    this.upDateDate = setInterval(() => {
+      let date = new Date();
+      if (date.getMinutes() == 1 || date.getMinutes() == 31) {
+        this.getStageFourHoverList();
+        this.getStageMax();
+        this.getStage(1, 4);
+      }
+    }, 30000);
   },
   updated() {
     this.ifCart();
@@ -2266,10 +2271,16 @@ export default {
 
     // 获取当前时间
     getTime() {
-      var now = new Date()
-      var month = (parseInt(now.getMonth()) + parseInt(1)) < 10 ? '0' + (parseInt(now.getMonth()) + parseInt(1)) : (parseInt(now.getMonth()) + parseInt(1))
-      var day = parseInt(now.getDate()) < 10 ? '0' + parseInt(now.getDate()) : parseInt(now.getDate())
-      this.nowTime = now.getFullYear() + '-' + month + '-' + day
+      var now = new Date();
+      var month =
+        parseInt(now.getMonth()) + parseInt(1) < 10
+          ? "0" + (parseInt(now.getMonth()) + parseInt(1))
+          : parseInt(now.getMonth()) + parseInt(1);
+      var day =
+        parseInt(now.getDate()) < 10
+          ? "0" + parseInt(now.getDate())
+          : parseInt(now.getDate());
+      this.nowTime = now.getFullYear() + "-" + month + "-" + day;
       // this.nowTime = '2019-09-08'
       // this.nowTime = '2019-08-28'
     },
@@ -2279,28 +2290,32 @@ export default {
       this.$axios
         .post(`/api/hjDeeppit/selectStructure?projectId=${this.projectId}`)
         .then(res => {
-          this.deviceName = res.data.data[0].deviceName
-          this.structureId = res.data.data[0].deviceId
-          this.structureIdChange = this.structureId
+          this.deviceName = res.data.data[0].deviceName;
+          this.structureId = res.data.data[0].deviceId;
+          this.structureIdChange = this.structureId;
           for (let i = 0; i < res.data.data.length; i++) {
-            this.handOverList.push({label: '', value: ''})
-            this.$set(this.handOverList[i], 'label', res.data.data[i].deviceName)
-            this.$set(this.handOverList[i], 'value', res.data.data[i].deviceId)
+            this.handOverList.push({ label: "", value: "" });
+            this.$set(
+              this.handOverList[i],
+              "label",
+              res.data.data[i].deviceName
+            );
+            this.$set(this.handOverList[i], "value", res.data.data[i].deviceId);
           }
-          this.selectUserAlarms()
-          this.getSelectDisplay()
-          this.getAlarmEchats()
-        })
+          this.selectUserAlarms();
+          this.getSelectDisplay();
+          this.getAlarmEchats();
+        });
     },
 
     // 切换基坑
     structureIdChangeClick() {
-      this.structureId = this.structureIdChange
-      this.selectUserAlarms()
-      this.getSelectDisplay()
-      this.getAlarmEchats()
-      this.dialog = !this.dialog
-      this.showBackGround = !this.showBackGround
+      this.structureId = this.structureIdChange;
+      this.selectUserAlarms();
+      this.getSelectDisplay();
+      this.getAlarmEchats();
+      this.dialog = !this.dialog;
+      this.showBackGround = !this.showBackGround;
     },
 
     // 查询因素列表
@@ -2308,213 +2323,248 @@ export default {
       this.$axios
         .post(`/api/hjDeeppit/selectDisplay?structureId=${this.structureId}`)
         .then(res => {
-          this.factorList = res.data.data
-          if (this.factorList[0].name == '深层水平位移') {
-            this.selectShow = 2
-          } else if (this.factorList[0].name == '应变原始数据') {
-            this.selectShow = 5
-          } else if (this.factorList[0].name == '地下水位') {
-            this.selectShow = 1
-          } else if (this.factorList[0].name == '沉降') {
-            this.selectShow = 3
-          } else if (this.factorList[0].name == '建筑物倾斜') {
-            this.selectShow = 6
+          this.factorList = res.data.data;
+          if (this.factorList[0].name == "深层水平位移") {
+            this.selectShow = 2;
+          } else if (this.factorList[0].name == "应变原始数据") {
+            this.selectShow = 5;
+          } else if (this.factorList[0].name == "地下水位") {
+            this.selectShow = 1;
+          } else if (this.factorList[0].name == "沉降") {
+            this.selectShow = 3;
+          } else if (this.factorList[0].name == "建筑物倾斜") {
+            this.selectShow = 6;
           }
           for (let i = 0; i < this.factorList.length; i++) {
-            if (this.factorList[i].name == '深层水平位移') {
-              this.offset = this.factorList[i].id
-            } else if (this.factorList[i].name == '应变原始数据') {
-              this.product = this.factorList[i].id
-            } else if (this.factorList[i].name == '地下水位') {
-              this.stage = this.factorList[i].id
-            } else if (this.factorList[i].name == '沉降') {
-              this.subside = this.factorList[i].id
-            } else if (this.factorList[i].name == '建筑物倾斜') {
-              this.bias = this.factorList[i].id
+            if (this.factorList[i].name == "深层水平位移") {
+              this.offset = this.factorList[i].id;
+            } else if (this.factorList[i].name == "应变原始数据") {
+              this.product = this.factorList[i].id;
+            } else if (this.factorList[i].name == "地下水位") {
+              this.stage = this.factorList[i].id;
+            } else if (this.factorList[i].name == "沉降") {
+              this.subside = this.factorList[i].id;
+            } else if (this.factorList[i].name == "建筑物倾斜") {
+              this.bias = this.factorList[i].id;
             }
           }
-          this.getFactorList()
-        })
+          this.getFactorList();
+        });
     },
 
     // 获取监测点列表
     getFactorList() {
       if (this.stage > 0) {
         this.$axios
-          .post(`/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.stage}`)
+          .post(
+            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.stage}`
+          )
           .then(res => {
             if (res.data.code == 0) {
-              this.stageList = res.data.data
-              this.stageListChild = res.data.data[0].id
+              this.stageList = res.data.data;
+              this.stageListChild = res.data.data[0].id;
               // this.stageListChild = 4
-              this.getStage(1, 4)
-              this.getStageFourHoverList()
-              this.getStageMax()
+              this.getStage(1, 4);
+              this.getStageFourHoverList();
+              this.getStageMax();
             }
-          })
+          });
       }
       if (this.offset > 0) {
         this.$axios
-          .post(`/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.offset}`)
+          .post(
+            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.offset}`
+          )
           .then(res => {
             if (res.data.code == 0) {
-              this.offsetList = res.data.data
-              this.offsetListChild = res.data.data[0].id
+              this.offsetList = res.data.data;
+              this.offsetListChild = res.data.data[0].id;
               // this.offsetListChild = 1
-              this.getOffset(1, 4)
-              this.getOffsetFourHoverList()
+              this.getOffset(1, 4);
+              this.getOffsetFourHoverList();
             }
-          })
+          });
       }
       if (this.subside > 0) {
         this.$axios
-          .post(`/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.subside}`)
+          .post(
+            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.subside}`
+          )
           .then(res => {
             if (res.data.code == 0) {
-              this.subsideList = res.data.data
-              this.subsideListChild = res.data.data[0].id
+              this.subsideList = res.data.data;
+              this.subsideListChild = res.data.data[0].id;
               // this.subsideListChild = 17092
-              this.getSubside(1, 4)
-              this.getSubsideFourHoverList()
-              this.getSubsideMax()
+              this.getSubside(1, 4);
+              this.getSubsideFourHoverList();
+              this.getSubsideMax();
             }
-          })
+          });
       }
       if (this.product > 0) {
         this.$axios
-          .post(`/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.product}`)
+          .post(
+            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.product}`
+          )
           .then(res => {
-              if (res.data.code == 0) {
-                this.productList = res.data.data
-                this.productListChild = res.data.data[0].id
-                // this.productListChild = 3
-                this.getProduct(1, 4)
-                this.getProductFourHoverList()
-              }
-          })
+            if (res.data.code == 0) {
+              this.productList = res.data.data;
+              this.productListChild = res.data.data[0].id;
+              // this.productListChild = 3
+              this.getProduct(1, 4);
+              this.getProductFourHoverList();
+            }
+          });
       }
       if (this.bias > 0) {
         this.$axios
-          .post(`/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.bias}`)
+          .post(
+            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.bias}`
+          )
           .then(res => {
             if (res.data.code == 0) {
-              this.biasList = res.data.data
-              this.biasListChild = res.data.data[0].id
+              this.biasList = res.data.data;
+              this.biasListChild = res.data.data[0].id;
               // this.biasListChild = 2
-              this.getBias(1, 4)
-              this.getBiasFourHoverList()
-              this.getBiasMax()
+              this.getBias(1, 4);
+              this.getBiasFourHoverList();
+              this.getBiasMax();
             }
-          })
+          });
       }
     },
 
     // 获取测点水位数据
     getStage(num, size) {
       this.$axios
-        .post(`/api/hjDeeppit/getFactorData?factorId=${this.stageListChild}&date=${this.nowTime}&pageNum=${num || this.pageNum}&pageSize=${size || this.pageSize}&endTime=`)
+        .post(
+          `/api/hjDeeppit/getFactorData?factorId=${this.stageListChild}&date=${
+            this.nowTime
+          }&pageNum=${num || this.pageNum}&pageSize=${size ||
+            this.pageSize}&endTime=`
+        )
         .then(res => {
           if (!size) {
             // this.stageHistoryTable = res.data.data
           } else {
-            this.stageTable = res.data.data
+            this.stageTable = res.data.data;
           }
-        })
+        });
     },
 
     // 获取测点位移数据
     getOffset(num, size) {
       this.$axios
-        .post(`/api/hjDeeppit/getFactorData?factorId=${this.offsetListChild}&date=${this.nowTime}&pageNum=${num || this.pageNum}&pageSize=${size || this.pageSize}&endTime=`)
+        .post(
+          `/api/hjDeeppit/getFactorData?factorId=${this.offsetListChild}&date=${
+            this.nowTime
+          }&pageNum=${num || this.pageNum}&pageSize=${size ||
+            this.pageSize}&endTime=`
+        )
         .then(res => {
           if (!size) {
             // this.offsetHistoryTable = res.data.data
           } else {
-            this.offsetTable = res.data.data
+            this.offsetTable = res.data.data;
           }
-        })
+        });
     },
 
     // 获取测点沉降数据
     getSubside(num, size) {
       this.$axios
-        .post(`/api/hjDeeppit/getFactorData?factorId=${this.subsideListChild}&date=${this.nowTime}&pageNum=${num || this.pageNum}&pageSize=${size || this.pageSize}&endTime=`)
+        .post(
+          `/api/hjDeeppit/getFactorData?factorId=${
+            this.subsideListChild
+          }&date=${this.nowTime}&pageNum=${num ||
+            this.pageNum}&pageSize=${size || this.pageSize}&endTime=`
+        )
         .then(res => {
           if (!size) {
             // this.subsideHistoryTable = res.data.data
           } else {
-            this.subsideTable = res.data.data
+            this.subsideTable = res.data.data;
           }
-        })
+        });
     },
 
     // 获取测点结构数据
     getProduct(num, size) {
       this.$axios
-        .post(`/api/hjDeeppit/getFactorData?factorId=${this.productListChild}&date=${this.nowTime}&pageNum=${num || this.pageNum}&pageSize=${size || this.pageSize}&endTime=`)
+        .post(
+          `/api/hjDeeppit/getFactorData?factorId=${
+            this.productListChild
+          }&date=${this.nowTime}&pageNum=${num ||
+            this.pageNum}&pageSize=${size || this.pageSize}&endTime=`
+        )
         .then(res => {
           if (!size) {
             // this.productHistoryTable = res.data.data
           } else {
-            this.productTable = res.data.data
+            this.productTable = res.data.data;
           }
-        })
+        });
     },
 
     // 获取测点倾斜数据
     getBias(num, size) {
       this.$axios
-        .post(`/api/hjDeeppit/getFactorData?factorId=${this.biasListChild}&date=${this.nowTime}&pageNum=${num || this.pageNum}&pageSize=${size || this.pageSize}&endTime=`)
+        .post(
+          `/api/hjDeeppit/getFactorData?factorId=${this.biasListChild}&date=${
+            this.nowTime
+          }&pageNum=${num || this.pageNum}&pageSize=${size ||
+            this.pageSize}&endTime=`
+        )
         .then(res => {
           if (!size) {
             // this.biasHistoryTable = res.data.data
           } else {
-            this.biasTable = res.data.data
+            this.biasTable = res.data.data;
           }
-        })
+        });
     },
 
     // 显示水位监测点名称
-    filterStage(id){
+    filterStage(id) {
       for (let i = 0; i < this.stageList.length; i++) {
         if (this.stageList[i].id == id) {
-          return this.stageList[i].name
+          return this.stageList[i].name;
         }
       }
     },
 
     // 显示位移监测点名称
-    filterOffset(id){
+    filterOffset(id) {
       for (let i = 0; i < this.offsetList.length; i++) {
         if (this.offsetList[i].id == id) {
-          return this.offsetList[i].name
+          return this.offsetList[i].name;
         }
       }
     },
 
     // 显示沉降监测点名称
-    filterSubside(id){
+    filterSubside(id) {
       for (let i = 0; i < this.subsideList.length; i++) {
         if (this.subsideList[i].id == id) {
-          return this.subsideList[i].name
+          return this.subsideList[i].name;
         }
       }
     },
 
     // 显示结构监测点名称
-    filterProduct(id){
+    filterProduct(id) {
       for (let i = 0; i < this.productList.length; i++) {
         if (this.productList[i].id == id) {
-          return this.productList[i].name
+          return this.productList[i].name;
         }
       }
     },
 
     // 显示倾斜监测点名称
-    filterBias(id){
+    filterBias(id) {
       for (let i = 0; i < this.biasList.length; i++) {
         if (this.biasList[i].id == id) {
-          return this.biasList[i].name
+          return this.biasList[i].name;
         }
       }
     },
@@ -2522,111 +2572,132 @@ export default {
     // 获取水位四小时记录
     getStageFourHoverList() {
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.stageListChild}&date=${this.nowTime}&param=water_level`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.stageListChild}&date=${this.nowTime}&param=water_level`
+        )
         .then(res => {
-          this.stageFourHoverList = res.data
-        })
+          this.stageFourHoverList = res.data;
+          this.ifCart();
+        });
     },
 
     // 获取位移四小时记录
     getOffsetFourHoverList() {
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_x`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_x`
+        )
         .then(res => {
-          this.offsetFourHoverListX = res.data
-        })
+          this.offsetFourHoverListX = res.data;
+        });
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_y`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_y`
+        )
         .then(res => {
-          this.offsetFourHoverListY = res.data
-        })
+          this.offsetFourHoverListY = res.data;
+        });
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_accumulate_x`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_accumulate_x`
+        )
         .then(res => {
-          this.offsetHistoryFourHoverListX = res.data
-        })
+          this.offsetHistoryFourHoverListX = res.data;
+        });
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_accumulate_y`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.offsetListChild}&date=${this.nowTime}&param=level_accumulate_y`
+        )
         .then(res => {
-          this.offsetHistoryFourHoverListY = res.data
-        })
+          this.offsetHistoryFourHoverListY = res.data;
+        });
     },
 
     // 获取沉降四小时记录
     getSubsideFourHoverList() {
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.subsideListChild}&date=${this.nowTime}&param=subside`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.subsideListChild}&date=${this.nowTime}&param=subside`
+        )
         .then(res => {
-          this.subsideFourHoverList = res.data
-        })
+          this.subsideFourHoverList = res.data;
+        });
     },
 
     // 获取结构四小时记录
     getProductFourHoverList() {
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.productListChild}&date=${this.nowTime}&param=strain_frequency`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.productListChild}&date=${this.nowTime}&param=strain_frequency`
+        )
         .then(res => {
-          this.productHzFourHoverList = res.data
-        })
+          this.productHzFourHoverList = res.data;
+        });
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.productListChild}&date=${this.nowTime}&param=strain_temperature`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.productListChild}&date=${this.nowTime}&param=strain_temperature`
+        )
         .then(res => {
-          this.productTempFourHoverList = res.data
-        })
+          this.productTempFourHoverList = res.data;
+        });
     },
 
     // 获取倾斜四小时记录
     getBiasFourHoverList() {
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.biasListChild}&date=${this.nowTime}&param=tilt_x`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.biasListChild}&date=${this.nowTime}&param=tilt_x`
+        )
         .then(res => {
-          this.biasFourHoverListX = res.data
-        })
+          this.biasFourHoverListX = res.data;
+        });
       this.$axios
-        .post(`/api/hjDeeppit/selectSpecial?factorId=${this.biasListChild}&date=${this.nowTime}&param=tilt_y`)
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.biasListChild}&date=${this.nowTime}&param=tilt_y`
+        )
         .then(res => {
-          this.biasFourHoverListY = res.data
-        })
+          this.biasFourHoverListY = res.data;
+        });
     },
 
     // 历史记录翻页
     handlePageNum(val) {
-      this.pageNum = val
-      this.searchClick()
+      this.pageNum = val;
+      this.searchClick();
     },
 
     // 历史记录表格点击显示
     historyTableChangeHeight(add) {
       if (add) {
-        this.seeMore = false
+        this.seeMore = false;
         this.historyTableChange = {
-          height: '10rem',
-          top: '-3.2rem',
-          zIndex: '16'
-        }
+          height: "10rem",
+          top: "-3.2rem",
+          zIndex: "16"
+        };
       } else {
-        this.seeMore = true
-        this.historyTableChange = {}
+        this.seeMore = true;
+        this.historyTableChange = {};
       }
     },
 
     // 导航栏点击事件
     navClick(num) {
-      this.selectShow = num
+      this.selectShow = num;
       if (this.historyShow) {
-        this.searchTime = ''
-        this.pageNum = 1
-        this.historyTableChangeHeight()
+        this.searchTime = "";
+        this.pageNum = 1;
+        this.historyTableChangeHeight();
         if (this.selectShow == 1) {
-          this.getStageHistory('today')
+          this.getStageHistory("today");
         } else if (this.selectShow == 2) {
-          this.getOffsetHistory('today')
+          this.getOffsetHistory("today");
         } else if (this.selectShow == 3) {
-          this.getSubsideHistory('today')
+          this.getSubsideHistory("today");
         } else if (this.selectShow == 5) {
-          this.getProductHistory('today')
+          this.getProductHistory("today");
         } else if (this.selectShow == 6) {
-          this.getBiasHistory('today')
+          this.getBiasHistory("today");
         }
       }
     },
@@ -2634,19 +2705,23 @@ export default {
     // 获取地下水位最大值
     getStageMax() {
       this.$axios
-        .post(`/api/hjDeeppit/getParmeterAvg?displayId=${this.stage}&factorId=${this.stageListChild}`)
+        .post(
+          `/api/hjDeeppit/getParmeterAvg?displayId=${this.stage}&factorId=${this.stageListChild}`
+        )
         .then(res => {
-          this.stageMaxList = res.data.data
-        })
+          this.stageMaxList = res.data.data;
+        });
     },
 
     // 获取周边沉降最大值
     getSubsideMax() {
       this.$axios
-        .post(`/api/hjDeeppit/getParmeterAvg?displayId=${this.subside}&factorId=${this.subsideListChild}`)
+        .post(
+          `/api/hjDeeppit/getParmeterAvg?displayId=${this.subside}&factorId=${this.subsideListChild}`
+        )
         .then(res => {
-          this.subsideMaxList = res.data.data
-        })
+          this.subsideMaxList = res.data.data;
+        });
     },
 
     // 获取倾斜最大值 倾斜不知道怎么搞，等隆鑫回来 调用已经写了
@@ -2661,180 +2736,261 @@ export default {
     // 历史记录按钮点击事件
     historyClick() {
       if (this.selectShow == 1) {
-        this.getStageHistory('today')
+        this.getStageHistory("today");
       } else if (this.selectShow == 2) {
-        this.getOffsetHistory('today')
+        this.getOffsetHistory("today");
       } else if (this.selectShow == 3) {
-        this.getSubsideHistory('today')
+        this.getSubsideHistory("today");
       } else if (this.selectShow == 5) {
-        this.getProductHistory('today')
+        this.getProductHistory("today");
       } else if (this.selectShow == 6) {
-        this.getBiasHistory('today')
+        this.getBiasHistory("today");
       }
     },
 
     // 获取地下水位历史数据
     getStageHistory(today) {
       if (today) {
-        var startTime = this.nowTime + ' 00:00:00'
-        var endTime = this.nowTime + ' 23:59:59'
+        var startTime = this.nowTime + " 00:00:00";
+        var endTime = this.nowTime + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`
+          )
           .then(res => {
-            this.stageHistoryEcharts = res.data
-          })
+            this.stageHistoryEcharts = res.data;
+            this.ifCart();
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorDataT?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.stageHistoryTable = res.data.data
-            this.historyStageTolal = res.data.sum
-          })
+            this.stageHistoryTable = res.data.data;
+            this.historyStageTolal = res.data.sum;
+          });
       } else {
-        var startTime = this.searchTime[0].toLocaleDateString().split('/').join('-') + ' 00:00:00'
-        var endTime = this.searchTime[1].toLocaleDateString().split('/').join('-') + ' 23:59:59'
+        var startTime =
+          this.searchTime[0]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 00:00:00";
+        var endTime =
+          this.searchTime[1]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`
+          )
           .then(res => {
-            this.stageHistoryEcharts = res.data
-          })
+            this.stageHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorData?factorId=${this.stageListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorData?factorId=${this.stageListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.stageHistoryTable = res.data.data
-            this.historyStageTolal = res.data.sum
-          })
+            this.stageHistoryTable = res.data.data;
+            this.historyStageTolal = res.data.sum;
+          });
       }
     },
 
     // 获取位移历史数据
     getOffsetHistory(today) {
       if (today) {
-        var startTime = this.nowTime + ' 00:00:00'
-        var endTime = this.nowTime + ' 23:59:59'
+        var startTime = this.nowTime + " 00:00:00";
+        var endTime = this.nowTime + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.offset}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.offset}`
+          )
           .then(res => {
-            this.offsetHistoryEcharts = res.data
-          })
+            this.offsetHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorDataT?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.offsetHistoryTable = res.data.data
-            this.historyOffsetTolal = res.data.sum
-          })
+            this.offsetHistoryTable = res.data.data;
+            this.historyOffsetTolal = res.data.sum;
+          });
       } else {
-        var startTime = this.searchTime[0].toLocaleDateString().split('/').join('-') + ' 00:00:00'
-        var endTime = this.searchTime[1].toLocaleDateString().split('/').join('-') + ' 23:59:59'
+        var startTime =
+          this.searchTime[0]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 00:00:00";
+        var endTime =
+          this.searchTime[1]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.offset}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.offset}`
+          )
           .then(res => {
-            this.offsetHistoryEcharts = res.data
-          })
+            this.offsetHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorData?factorId=${this.offsetListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorData?factorId=${this.offsetListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.offsetHistoryTable = res.data.data
-            this.historyOffsetTolal = res.data.sum
-          })
+            this.offsetHistoryTable = res.data.data;
+            this.historyOffsetTolal = res.data.sum;
+          });
       }
     },
 
     // 获取沉降历史数据
     getSubsideHistory(today) {
       if (today) {
-        var startTime = this.nowTime + ' 00:00:00'
-        var endTime = this.nowTime + ' 23:59:59'
+        var startTime = this.nowTime + " 00:00:00";
+        var endTime = this.nowTime + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.subside}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.subside}`
+          )
           .then(res => {
-            this.subsideHistoryEcharts = res.data
-          })
+            this.subsideHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorDataT?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.subsideHistoryTable = res.data.data
-            this.historySubsideTolal = res.data.sum
-          })
+            this.subsideHistoryTable = res.data.data;
+            this.historySubsideTolal = res.data.sum;
+          });
       } else {
-        var startTime = this.searchTime[0].toLocaleDateString().split('/').join('-') + ' 00:00:00'
-        var endTime = this.searchTime[1].toLocaleDateString().split('/').join('-') + ' 23:59:59'
+        var startTime =
+          this.searchTime[0]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 00:00:00";
+        var endTime =
+          this.searchTime[1]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.subside}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.subside}`
+          )
           .then(res => {
-            this.subsideHistoryEcharts = res.data
-          })
+            this.subsideHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorData?factorId=${this.subsideListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorData?factorId=${this.subsideListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.subsideHistoryTable = res.data.data
-            this.historySubsideTolal = res.data.sum
-          })
+            this.subsideHistoryTable = res.data.data;
+            this.historySubsideTolal = res.data.sum;
+          });
       }
     },
 
     // 获取结构应变历史数据
     getProductHistory(today) {
       if (today) {
-        var startTime = this.nowTime + ' 00:00:00'
-        var endTime = this.nowTime + ' 23:59:59'
+        var startTime = this.nowTime + " 00:00:00";
+        var endTime = this.nowTime + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.product}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.product}`
+          )
           .then(res => {
-            this.productHistoryEcharts = res.data
-          })
+            this.productHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorDataT?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.productHistoryTable = res.data.data
-            this.historyProductTolal = res.data.sum
-          })
+            this.productHistoryTable = res.data.data;
+            this.historyProductTolal = res.data.sum;
+          });
       } else {
-        var startTime = this.searchTime[0].toLocaleDateString().split('/').join('-') + ' 00:00:00'
-        var endTime = this.searchTime[1].toLocaleDateString().split('/').join('-') + ' 23:59:59'
+        var startTime =
+          this.searchTime[0]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 00:00:00";
+        var endTime =
+          this.searchTime[1]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.product}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.product}`
+          )
           .then(res => {
-            this.productHistoryEcharts = res.data
-          })
+            this.productHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorData?factorId=${this.productListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorData?factorId=${this.productListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.productHistoryTable = res.data.data
-            this.historyProductTolal = res.data.sum
-          })
+            this.productHistoryTable = res.data.data;
+            this.historyProductTolal = res.data.sum;
+          });
       }
     },
 
     // 获取倾斜历史数据
     getBiasHistory(today) {
       if (today) {
-        var startTime = this.nowTime + ' 00:00:00'
-        var endTime = this.nowTime + ' 23:59:59'
+        var startTime = this.nowTime + " 00:00:00";
+        var endTime = this.nowTime + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.bias}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.bias}`
+          )
           .then(res => {
-            this.biasHistoryEcharts = res.data
-          })
+            this.biasHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorDataT?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.biasHistoryTable = res.data.data
-            this.historyBiasTolal = res.data.sum
-          })
+            this.biasHistoryTable = res.data.data;
+            this.historyBiasTolal = res.data.sum;
+          });
       } else {
-        var startTime = this.searchTime[0].toLocaleDateString().split('/').join('-') + ' 00:00:00'
-        var endTime = this.searchTime[1].toLocaleDateString().split('/').join('-') + ' 23:59:59'
+        var startTime =
+          this.searchTime[0]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 00:00:00";
+        var endTime =
+          this.searchTime[1]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 23:59:59";
         this.$axios
-          .post(`/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.bias}`)
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.bias}`
+          )
           .then(res => {
-            this.biasHistoryEcharts = res.data
-          })
+            this.biasHistoryEcharts = res.data;
+          });
         this.$axios
-          .post(`/api/hjDeeppit/getFactorData?factorId=${this.biasListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+          .post(
+            `/api/hjDeeppit/getFactorData?factorId=${this.biasListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
           .then(res => {
-            this.biasHistoryTable = res.data.data
-            this.historyBiasTolal = res.data.sum
-          })
+            this.biasHistoryTable = res.data.data;
+            this.historyBiasTolal = res.data.sum;
+          });
       }
     },
 
@@ -2842,33 +2998,33 @@ export default {
     searchClick() {
       if (this.selectShow == 1) {
         if (this.searchTime) {
-          this.getStageHistory()
+          this.getStageHistory();
         } else {
-          this.getStageHistory('today')
+          this.getStageHistory("today");
         }
       } else if (this.selectShow == 2) {
         if (this.searchTime) {
-          this.getOffsetHistory()
+          this.getOffsetHistory();
         } else {
-          this.getOffsetHistory('today')
+          this.getOffsetHistory("today");
         }
       } else if (this.selectShow == 3) {
         if (this.searchTime) {
-          this.getSubsideHistory()
+          this.getSubsideHistory();
         } else {
-          this.getSubsideHistory('today')
+          this.getSubsideHistory("today");
         }
       } else if (this.selectShow == 5) {
         if (this.searchTime) {
-          this.getProductHistory()
+          this.getProductHistory();
         } else {
-          this.getProductHistory('today')
+          this.getProductHistory("today");
         }
       } else if (this.selectShow == 6) {
         if (this.searchTime) {
-          this.getBiasHistory()
+          this.getBiasHistory();
         } else {
-          this.getBiasHistory('today')
+          this.getBiasHistory("today");
         }
       }
     },
@@ -2877,20 +3033,26 @@ export default {
     selectUserAlarms(today) {
       if (today) {
         this.$axios
-          .post(`/api/hjDeeppit/selectUserAlarms?structureId=${this.structureId}&date=${this.nowTime}&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}`)
+          .post(
+            `/api/hjDeeppit/selectUserAlarms?structureId=${this.structureId}&date=${this.nowTime}&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}`
+          )
           .then(res => {
-            this.alarmList = res.data.data
-            this.alarmListTotal = res.data.sum
-          })
+            this.alarmList = res.data.data;
+            this.alarmListTotal = res.data.sum;
+          });
       } else {
         this.$axios
-          .post(`/api/hjDeeppit/selectUserAlarms?structureId=${this.structureId}&pageSize=100&pageNum=1&date=${this.nowTime.split('-')[0]}`)
+          .post(
+            `/api/hjDeeppit/selectUserAlarms?structureId=${
+              this.structureId
+            }&pageSize=100&pageNum=1&date=${this.nowTime.split("-")[0]}`
+          )
           .then(res => {
             if (res.data.code == 0) {
-              this.allAlarmList = res.data.data
-              this.allOfAlarm = res.data.sum
+              this.allAlarmList = res.data.data;
+              this.allOfAlarm = res.data.sum;
             }
-          })
+          });
       }
     },
 
@@ -2898,37 +3060,45 @@ export default {
     searchUserAlarms(today) {
       if (today) {
         this.$axios
-          .post(`/api/hjDeeppit/selectUserAlarmsByFactor?factorName=${this.searchValue}&date=${this.nowTime}&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}`)
+          .post(
+            `/api/hjDeeppit/selectUserAlarmsByFactor?factorName=${this.searchValue}&date=${this.nowTime}&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}`
+          )
           .then(res => {
-            this.alarmList = res.data.data.rows
-            this.alarmListTotal = res.data.total
-          })
+            this.alarmList = res.data.data.rows;
+            this.alarmListTotal = res.data.total;
+          });
       } else {
         this.$axios
-          .post(`/api/hjDeeppit/selectUserAlarmsByFactor?factorName=${this.searchValue}&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}&date=${this.nowTime.split('-')[0]}`)
+          .post(
+            `/api/hjDeeppit/selectUserAlarmsByFactor?factorName=${
+              this.searchValue
+            }&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}&date=${
+              this.nowTime.split("-")[0]
+            }`
+          )
           .then(res => {
-            this.alarmList = res.data.data.rows
-            this.alarmListTotal = res.data.total
-          })
+            this.alarmList = res.data.data.rows;
+            this.alarmListTotal = res.data.total;
+          });
       }
     },
 
     // 获取报警搜索栏的测点数据
     getStationList() {
       this.stageList.forEach(item => {
-        this.stationList.push(item)
+        this.stationList.push(item);
       });
       this.offsetList.forEach(item => {
-        this.stationList.push(item)
+        this.stationList.push(item);
       });
       this.subsideList.forEach(item => {
-        this.stationList.push(item)
+        this.stationList.push(item);
       });
       this.productList.forEach(item => {
-        this.stationList.push(item)
+        this.stationList.push(item);
       });
       this.stageList.forEach(item => {
-        this.biasList.push(item)
+        this.biasList.push(item);
       });
     },
 
@@ -2938,63 +3108,71 @@ export default {
       // console.log(this.radio)
       if (this.radio == 1) {
         if (this.searchValue) {
-          this.searchUserAlarms('today')
+          this.searchUserAlarms("today");
         } else {
-          this.selectUserAlarms('today')
+          this.selectUserAlarms("today");
         }
       } else {
         if (this.searchValue) {
-          this.searchUserAlarms()
+          this.searchUserAlarms();
         } else {
           this.$axios
-            .post(`/api/hjDeeppit/selectUserAlarms?structureId=${this.structureId}&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}&date=${this.nowTime.split('-')[0]}`)
+            .post(
+              `/api/hjDeeppit/selectUserAlarms?structureId=${
+                this.structureId
+              }&pageSize=${this.alarmSize}&pageNum=${this.alarmNum}&date=${
+                this.nowTime.split("-")[0]
+              }`
+            )
             .then(res => {
-              this.alarmList = res.data.data
-              this.alarmListTotal = res.data.sum
-            })
+              this.alarmList = res.data.data;
+              this.alarmListTotal = res.data.sum;
+            });
         }
       }
     },
 
     // 报警翻页
     handleAlarm(val) {
-      this.alarmNum = val
-      this.selectUserAlarms('today')
+      this.alarmNum = val;
+      this.selectUserAlarms("today");
     },
 
     // 报警图表
     getAlarmEchats() {
       this.$axios
-        .post(`/api/hjDeeppit/statisticsAlertor?structureId=${this.structureId}`)
+        .post(
+          `/api/hjDeeppit/statisticsAlertor?structureId=${this.structureId}`
+        )
         .then(res => {
           // this.alarmEchats = res.data.data
           for (let i = 0; i < res.data.data.length; i++) {
             if (res.data.data[i].level == 1) {
               this.alarmEchats.push({
                 value: res.data.data[i].cnt,
-                name: '一级预警'
-              })
+                name: "一级预警"
+              });
             } else if (res.data.data[i].level == 2) {
               this.alarmEchats.push({
                 value: res.data.data[i].cnt,
-                name: '二级预警'
-              })
+                name: "二级预警"
+              });
             } else if (res.data.data[i].level == 3) {
               this.alarmEchats.push({
                 value: res.data.data[i].cnt,
-                name: '三级预警'
-              })
+                name: "三级预警"
+              });
             }
           }
-          this.alarmChart(this.alarmEchats)
-        })
+          this.alarmChart(this.alarmEchats);
+        });
     },
 
     // 格式化报警时间
     getAlarmTime(time) {
-      var a = time.split('-')
-      a.shift()
-      return a.join('-')
+      var a = time.split("-");
+      a.shift();
+      return a.join("-");
     },
 
     // 渲染深基坑预警占比图
@@ -3046,14 +3224,41 @@ export default {
             //   { value: 0, name: "二级预警" },
             //   { value: 0, name: "三级预警" }
             // ]
-            data: data
+            data: data.length
+              ? data
+              : [
+                  { value: 0, name: "一级预警" },
+                  { value: 0, name: "二级预警" },
+                  { value: 0, name: "三级预警" }
+                ]
           }
         ]
       });
     },
 
     // 地下水位当日数据趋势图
-    oneChart(stage) {
+    oneChart(stageFrom) {
+      let date = new Date();
+      let time = `${date.getFullYear()}/${date.getMonth() +
+        1}/${date.getDate()}`;
+      let stage = Object.assign({}, stageFrom);
+      stage.length = 48;
+      for (let i = 0; i < stage.length; i++) {
+        let temp = new Array();
+        temp.push(
+          new Date(
+            `${time} ${
+              i == 0
+                ? "00:00:00"
+                : i % 2
+                ? Math.floor(i / 2) + ":30:00"
+                : i / 2 + ":00:00"
+            }`
+          ).getTime()
+        );
+        temp.push(stage[i] ? stage[i] : undefined);
+        stage[i] = temp;
+      }
       let oneChart = this.$echarts.init(document.getElementById("oneChart"));
       oneChart.setOption({
         // backgroundColor: "#FBFBFB",
@@ -3068,78 +3273,109 @@ export default {
           trigger: "axis"
         },
         calculable: true,
-        xAxis: [
-          {
-            axisLabel: {
-              rotate: 0,
-              interval: 0,
+        xAxis: {
+          axisLabel: {
+            rotate: 0,
+            interval: 0,
+            color: "#000"
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          type: "time",
+          boundaryGap: false
+        },
+        yAxis: {
+          type: "value",
+          // min: 0,
+          // interval: 0.1,
+          axisLabel: {
+            textStyle: {
               color: "#000"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#132e6d"
-              }
-            },
-            type: "category",
-            boundaryGap: false,
-            data: ["00：00", "04：00", "08：00", "12：00", "16：00", "20：00"]
-          }
-        ],
-        yAxis: [
-          {
-            type: "value",
-            min: 0,
-            // interval: 0.1,
-            axisLabel: {
-              textStyle: {
-                color: "#000"
-              },
-              // formatter: "{value} 度"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#132e6d"
-              }
-            },
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: ["#ccc"],
-                width: 1,
-                type: "dashed"
-              }
+            }
+            // formatter: "{value} 度"
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["#ccc"],
+              width: 1,
+              type: "dashed"
             }
           }
-        ],
-        series: [
-          {
-            name: "地下水位",
-            type: "line",
-            symbolSize: 10,
-            smooth: 0.2,
-            color: ["#0090ff"],
-            // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
-            data: stage
+        },
+        visualMap: {
+          show: false,
+          pieces: [
+            {
+              gt: -10,
+              lte: -9,
+              color: "#096"
+            },
+            {
+              gt: -9,
+              lte: -7,
+              color: "#ffde33"
+            },
+            {
+              gt: -7,
+              lte: -6,
+              color: "#ff9933"
+            },
+            {
+              gt: -6,
+              lte: -5,
+              color: "#cc0033"
+            },
+            {
+              gt: -4,
+              lte: 0,
+              color: "#660099"
+            },
+            {
+              gt: 0,
+              color: "#7e0023"
+            }
+          ],
+          outOfRange: {
+            color: "#999"
           }
-          // {
-          //     name: "考勤总人数",
-          //     type: "line",
-          //     symbolSize: 10,
-          //     smooth: 0.2,
-          //     color: ["#0090ff"],
-          //     // data: [300, 200, 100, 500, 300, 300, 400, 300, 100, 300],
-          //     data: kqrs
-          // },
-          // {
-          //     name: "管理人员出勤人数",
-          //     type: "line",
-          //     symbolSize: 4,
-          //     smooth: 0.2,
-          //     color: ["#33577c"],
-          //     data: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-          //     // data: aMZcGly
-          // }
-        ]
+        },
+        series: {
+          name: "地下水位",
+          type: "line",
+          // symbolSize: 10,
+          // smooth: 0.2,
+          // color: ["#0090ff"],
+          data: stage,
+          markLine: {
+            // silent: true,
+            data: [
+              {
+                yAxis: -10
+              },
+              {
+                yAxis: -9
+              },
+              {
+                yAxis: -7
+              },
+              {
+                yAxis: -5
+              },
+              {
+                yAxis: -2
+              }
+            ]
+          }
+        }
       });
     },
 
@@ -3211,7 +3447,8 @@ export default {
             color: ["#0090ff"],
             // data: [3.6, 4.5, 2.5, 3.5, 4.4, 3.5]
             data: offsetX
-          },{
+          },
+          {
             name: "Y方向位移",
             type: "line",
             symbolSize: 10,
@@ -3244,7 +3481,7 @@ export default {
         calculable: true,
         xAxis: [
           {
-            position: 'top',
+            position: "top",
             axisLabel: {
               rotate: 0,
               interval: 0,
@@ -3443,7 +3680,9 @@ export default {
 
     // 结构应变当日数据趋势图（频率）
     structureFrequency(productHz) {
-      let fourChart = this.$echarts.init(document.getElementById("structureFrequency"));
+      let fourChart = this.$echarts.init(
+        document.getElementById("structureFrequency")
+      );
       fourChart.setOption({
         // backgroundColor: "#FBFBFB",
         grid: {
@@ -3516,7 +3755,9 @@ export default {
 
     // 结构应变当日数据趋势图（温度）
     structureTemperature(productTemp) {
-      let fourChart = this.$echarts.init(document.getElementById("structureTemperature"));
+      let fourChart = this.$echarts.init(
+        document.getElementById("structureTemperature")
+      );
       fourChart.setOption({
         // backgroundColor: "#FBFBFB",
         grid: {
@@ -3604,76 +3845,57 @@ export default {
           trigger: "axis"
         },
         calculable: true,
-        xAxis: [
-          {
-            axisLabel: {
-              rotate: 0,
-              interval: 0,
+        xAxis: {
+          axisLabel: {
+            rotate: 0,
+            interval: 0,
+            color: "#000"
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          type: "time"
+        },
+        yAxis: {
+          type: "value",
+          axisLabel: {
+            textStyle: {
               color: "#000"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#132e6d"
-              }
-            },
-            type: "category",
-            boundaryGap: false,
-            // data: [
-            //   "2019-08-01 00：00",
-            //   "2019-08-01 04：00",
-            //   "2019-08-01 08：00",
-            //   "2019-08-01 12：00",
-            //   "2019-08-01 16：00",
-            //   "2019-08-01 20：00"
-            // ]
-            data: data.map(item => {
-              return item[0]
-            })
-          }
-        ],
-        yAxis: [
-          {
-            type: "value",
-            axisLabel: {
-              textStyle: {
-                color: "#000"
-              }
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#132e6d"
-              }
-            },
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: ["#ccc"],
-                width: 1,
-                type: "dashed"
-              }
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["#ccc"],
+              width: 1,
+              type: "dashed"
             }
           }
+        },
+        dataZoom: [
+          {
+            startValue: data[0][0],
+            realtime: true, //拖动滚动条时是否动态的更新图表数据
+            height: 25, //滚动条高度
+            // start:40,//滚动条开始位置（共100等份）
+            // end:15,//结束位置（共100等份）
+            // filterMode: 'filter',
+            type: "slider"
+          }
         ],
-        dataZoom: [{
-          realtime:true, //拖动滚动条时是否动态的更新图表数据
-          height:25,//滚动条高度
-          start:40,//滚动条开始位置（共100等份）
-          end:65,//结束位置（共100等份）
-          // filterMode: 'filter'
-        }, {
-          type: 'inside'
-        }],
         series: [
           {
             name: "地下水位",
             type: "line",
-            symbolSize: 10,
-            smooth: 0.2,
             color: ["#0090ff"],
-            // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
-            data: data.map(item => {
-              return item[1]
-            })
+            data: data
           }
         ]
       });
@@ -3712,7 +3934,7 @@ export default {
             boundaryGap: false,
             // data: ["00：00", "04：00", "08：00", "12：00", "16：00", "20：00"]
             data: data.map(item => {
-              return item[0]
+              return item[0];
             })
           }
         ],
@@ -3740,15 +3962,18 @@ export default {
             }
           }
         ],
-        dataZoom: [{
-          realtime:true, //拖动滚动条时是否动态的更新图表数据
-          height:25,//滚动条高度
-          start:40,//滚动条开始位置（共100等份）
-          end:65,//结束位置（共100等份）
-          // filterMode: 'filter'
-        }, {
-          type: 'inside'
-        }],
+        dataZoom: [
+          {
+            realtime: true, //拖动滚动条时是否动态的更新图表数据
+            height: 25, //滚动条高度
+            start: 40, //滚动条开始位置（共100等份）
+            end: 65 //结束位置（共100等份）
+            // filterMode: 'filter'
+          },
+          {
+            type: "inside"
+          }
+        ],
         series: [
           {
             name: "X方向位移",
@@ -3758,9 +3983,10 @@ export default {
             color: ["#0090ff"],
             // data: [3.6, 4.5, 2.5, 3.5, 4.4, 3.5]
             data: data.map(item => {
-              return item[1]
+              return item[1];
             })
-          },{
+          },
+          {
             name: "Y方向位移",
             type: "line",
             symbolSize: 10,
@@ -3768,7 +3994,7 @@ export default {
             color: ["#0090ff"],
             // data: [3.6, 4.5, 2.5, 3.5, 4.4, 3.5]
             data: data.map(item => {
-              return item[2]
+              return item[2];
             })
           }
         ]
@@ -3794,7 +4020,7 @@ export default {
         calculable: true,
         xAxis: [
           {
-            position: 'top',
+            position: "top",
             axisLabel: {
               rotate: 0,
               interval: 0,
@@ -3809,7 +4035,7 @@ export default {
             boundaryGap: false,
             // data: ["00：00", "04：00", "08：00", "12：00", "16：00", "20：00"]
             data: data.map(item => {
-              return item[0]
+              return item[0];
             })
           }
         ],
@@ -3837,15 +4063,18 @@ export default {
             }
           }
         ],
-        dataZoom: [{
-          realtime:true, //拖动滚动条时是否动态的更新图表数据
-          height:25,//滚动条高度
-          start:40,//滚动条开始位置（共100等份）
-          end:65,//结束位置（共100等份）
-          // filterMode: 'filter'
-        }, {
-          type: 'inside'
-        }],
+        dataZoom: [
+          {
+            realtime: true, //拖动滚动条时是否动态的更新图表数据
+            height: 25, //滚动条高度
+            start: 40, //滚动条开始位置（共100等份）
+            end: 65 //结束位置（共100等份）
+            // filterMode: 'filter'
+          },
+          {
+            type: "inside"
+          }
+        ],
         series: [
           {
             name: "周边沉降",
@@ -3855,7 +4084,7 @@ export default {
             color: ["#0090ff"],
             // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
             data: data.map(item => {
-              return item[1]
+              return item[1];
             })
           }
         ]
@@ -3923,10 +4152,10 @@ export default {
           }
         ],
         dataZoom: {
-          realtime:true, //拖动滚动条时是否动态的更新图表数据
-          height:25,//滚动条高度
-          start:40,//滚动条开始位置（共100等份）
-          end:65//结束位置（共100等份）
+          realtime: true, //拖动滚动条时是否动态的更新图表数据
+          height: 25, //滚动条高度
+          start: 40, //滚动条开始位置（共100等份）
+          end: 65 //结束位置（共100等份）
         },
         series: [
           {
@@ -3961,7 +4190,7 @@ export default {
         calculable: true,
         xAxis: [
           {
-            position: 'top',
+            position: "top",
             axisLabel: {
               rotate: 0,
               interval: 0,
@@ -3976,7 +4205,7 @@ export default {
             boundaryGap: false,
             // data: ["00：00", "04：00", "08：00", "12：00", "16：00", "20：00"]
             data: data.map(item => {
-              return item[0]
+              return item[0];
             })
           }
         ],
@@ -4004,15 +4233,18 @@ export default {
             }
           }
         ],
-        dataZoom: [{
-          realtime:true, //拖动滚动条时是否动态的更新图表数据
-          height:25,//滚动条高度
-          start:40,//滚动条开始位置（共100等份）
-          end:65,//结束位置（共100等份）
-          // filterMode: 'filter'
-        }, {
-          type: 'inside'
-        }],
+        dataZoom: [
+          {
+            realtime: true, //拖动滚动条时是否动态的更新图表数据
+            height: 25, //滚动条高度
+            start: 40, //滚动条开始位置（共100等份）
+            end: 65 //结束位置（共100等份）
+            // filterMode: 'filter'
+          },
+          {
+            type: "inside"
+          }
+        ],
         series: [
           {
             name: "结构应变(HZ)",
@@ -4022,9 +4254,10 @@ export default {
             color: ["#0090ff"],
             // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
             data: data.map(item => {
-              return item[1]
+              return item[1];
             })
-          }, {
+          },
+          {
             name: "结构应变(℃)",
             type: "line",
             symbolSize: 10,
@@ -4032,7 +4265,7 @@ export default {
             color: ["#009000"],
             // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
             data: data.map(item => {
-              return item[2]
+              return item[2];
             })
           }
         ]
@@ -4058,7 +4291,7 @@ export default {
         calculable: true,
         xAxis: [
           {
-            position: 'top',
+            position: "top",
             axisLabel: {
               rotate: 0,
               interval: 0,
@@ -4073,7 +4306,7 @@ export default {
             boundaryGap: false,
             // data: ["00：00", "04：00", "08：00", "12：00", "16：00", "20：00"]
             data: data.map(item => {
-              return item[0]
+              return item[0];
             })
           }
         ],
@@ -4101,15 +4334,18 @@ export default {
             }
           }
         ],
-        dataZoom: [{
-          realtime:true, //拖动滚动条时是否动态的更新图表数据
-          height:25,//滚动条高度
-          start:40,//滚动条开始位置（共100等份）
-          end:65,//结束位置（共100等份）
-          // filterMode: 'filter'
-        }, {
-          type: 'inside'
-        }],
+        dataZoom: [
+          {
+            realtime: true, //拖动滚动条时是否动态的更新图表数据
+            height: 25, //滚动条高度
+            start: 40, //滚动条开始位置（共100等份）
+            end: 65 //结束位置（共100等份）
+            // filterMode: 'filter'
+          },
+          {
+            type: "inside"
+          }
+        ],
         series: [
           {
             name: "建筑倾斜(X轴)",
@@ -4119,9 +4355,10 @@ export default {
             color: ["#0090ff"],
             // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
             data: data.map(item => {
-              return item[1]
+              return item[1];
             })
-          }, {
+          },
+          {
             name: "建筑倾斜(Y轴)",
             type: "line",
             symbolSize: 10,
@@ -4129,7 +4366,7 @@ export default {
             color: ["#009000"],
             // data: [0.6, 0.5, 0.5, 0.5, 0.4, 0.5]
             data: data.map(item => {
-              return item[2]
+              return item[2];
             })
           }
         ]
@@ -4139,19 +4376,29 @@ export default {
     // 渲染当前选中模块的ECharts图
     ifCart() {
       if (this.selectShow == 1 && !this.historyShow) {
-        if (document.getElementById("oneChart") && this.stageFourHoverList.length>0) {
+        if (
+          document.getElementById("oneChart") &&
+          this.stageFourHoverList.length > 0
+        ) {
           this.oneChart(this.stageFourHoverList);
         }
       }
       if (this.selectShow == 2 && !this.historyShow) {
         // this.twoChart();
-        if (document.getElementById("twoChart") && this.offsetFourHoverListX.length>0 && this.offsetFourHoverListY.length>0) {
+        if (
+          document.getElementById("twoChart") &&
+          this.offsetFourHoverListX.length > 0 &&
+          this.offsetFourHoverListY.length > 0
+        ) {
           this.twoChart(this.offsetFourHoverListX, this.offsetFourHoverListY);
         }
       }
       if (this.selectShow == 3 && !this.historyShow) {
         // this.threeChart();
-        if (document.getElementById("threeChart") && this.subsideFourHoverList.length>0) {
+        if (
+          document.getElementById("threeChart") &&
+          this.subsideFourHoverList.length > 0
+        ) {
           this.threeChart(this.subsideFourHoverList);
         }
       }
@@ -4162,7 +4409,11 @@ export default {
         // }
       }
       if (this.selectShow == 5 && !this.historyShow) {
-        if (document.getElementById('structureFrequency') && this.productHzFourHoverList.length>0 && this.productTempFourHoverList.length>0) {
+        if (
+          document.getElementById("structureFrequency") &&
+          this.productHzFourHoverList.length > 0 &&
+          this.productTempFourHoverList.length > 0
+        ) {
           this.structureFrequency(this.productHzFourHoverList);
           this.structureTemperature(this.productTempFourHoverList);
         }
@@ -4170,43 +4421,65 @@ export default {
         // this.structureTemperature();
       }
       if (this.selectShow == 6 && !this.historyShow) {
-        if (document.getElementById("slantX") && this.biasFourHoverListX.length>0 && this.biasFourHoverListY.length>0) {
+        if (
+          document.getElementById("slantX") &&
+          this.biasFourHoverListX.length > 0 &&
+          this.biasFourHoverListY.length > 0
+        ) {
           this.slantX(this.biasFourHoverListX);
-          this.slantY(this.biasFourHoverListY)
+          this.slantY(this.biasFourHoverListY);
         }
       }
       // 历史记录
       if (this.selectShow == 1 && this.historyShow) {
         // this.historyOne();
-        if (document.getElementById("historyOne") && this.stageHistoryEcharts.length>0) {
+        if (
+          document.getElementById("historyOne") &&
+          this.stageHistoryEcharts.length > 0
+        ) {
           this.historyOne(this.stageHistoryEcharts);
         }
       }
       if (this.selectShow == 2 && this.historyShow) {
         // this.historyTwo();
-        if (document.getElementById("historyTwo") && this.offsetHistoryEcharts.length>0) {
+        if (
+          document.getElementById("historyTwo") &&
+          this.offsetHistoryEcharts.length > 0
+        ) {
           this.historyTwo(this.offsetHistoryEcharts);
         }
       }
       if (this.selectShow == 3 && this.historyShow) {
         // this.historyThree();
-        if (document.getElementById("historyThree") && this.subsideHistoryEcharts.length>0) {
+        if (
+          document.getElementById("historyThree") &&
+          this.subsideHistoryEcharts.length > 0
+        ) {
           this.historyThree(this.subsideHistoryEcharts);
         }
       }
       if (this.selectShow == 4 && this.historyShow) {
         // this.historyFour();
-        if (document.getElementById("historyFour") && this.stageFourHoverList.length>0) {
+        if (
+          document.getElementById("historyFour") &&
+          this.stageFourHoverList.length > 0
+        ) {
           this.historyFour();
         }
       }
       if (this.selectShow == 5 && this.historyShow) {
-        if (document.getElementById("historyFive") && this.productHistoryEcharts.length>0) {
+        if (
+          document.getElementById("historyFive") &&
+          this.productHistoryEcharts.length > 0
+        ) {
           this.historyFive(this.productHistoryEcharts);
         }
       }
       if (this.selectShow == 6 && this.historyShow) {
-        if (document.getElementById("historySix") && this.biasHistoryEcharts.length>0) {
+        if (
+          document.getElementById("historySix") &&
+          this.biasHistoryEcharts.length > 0
+        ) {
           this.historySix(this.biasHistoryEcharts);
         }
       }
@@ -4214,36 +4487,41 @@ export default {
 
     // 点击向左滚动效果
     scrollLeft() {
-      var temp = Math.floor(scrollWrap.scrollLeft) + 329
-      clearInterval(interval)
+      var temp = Math.floor(scrollWrap.scrollLeft) + 329;
+      clearInterval(interval);
       var interval = setInterval(() => {
         if (scrollWrap.scrollLeft < temp) {
-          var distance = scrollWrap.scrollLeft += 20
+          var distance = (scrollWrap.scrollLeft += 20);
           if (scrollWrap.scrollLeft !== distance) {
-            clearInterval(interval)
+            clearInterval(interval);
           }
         } else {
-          scrollWrap.scrollLeft = temp
-          clearInterval(interval)
+          scrollWrap.scrollLeft = temp;
+          clearInterval(interval);
         }
       }, 5);
     },
 
     // 点击向右滚动效果
     scrollRight() {
-      var temp = Math.floor(scrollWrap.scrollLeft) - 329
-      clearInterval(interval)
+      var temp = Math.floor(scrollWrap.scrollLeft) - 329;
+      clearInterval(interval);
       var interval = setInterval(() => {
         if (scrollWrap.scrollLeft > temp) {
-          var distance = scrollWrap.scrollLeft -= 20
+          var distance = (scrollWrap.scrollLeft -= 20);
           if (scrollWrap.scrollLeft !== distance) {
-            clearInterval(interval)
+            clearInterval(interval);
           }
         } else {
-          scrollWrap.scrollLeft = temp
-          clearInterval(interval)
+          scrollWrap.scrollLeft = temp;
+          clearInterval(interval);
         }
       }, 5);
+    }
+  },
+  beforeDestroy() {
+    if (this.upDateDate) {
+      clearInterval(this.upDateDate);
     }
   }
 };
