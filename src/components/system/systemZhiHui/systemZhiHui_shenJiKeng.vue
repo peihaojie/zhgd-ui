@@ -1862,316 +1862,15 @@ export default {
       searchOptions: [], // 搜索栏选项
       searchValue: "", // 搜索栏值
       radio: "1", // 搜索栏单选框
-      tableData: [
-        {
-          works: "地下水位", // 结构物
-          source: "ZJ-01", // 警告源
-          rank: "1", // 警告等级
-          message: "超1级阀值告警", // 警告信息
-          number: "2", // 警告次数
-          time: "2018-02-06 12：00：00" // 告警时间
-        },
-        {
-          works: "土体位移",
-          source: "LG-01",
-          rank: "1",
-          message: "超1级阀值告警",
-          number: "3",
-          time: "2018-02-06 12：00：00"
-        },
-        {
-          works: "周边沉降",
-          source: "QJ-01",
-          rank: "1",
-          message: "超1级阀值告警",
-          number: "1",
-          time: "2018-02-06 12：00：00"
-        },
-        {
-          works: "支撑轴力",
-          source: "SP-01",
-          rank: "1",
-          message: "超1级阀值告警",
-          number: "4",
-          time: "2018-02-06 12：00：00"
-        }
-      ], // 警报列表数据
+      tableData: [], // 警报列表数据
       date1: "", // 地下水位历史数据起止时间
-      historyTableData1: [
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 地下水位
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 1.2,
-          status: 0,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 地下水位
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 1.2,
-          status: 0,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        }
-      ], // 地下水位历史数据列表
+      historyTableData1: [], // 地下水位历史数据列表
       date2: "", // 水平位移历史数据起止时间
-      historyTableData2: [
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 水平位移
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 1.2,
-          status: 0,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 水平位移
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 1.2,
-          status: 0,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 水平位移
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        }
-      ], // 水平位移历史数据列表
+      historyTableData2: [], // 水平位移历史数据列表
       date3: "", // 周边沉降历史数据起止时间
-      historyTableData3: [
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 周边沉降
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 1.2,
-          status: 0,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        }
-      ], // 周边沉降历史数据列表
+      historyTableData3: [], // 周边沉降历史数据列表
       date4: "", // 支撑轴力历史数据起止时间
-      historyTableData4: [
-        {
-          name: "CJ-01", // 检测点
-          level: 0.5, // 支撑轴力
-          status: 1, // 状态
-          time: "2019-10-10 19:19:19" // 时间
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 1.2,
-          status: 0,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        },
-        {
-          name: "CJ-01",
-          level: 0.5,
-          status: 1,
-          time: "2019-10-10 19:19:19"
-        }
-      ], // 支撑轴力历史数据列表
+      historyTableData4: [], // 支撑轴力历史数据列表
       deviceName: "", // 基坑名称
       structureId: "", // 基坑ID
       handOverList: [], // 切换设备列表
@@ -2324,41 +2023,58 @@ export default {
         .post(`/api/hjDeeppit/selectDisplay?structureId=${this.structureId}`)
         .then(res => {
           this.factorList = res.data.data;
-          if (this.factorList[0].name == "深层水平位移") {
-            this.selectShow = 2;
-          } else if (this.factorList[0].name == "应变原始数据") {
-            this.selectShow = 5;
-          } else if (this.factorList[0].name == "地下水位") {
-            this.selectShow = 1;
-          } else if (this.factorList[0].name == "沉降") {
-            this.selectShow = 3;
-          } else if (this.factorList[0].name == "建筑物倾斜") {
-            this.selectShow = 6;
-          }
-          for (let i = 0; i < this.factorList.length; i++) {
-            if (this.factorList[i].name == "深层水平位移") {
-              this.offset = this.factorList[i].id;
-            } else if (this.factorList[i].name == "应变原始数据") {
-              this.product = this.factorList[i].id;
-            } else if (this.factorList[i].name == "地下水位") {
-              this.stage = this.factorList[i].id;
-            } else if (this.factorList[i].name == "沉降") {
-              this.subside = this.factorList[i].id;
-            } else if (this.factorList[i].name == "建筑物倾斜") {
-              this.bias = this.factorList[i].id;
+          this.factorList.forEach((value, index) => {
+            if (index == 0) {
+              switch (value.name) {
+                case "地下水位":
+                  this.selectShow = 1;
+                  break;
+                case "深层水平位移":
+                  this.selectShow = 2;
+                  break;
+                case "沉降":
+                  this.selectShow = 3;
+                  break;
+                case "应变原始数据":
+                  this.selectShow = 5;
+                  break;
+                case "建筑物倾斜":
+                  this.selectShow = 6;
+                  break;
+                default:
+                  break;
+              }
             }
-          }
+            switch (value.name) {
+              case "深层水平位移":
+                this.offset = value.id;
+                break;
+              case "应变原始数据":
+                this.product = value.id;
+                break;
+              case "地下水位":
+                this.stage = value.id;
+                break;
+              case "沉降":
+                this.subside = value.id;
+                break;
+              case "建筑物倾斜":
+                this.bias = value.id;
+                break;
+              default:
+                break;
+            }
+          });
           this.getFactorList();
         });
     },
 
     // 获取监测点列表
     getFactorList() {
+      let url = `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=`
       if (this.stage > 0) {
         this.$axios
-          .post(
-            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.stage}`
-          )
+          .post(`${url}${this.stage}`)
           .then(res => {
             if (res.data.code == 0) {
               this.stageList = res.data.data;
@@ -2371,14 +2087,11 @@ export default {
       }
       if (this.offset > 0) {
         this.$axios
-          .post(
-            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.offset}`
-          )
+          .post(`${url}${this.offset}`)
           .then(res => {
             if (res.data.code == 0) {
               this.offsetList = res.data.data;
               this.offsetListChild = res.data.data[0].id;
-              // this.offsetListChild = 1
               this.getOffset(1, 4);
               this.getOffsetFourHoverList();
             }
@@ -2386,14 +2099,11 @@ export default {
       }
       if (this.subside > 0) {
         this.$axios
-          .post(
-            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.subside}`
-          )
+          .post(`${url}${this.subside}`)
           .then(res => {
             if (res.data.code == 0) {
               this.subsideList = res.data.data;
               this.subsideListChild = res.data.data[0].id;
-              // this.subsideListChild = 17092
               this.getSubside(1, 4);
               this.getSubsideFourHoverList();
               this.getSubsideMax();
@@ -2402,14 +2112,11 @@ export default {
       }
       if (this.product > 0) {
         this.$axios
-          .post(
-            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.product}`
-          )
+          .post(`${url}${this.product}`)
           .then(res => {
             if (res.data.code == 0) {
               this.productList = res.data.data;
               this.productListChild = res.data.data[0].id;
-              // this.productListChild = 3
               this.getProduct(1, 4);
               this.getProductFourHoverList();
             }
@@ -2417,14 +2124,11 @@ export default {
       }
       if (this.bias > 0) {
         this.$axios
-          .post(
-            `/api/hjDeeppit/getFactorList?structureId=${this.structureId}&displayId=${this.bias}`
-          )
+          .post(`${url}${this.bias}`)
           .then(res => {
             if (res.data.code == 0) {
               this.biasList = res.data.data;
               this.biasListChild = res.data.data[0].id;
-              // this.biasListChild = 2
               this.getBias(1, 4);
               this.getBiasFourHoverList();
               this.getBiasMax();
@@ -2439,15 +2143,10 @@ export default {
         .post(
           `/api/hjDeeppit/getFactorData?factorId=${this.stageListChild}&date=${
             this.nowTime
-          }&pageNum=${num || this.pageNum}&pageSize=${size ||
-            this.pageSize}&endTime=`
+          }&pageNum=${num}&pageSize=${size}&endTime=`
         )
         .then(res => {
-          if (!size) {
-            // this.stageHistoryTable = res.data.data
-          } else {
-            this.stageTable = res.data.data;
-          }
+          this.stageTable = res.data.data;
         });
     },
 
@@ -2457,15 +2156,10 @@ export default {
         .post(
           `/api/hjDeeppit/getFactorData?factorId=${this.offsetListChild}&date=${
             this.nowTime
-          }&pageNum=${num || this.pageNum}&pageSize=${size ||
-            this.pageSize}&endTime=`
+          }&pageNum=${num}&pageSize=${size}&endTime=`
         )
         .then(res => {
-          if (!size) {
-            // this.offsetHistoryTable = res.data.data
-          } else {
-            this.offsetTable = res.data.data;
-          }
+          this.offsetTable = res.data.data;
         });
     },
 
@@ -2475,15 +2169,10 @@ export default {
         .post(
           `/api/hjDeeppit/getFactorData?factorId=${
             this.subsideListChild
-          }&date=${this.nowTime}&pageNum=${num ||
-            this.pageNum}&pageSize=${size || this.pageSize}&endTime=`
+          }&date=${this.nowTime}&pageNum=${num}&pageSize=${size}&endTime=`
         )
         .then(res => {
-          if (!size) {
-            // this.subsideHistoryTable = res.data.data
-          } else {
-            this.subsideTable = res.data.data;
-          }
+          this.subsideTable = res.data.data;
         });
     },
 
@@ -2493,15 +2182,10 @@ export default {
         .post(
           `/api/hjDeeppit/getFactorData?factorId=${
             this.productListChild
-          }&date=${this.nowTime}&pageNum=${num ||
-            this.pageNum}&pageSize=${size || this.pageSize}&endTime=`
+          }&date=${this.nowTime}&pageNum=${num}&pageSize=${size}&endTime=`
         )
         .then(res => {
-          if (!size) {
-            // this.productHistoryTable = res.data.data
-          } else {
-            this.productTable = res.data.data;
-          }
+          this.productTable = res.data.data;
         });
     },
 
@@ -2511,15 +2195,10 @@ export default {
         .post(
           `/api/hjDeeppit/getFactorData?factorId=${this.biasListChild}&date=${
             this.nowTime
-          }&pageNum=${num || this.pageNum}&pageSize=${size ||
-            this.pageSize}&endTime=`
+          }&pageNum=${num}&pageSize=${size}&endTime=`
         )
         .then(res => {
-          if (!size) {
-            // this.biasHistoryTable = res.data.data
-          } else {
-            this.biasTable = res.data.data;
-          }
+          this.biasTable = res.data.data;
         });
     },
 
@@ -2734,16 +2413,24 @@ export default {
 
     // 历史记录按钮点击事件
     historyClick() {
-      if (this.selectShow == 1) {
-        this.getStageHistory("today");
-      } else if (this.selectShow == 2) {
-        this.getOffsetHistory("today");
-      } else if (this.selectShow == 3) {
-        this.getSubsideHistory("today");
-      } else if (this.selectShow == 5) {
-        this.getProductHistory("today");
-      } else if (this.selectShow == 6) {
-        this.getBiasHistory("today");
+      switch (this.selectShow) {
+        case 1:
+          this.getStageHistory("today");
+          break;
+        case 2:
+          this.getOffsetHistory("today");
+          break;
+        case 3:
+          this.getSubsideHistory("today");
+          break;
+        case 5:
+          this.getProductHistory("today");
+          break;
+        case 6:
+          this.getBiasHistory("today");
+          break;
+        default:
+          break;
       }
     },
 
@@ -2781,14 +2468,15 @@ export default {
             .join("-") + " 23:59:59";
         this.$axios
           .post(
-            `/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`
           )
           .then(res => {
             this.stageHistoryEcharts = res.data;
+            this.ifCart();
           });
         this.$axios
           .post(
-            `/api/hjDeeppit/getFactorData?factorId=${this.stageListChild}&date=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
           )
           .then(res => {
             this.stageHistoryTable = res.data.data;
@@ -3241,18 +2929,22 @@ export default {
       let time = `${date.getFullYear()}/${date.getMonth() +
         1}/${date.getDate()}`;
       let stage = Object.assign({}, stageFrom);
-      stage.length = 48;
+      // stage.length = 48;
+      stage.length = 24;
       for (let i = 0; i < stage.length; i++) {
         let temp = new Array();
         temp.push(
+          // new Date(
+          //   `${time} ${
+          //     i == 0
+          //       ? "00:00:00"
+          //       : i % 2
+          //       ? Math.floor(i / 2) + ":30:00"
+          //       : i / 2 + ":00:00"
+          //   }`
+          // ).getTime()
           new Date(
-            `${time} ${
-              i == 0
-                ? "00:00:00"
-                : i % 2
-                ? Math.floor(i / 2) + ":30:00"
-                : i / 2 + ":00:00"
-            }`
+            `${time} ${ i == 0 ? "00:00:00" : i + ":00:00" }`
           ).getTime()
         );
         temp.push(stage[i] ? stage[i] : undefined);
@@ -3857,10 +3549,9 @@ export default {
         },
         dataZoom: [
           {
-            startValue: data[0][0],
             realtime: true, //拖动滚动条时是否动态的更新图表数据
             height: 25, //滚动条高度
-            // start:40,//滚动条开始位置（共100等份）
+            start:0,//滚动条开始位置（共100等份）
             // end:15,//结束位置（共100等份）
             // filterMode: 'filter',
             type: "slider"
@@ -3871,7 +3562,7 @@ export default {
             name: "地下水位",
             type: "line",
             color: ["#0090ff"],
-            data: data
+            data: data.reverse()
           }
         ]
       });
@@ -4353,14 +4044,12 @@ export default {
     ifCart() {
       if (this.selectShow == 1 && !this.historyShow) {
         if (
-          document.getElementById("oneChart") &&
-          this.stageFourHoverList.length > 0
+          document.getElementById("oneChart")
         ) {
           this.oneChart(this.stageFourHoverList);
         }
       }
       if (this.selectShow == 2 && !this.historyShow) {
-        // this.twoChart();
         if (
           document.getElementById("twoChart") &&
           this.offsetFourHoverListX.length > 0 &&
@@ -4370,7 +4059,6 @@ export default {
         }
       }
       if (this.selectShow == 3 && !this.historyShow) {
-        // this.threeChart();
         if (
           document.getElementById("threeChart") &&
           this.subsideFourHoverList.length > 0
@@ -4379,7 +4067,6 @@ export default {
         }
       }
       if (this.selectShow == 4 && !this.historyShow) {
-        // this.fourChart();
         // if (document.getElementById("fourChart")) {
         //   this.fourChart();
         // }
@@ -4393,8 +4080,6 @@ export default {
           this.structureFrequency(this.productHzFourHoverList);
           this.structureTemperature(this.productTempFourHoverList);
         }
-        // this.structureFrequency();
-        // this.structureTemperature();
       }
       if (this.selectShow == 6 && !this.historyShow) {
         if (
@@ -4408,16 +4093,13 @@ export default {
       }
       // 历史记录
       if (this.selectShow == 1 && this.historyShow) {
-        // this.historyOne();
         if (
-          document.getElementById("historyOne") &&
-          this.stageHistoryEcharts.length > 0
+          document.getElementById("historyOne")
         ) {
           this.historyOne(this.stageHistoryEcharts);
         }
       }
       if (this.selectShow == 2 && this.historyShow) {
-        // this.historyTwo();
         if (
           document.getElementById("historyTwo") &&
           this.offsetHistoryEcharts.length > 0
@@ -4426,7 +4108,6 @@ export default {
         }
       }
       if (this.selectShow == 3 && this.historyShow) {
-        // this.historyThree();
         if (
           document.getElementById("historyThree") &&
           this.subsideHistoryEcharts.length > 0
@@ -4435,7 +4116,6 @@ export default {
         }
       }
       if (this.selectShow == 4 && this.historyShow) {
-        // this.historyFour();
         if (
           document.getElementById("historyFour") &&
           this.stageFourHoverList.length > 0
