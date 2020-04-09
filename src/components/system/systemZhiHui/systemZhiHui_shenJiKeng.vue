@@ -1500,7 +1500,9 @@
               height: 0.9rem;
               color: #4a4a4a;
               font-size: 0.18rem;
-              line-height: 0.9rem;
+              // line-height: 0.9rem;
+              display: flex;
+              align-items: center;
               .el-select {
                 margin-right: 0.8rem;
                 input {
@@ -1841,10 +1843,10 @@
 
 <script>
 import mixin from "@/utils/mixin";
+let scrollWrap = document.getElementById("scrollWrap");
 export default {
   mixins: [mixin],
   data() {
-    var scrollWrap = document.getElementById("scrollWrap");
     return {
       selectShow: 1, // 当前模块
       alarmShow: false, // 警报模块状态
@@ -2271,18 +2273,16 @@ export default {
 
     // 获取当前时间
     getTime() {
-      var now = new Date();
-      var month =
+      let now = new Date();
+      let month =
         parseInt(now.getMonth()) + parseInt(1) < 10
           ? "0" + (parseInt(now.getMonth()) + parseInt(1))
           : parseInt(now.getMonth()) + parseInt(1);
-      var day =
+      let day =
         parseInt(now.getDate()) < 10
           ? "0" + parseInt(now.getDate())
           : parseInt(now.getDate());
       this.nowTime = now.getFullYear() + "-" + month + "-" + day;
-      // this.nowTime = '2019-09-08'
-      // this.nowTime = '2019-08-28'
     },
 
     // 获取基坑列表
@@ -2363,7 +2363,6 @@ export default {
             if (res.data.code == 0) {
               this.stageList = res.data.data;
               this.stageListChild = res.data.data[0].id;
-              // this.stageListChild = 4
               this.getStage(1, 4);
               this.getStageFourHoverList();
               this.getStageMax();
@@ -2751,8 +2750,8 @@ export default {
     // 获取地下水位历史数据
     getStageHistory(today) {
       if (today) {
-        var startTime = this.nowTime + " 00:00:00";
-        var endTime = this.nowTime + " 23:59:59";
+        let startTime = this.nowTime + " 00:00:00";
+        let endTime = this.nowTime + " 23:59:59";
         this.$axios
           .post(
             `/api/hjDeeppit/selectSpecialS?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.stage}`
@@ -2770,12 +2769,12 @@ export default {
             this.historyStageTolal = res.data.sum;
           });
       } else {
-        var startTime =
+        let startTime =
           this.searchTime[0]
             .toLocaleDateString()
             .split("/")
             .join("-") + " 00:00:00";
-        var endTime =
+        let endTime =
           this.searchTime[1]
             .toLocaleDateString()
             .split("/")
@@ -2801,8 +2800,8 @@ export default {
     // 获取位移历史数据
     getOffsetHistory(today) {
       if (today) {
-        var startTime = this.nowTime + " 00:00:00";
-        var endTime = this.nowTime + " 23:59:59";
+        let startTime = this.nowTime + " 00:00:00";
+        let endTime = this.nowTime + " 23:59:59";
         this.$axios
           .post(
             `/api/hjDeeppit/selectSpecialS?factorId=${this.offsetListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.offset}`
@@ -2819,12 +2818,12 @@ export default {
             this.historyOffsetTolal = res.data.sum;
           });
       } else {
-        var startTime =
+        let startTime =
           this.searchTime[0]
             .toLocaleDateString()
             .split("/")
             .join("-") + " 00:00:00";
-        var endTime =
+        let endTime =
           this.searchTime[1]
             .toLocaleDateString()
             .split("/")
@@ -2850,8 +2849,8 @@ export default {
     // 获取沉降历史数据
     getSubsideHistory(today) {
       if (today) {
-        var startTime = this.nowTime + " 00:00:00";
-        var endTime = this.nowTime + " 23:59:59";
+        let startTime = this.nowTime + " 00:00:00";
+        let endTime = this.nowTime + " 23:59:59";
         this.$axios
           .post(
             `/api/hjDeeppit/selectSpecialS?factorId=${this.subsideListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.subside}`
@@ -2868,12 +2867,12 @@ export default {
             this.historySubsideTolal = res.data.sum;
           });
       } else {
-        var startTime =
+        let startTime =
           this.searchTime[0]
             .toLocaleDateString()
             .split("/")
             .join("-") + " 00:00:00";
-        var endTime =
+        let endTime =
           this.searchTime[1]
             .toLocaleDateString()
             .split("/")
@@ -2899,8 +2898,8 @@ export default {
     // 获取结构应变历史数据
     getProductHistory(today) {
       if (today) {
-        var startTime = this.nowTime + " 00:00:00";
-        var endTime = this.nowTime + " 23:59:59";
+        let startTime = this.nowTime + " 00:00:00";
+        let endTime = this.nowTime + " 23:59:59";
         this.$axios
           .post(
             `/api/hjDeeppit/selectSpecialS?factorId=${this.productListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.product}`
@@ -2917,12 +2916,12 @@ export default {
             this.historyProductTolal = res.data.sum;
           });
       } else {
-        var startTime =
+        let startTime =
           this.searchTime[0]
             .toLocaleDateString()
             .split("/")
             .join("-") + " 00:00:00";
-        var endTime =
+        let endTime =
           this.searchTime[1]
             .toLocaleDateString()
             .split("/")
@@ -2948,8 +2947,8 @@ export default {
     // 获取倾斜历史数据
     getBiasHistory(today) {
       if (today) {
-        var startTime = this.nowTime + " 00:00:00";
-        var endTime = this.nowTime + " 23:59:59";
+        let startTime = this.nowTime + " 00:00:00";
+        let endTime = this.nowTime + " 23:59:59";
         this.$axios
           .post(
             `/api/hjDeeppit/selectSpecialS?factorId=${this.biasListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.bias}`
@@ -2966,12 +2965,12 @@ export default {
             this.historyBiasTolal = res.data.sum;
           });
       } else {
-        var startTime =
+        let startTime =
           this.searchTime[0]
             .toLocaleDateString()
             .split("/")
             .join("-") + " 00:00:00";
-        var endTime =
+        let endTime =
           this.searchTime[1]
             .toLocaleDateString()
             .split("/")
@@ -3170,7 +3169,7 @@ export default {
 
     // 格式化报警时间
     getAlarmTime(time) {
-      var a = time.split("-");
+      let a = time.split("-");
       a.shift();
       return a.join("-");
     },
@@ -3315,33 +3314,19 @@ export default {
           show: false,
           pieces: [
             {
-              gt: -10,
-              lte: -9,
+              // gt: -10,
+              lte: -4,
               color: "#096"
             },
             {
-              gt: -9,
-              lte: -7,
+              gt: -4,
+              lte: -2,
               color: "#ffde33"
             },
             {
-              gt: -7,
-              lte: -6,
-              color: "#ff9933"
-            },
-            {
-              gt: -6,
-              lte: -5,
-              color: "#cc0033"
-            },
-            {
-              gt: -4,
+              gt: -2,
               lte: 0,
-              color: "#660099"
-            },
-            {
-              gt: 0,
-              color: "#7e0023"
+              color: "#ff9933"
             }
           ],
           outOfRange: {
@@ -3352,23 +3337,14 @@ export default {
           name: "地下水位",
           type: "line",
           // symbolSize: 10,
-          // smooth: 0.2,
+          smooth: 0.2,
           // color: ["#0090ff"],
           data: stage,
           markLine: {
             // silent: true,
             data: [
               {
-                yAxis: -10
-              },
-              {
-                yAxis: -9
-              },
-              {
-                yAxis: -7
-              },
-              {
-                yAxis: -5
+                yAxis: -4
               },
               {
                 yAxis: -2
@@ -4487,11 +4463,11 @@ export default {
 
     // 点击向左滚动效果
     scrollLeft() {
-      var temp = Math.floor(scrollWrap.scrollLeft) + 329;
+      let temp = Math.floor(scrollWrap.scrollLeft) + 329;
       clearInterval(interval);
-      var interval = setInterval(() => {
+      let interval = setInterval(() => {
         if (scrollWrap.scrollLeft < temp) {
-          var distance = (scrollWrap.scrollLeft += 20);
+          let distance = (scrollWrap.scrollLeft += 20);
           if (scrollWrap.scrollLeft !== distance) {
             clearInterval(interval);
           }
@@ -4504,11 +4480,11 @@ export default {
 
     // 点击向右滚动效果
     scrollRight() {
-      var temp = Math.floor(scrollWrap.scrollLeft) - 329;
+      let temp = Math.floor(scrollWrap.scrollLeft) - 329;
       clearInterval(interval);
-      var interval = setInterval(() => {
+      let interval = setInterval(() => {
         if (scrollWrap.scrollLeft > temp) {
-          var distance = (scrollWrap.scrollLeft -= 20);
+          let distance = (scrollWrap.scrollLeft -= 20);
           if (scrollWrap.scrollLeft !== distance) {
             clearInterval(interval);
           }
