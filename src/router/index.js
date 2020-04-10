@@ -622,6 +622,10 @@ const router = new VueRouter({
     {
       path: '/temperatureAlarm',
       component: resolve => require(['../components/temperatureAlarm/temperatureAlarm.vue'], resolve)
+    },
+    {
+      path: '/aboutHuJiang',
+      component: resolve => require(['../components/aboutHuJiang/aboutHuJiang.vue'], resolve)
     }
   ]
 });
