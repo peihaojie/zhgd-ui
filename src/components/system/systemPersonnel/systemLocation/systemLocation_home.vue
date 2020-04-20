@@ -10,22 +10,13 @@
             :key="index"
           >
             <el-collapse @change="handleChange" accordion>
-              <!-- <el-collapse-item v-for="(item,index) in monitoringData.areaList" :key="index" :title="item.name" :name="`${item.name}`">
-                <div v-for="(item2,index2) in item.hireList" :key="index2">
-                  <a style="color:#fff" @click="$router.push({ path: '/location/l_search', query: { orderId: item2.hname } })">
-                  {{item2.hname}}
-                  <span class="online" v-show="item2.xloc">在线</span>
-                  <span class="offline" v-show="!item2.xloc">不在线</span>
-                  </a>
-                </div>
-              </el-collapse-item>-->
               <el-collapse-item
                 :title="item2.areaName"
                 :name="item2.areaId"
                 v-for="item2 in item.areaList"
                 :key="item2.areaId"
               >
-                <div v-for="item3 in item2.userList" :key="item3.yuserId">
+                <!-- <div v-for="item3 in item2.userList" :key="item3.yuserId">
                   <a
                     style="color:#4a4a4a"
                     @click="$router.push({ path: '/systemLocation_search',query: { orderId: item3.userName}})"
@@ -34,9 +25,30 @@
                     <span
                       :class="item3.userStatus?'online':'offline'"
                     >{{item3.userStatus?'在线':'不在线'}}</span>
-                    <!-- <span class="offline">不在线</span> -->
                   </a>
-                </div>
+                </div> -->
+                <el-collapse accordion>
+                  <el-collapse-item
+                    :title="`在线(${item2.line.onLine.length}人)`"
+                  >
+                    <a v-for="onLine in item2.line.onLine"
+                      :key="onLine.userId"
+                      style="color:#4a4a4a"
+                      @click="$router.push({ path: '/systemLocation_search',query: { orderId: onLine.userName}})">
+                      {{onLine.userName}}
+                      <span class="online">在线</span>
+                    </a>
+                  </el-collapse-item>
+                  <el-collapse-item
+                    :title="`不在线(${item2.line.offLine.length}人)`"
+                  >
+                    <a v-for="offLine in item2.line.offLine"
+                      :key="offLine.userId">
+                      {{offLine.userName}}
+                      <span class="offline">不在线</span>
+                    </a>
+                  </el-collapse-item>
+                </el-collapse>
               </el-collapse-item>
             </el-collapse>
           </el-collapse-item>
@@ -52,7 +64,18 @@
           :plugin="plugin"
           :events="events"
           class="amap-demo"
-        ></el-amap>
+        >
+          <el-amap-polygon
+            :path="path"
+            strokeColor="#333"
+            strokeWeight="2"
+            fillColor="#fff"
+            fillOpacity="0.5"
+          ></el-amap-polygon>
+          <template v-if="markers.length">
+            <el-amap-marker v-for="(marker, index) in markers" :key="index" :position="marker.position"></el-amap-marker>
+          </template>
+        </el-amap>
         <div class="alarm" @click="dialog">
           <i class="spectacularsAlarm"></i>
         </div>
@@ -144,9 +167,9 @@
       cursor: pointer;
       .spectacularsAlarm {
         display: inline-block;
-        width: .6rem;
-        height: .6rem;
-        background-image: url('../../../../../static/images/spectacularsAlarm.png');
+        width: 0.6rem;
+        height: 0.6rem;
+        background-image: url("../../../../../static/images/spectacularsAlarm.png");
         background-position: 100% 100%;
         background-size: 100%;
       }
@@ -157,20 +180,20 @@
       right: 1rem;
       width: 2rem;
       height: 2.2rem;
-      background: rgba(255, 255, 255, .85);
+      background: rgba(255, 255, 255, 0.85);
       color: #3375fe;
-      font-size: .2rem;
-      line-height: .48rem;
-      padding: 0 .1rem;
+      font-size: 0.2rem;
+      line-height: 0.48rem;
+      padding: 0 0.1rem;
       .corner {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(255, 255, 255, .95);
+        background: rgba(255, 255, 255, 0.95);
         transform: rotate(45deg);
         position: absolute;
         top: -0.1rem;
-        right: .2rem;
+        right: 0.2rem;
       }
       ul {
         width: 100%;
@@ -185,28 +208,28 @@
           cursor: pointer;
           i {
             display: inline-block;
-            width: .18rem;
-            height: .24rem;
+            width: 0.18rem;
+            height: 0.24rem;
             background-size: 100% 100%;
             vertical-align: sub;
-            margin-right: .1rem;
+            margin-right: 0.1rem;
           }
           .spectacularsSOS {
-            background-image: url('../../../../../static/images/spectacularsSOS.png')
+            background-image: url("../../../../../static/images/spectacularsSOS.png");
           }
           .spectacularsTumble {
-            background-image: url('../../../../../static/images/systemSpectacularsTumble.png')
+            background-image: url("../../../../../static/images/systemSpectacularsTumble.png");
           }
           .spectacularsStand {
-            background-image: url('../../../../../static/images/systemSpectacularsStand.png')
+            background-image: url("../../../../../static/images/systemSpectacularsStand.png");
           }
           .spectacularsElectricity {
-            background-image: url('../../../../../static/images/systemSpectacularsElectricity.png')
+            background-image: url("../../../../../static/images/systemSpectacularsElectricity.png");
           }
         }
       }
       ul::-webkit-scrollbar {
-        display: none
+        display: none;
       }
     }
   }
@@ -214,13 +237,12 @@
 </style>
 
 <script>
-import mixin from '@/utils/mixin.js'
+import mixin from "@/utils/mixin.js";
 let amapManager = new VueAMap.AMapManager();
 export default {
   mixins: [mixin],
   data() {
     return {
-      polygon: "",
       text: "",
       amapManager,
       circle: "", // 电子围栏位置信息
@@ -282,25 +304,27 @@ export default {
       alarmClick: false, // 报警弹窗显示
       alarmList: {}, // 报警列表
       scrollPlace: 0, // 滚动的位置
-      clearScroll: '', // 清除滚动
+      clearScroll: "", // 清除滚动
       warningTypeList: [
         {
-          label: 'SOS报警',
+          label: "SOS报警",
           value: 0
         },
         {
-          label: '摔跌报警',
+          label: "摔跌报警",
           value: 1
         },
         {
-          label: '久站不动报警',
+          label: "久站不动报警",
           value: 2
         },
         {
-          label: '低电量报警',
+          label: "低电量报警",
           value: 3
         }
       ], // 报警搜索列表
+      path: [],
+      markers: []
     };
   },
   created() {
@@ -312,18 +336,9 @@ export default {
   methods: {
     // 导航栏点击事件
     handleChange(val) {
-      // console.log(val)
-      // if (val == '1-1') {
-      //     this.polygon.show()
-      //     this.text.show()
-      //     this.marker.hide()
-      // }
-      // this.circle.show()
-      console.log(this.workAreaList);
       let temp = [];
       for (let i = 0; i < this.workAreaList[0].areaList.length; i++) {
-        // console.log(this.monitoringData.areaList[i].name)
-        if (val == this.workAreaList[0].areaList[i].areaId) {
+        if (val == this.workAreaList[0].areaList[i].areaId && !this.workAreaList[0].areaList[i].way) {
           temp.push(this.workAreaList[0].areaList[i].areaXloc);
           temp.push(this.workAreaList[0].areaList[i].areaYloc);
           // 设置电子围栏圆心
@@ -334,6 +349,23 @@ export default {
           this.center = temp;
           // 设置地图缩放等级
           this.zoom = 14;
+        } else if (val == this.workAreaList[0].areaList[i].areaId && this.workAreaList[0].areaList[i].way) {
+          this.zoom = 14;
+          this.center = [this.workAreaList[0].areaList[i].localtion[0].xloc, this.workAreaList[0].areaList[i].localtion[0].yloc]
+          this.markers = new Array()
+          for (let j = 0; j < this.workAreaList[0].areaList[i].line.onLine.length; j++) {
+            let obj = new Object()
+            obj.position = [this.workAreaList[0].areaList[i].line.onLine[j].userXloc, this.workAreaList[0].areaList[i].line.onLine[j].userYloc]
+            this.markers.push(obj)
+            console.log(this.markers);
+          }
+          let temp = []
+          temp.push(this.workAreaList[0].areaList[i].localtion.map(a => {
+            return new Array(a.xloc, a.yloc)
+          }));
+          temp.forEach(item => {
+            this.path.push(item)
+          });
         }
       }
     },
@@ -349,31 +381,28 @@ export default {
       this.$axios
         .post(`/api/hireApi/getHirePeople?projectId=${this.projectId}`)
         .then(res => {
-          // console.log(res.data.data[0])
-          // for (let i = 0; i < res.data.data.length; i++) {
-          //     if (this.projectId==res.data.data[i].projectId) {
-          //         this.workAreaList.push(res.data.data[i])
-          //     }
-          // }
-          this.workAreaList = res.data.data;
-          // console.log(this.workAreaList)
+          if (res.data.code == 0) {
+            this.workAreaList = res.data.data;
+          }
         });
     },
 
     // 获取报警数据，并弹窗
     dialog() {
-      this.alarmClick = !this.alarmClick
+      this.alarmClick = !this.alarmClick;
       if (this.alarmClick) {
         this.$axios
-          .post(`/api/pcEquipmentWarning/warningCount?projectId=${this.projectId}`)
+          .post(
+            `/api/pcEquipmentWarning/warningCount?projectId=${this.projectId}`
+          )
           .then(res => {
             if (res.data.code == 0) {
-              this.alarmList = res.data.data
+              this.alarmList = res.data.data;
               // setTimeout(() => {
               //   this.startScroll()
               // }, 500);
             }
-          })
+          });
       } else {
         // clearInterval(this.clearScroll)
         // this.$refs.scroll.scrollTop = 0
@@ -382,45 +411,49 @@ export default {
 
     // 滚动
     startScroll() {
-      if (this.clearScroll) clearInterval(this.clearScroll)
+      if (this.clearScroll) clearInterval(this.clearScroll);
       this.clearScroll = setInterval(() => {
-        this.$refs.scroll.scrollTop += 1
+        this.$refs.scroll.scrollTop += 1;
         if (this.scrollPlace == this.$refs.scroll.scrollTop) {
-          this.$refs.scroll.scrollTop = 0
+          this.$refs.scroll.scrollTop = 0;
         } else {
-          this.scrollPlace = this.$refs.scroll.scrollTop
+          this.scrollPlace = this.$refs.scroll.scrollTop;
         }
       }, 50);
     },
 
     // 返回报警名称
     getWarningName(name, value) {
-      if (name == 'countFall') {
-        return '摔倒报警'+ value + '人'
-      } else if (name == 'countBat') {
-        return '低电量报警'+ value + '台'
-      } else if (name == 'countSos') {
-        return 'SOS报警'+ value + '人'
+      if (name == "countFall") {
+        return "摔倒报警" + value + "人";
+      } else if (name == "countBat") {
+        return "低电量报警" + value + "台";
+      } else if (name == "countSos") {
+        return "SOS报警" + value + "人";
       } else {
-        return '久站未动报警'+ value + '人'
+        return "久站未动报警" + value + "人";
       }
     },
 
     //查看详情
     examine(name) {
       this.$router.push({
-        path: '/systemLocation_alarm',
+        path: "/systemLocation_alarm",
         query: {
-          warningType: name=='countSos' ? 0
-                :name=='countFall' ? 1
-                :name=='countMove' ? 2
-                : 3
+          warningType:
+            name == "countSos"
+              ? 0
+              : name == "countFall"
+              ? 1
+              : name == "countMove"
+              ? 2
+              : 3
         }
-      })
+      });
     }
   },
   beforeDestroy() {
     // if (this.clearScroll) clearInterval(this.clearScroll)
   }
-}
+};
 </script>
