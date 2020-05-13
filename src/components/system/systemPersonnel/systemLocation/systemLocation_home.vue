@@ -110,6 +110,8 @@
     box-shadow: 0 0 0.5rem -0.3rem #666;
     .nav {
       width: 3.17rem;
+      // height: 100%;
+      overflow: auto;
       .el-collapse {
         border: 0;
         // transform: translateY(.12rem);
@@ -382,6 +384,10 @@ export default {
         .post(`/api/hireApi/getHirePeople?projectId=${this.projectId}`)
         .then(res => {
           if (res.data.code == 0) {
+            res.data.data[0].areaList.forEach(item => {
+              item.line.offLine = item.line.offLine ? item.line.offLine : []
+              item.line.onLine = item.line.onLine ? item.line.onLine : []
+            });
             this.workAreaList = res.data.data;
           }
         });

@@ -90,8 +90,7 @@
                 <a @click="navClick(1)" :class="selectShow==1?'active':''" v-if="stage!=''">地下水位</a>
                 <a @click="navClick(2)" :class="selectShow==2?'active':''" v-if="offset!=''">水平位移</a>
                 <a @click="navClick(3)" :class="selectShow==3?'active':''" v-if="subside!=''">周边沉降</a>
-                <!-- <a @click="navClick(4)" :class="selectShow==4?'active':''">支撑轴力</a> -->
-
+                <a @click="navClick(4)" :class="selectShow==4?'active':''" v-if="axialForce!=''">支撑轴力</a>
                 <a @click="navClick(5)" :class="selectShow==5?'active':''" v-if="product!=''">结构应变</a>
                 <a @click="navClick(6)" :class="selectShow==6?'active':''" v-if="bias!=''">建筑倾斜</a>
               </div>
@@ -126,7 +125,7 @@
               </div>
               <div class="top-box">
                 <!-- 检测点 -->
-                <div class="left-box" style="width: 1.8rem;">
+                <div class="left-box" style="width: 2rem;">
                   <div class="name">{{filterStage(stageListChild)}}</div>
                   <ul>
                     <li>基坑：{{deviceName}}</li>
@@ -427,108 +426,57 @@
             </div>
           </div>
           <!-- 支撑轴力实时数据 暂时未开放 -->
-          <div class="main" v-show="selectShow==4&&!historyShow">
+          <div class="main" v-show="selectShow==4&&!historyShow" v-if="axialForce != ''">
             <!-- 搜索栏 -->
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="value4" placeholder="请选择">
+                <el-select v-model="axialForceChild" placeholder="请选择" @change="getAxialForce(1, 4),getAxialForceFourHoverList(),getAxialForceMax()">
                   <el-option
-                    v-for="item in options4"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="item in axialForceList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
                   ></el-option>
                 </el-select>
               </div>
-              <!-- <div class="right-search">
-                <div class="input-box">
-                  <input type="text" placeholder="请输入测点名称搜索" />
-                  <a class="el-icon-search"></a>
-                </div>
-              </div>-->
             </div>
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
                 <span>检测点</span>
-                <span>当日数据趋势图</span>
-                <span style="width:2.4rem;">当日数据列表</span>
+                <span style="margin-right: 4rem;">当日数据趋势图</span>
               </div>
               <div class="top-box">
                 <!-- 检测点 -->
-                <div class="left-box">
-                  <div class="name">
-                    <i class="dot"></i>
-                    ZL-01
-                  </div>
+                <div class="left-box" style="width: 2rem;">
+                  <div class="name">{{filterAxialForce(axialForceChild)}}</div>
                   <ul>
-                    <li>深基坑：1号深基坑</li>
-                    <li>最大值：100%FN</li>
-                    <li>最小值：20%FN</li>
-                    <li>平均值：60%FN</li>
+                    <li>基坑：{{deviceName}}</li>
+                    <li>最大值：{{axialMaxList.max ? axialMaxList.max : 0}}KN</li>
+                    <li>最小值：{{axialMaxList.min ? axialMaxList.min : 0}}KN</li>
+                    <li>平均值：{{axialMaxList.avg ? parseFloat(axialMaxList.avg).toFixed(3) : 0}}KN</li>
                   </ul>
                 </div>
                 <!-- 当日数据趋势图 -->
                 <div class="line-chart" id="fourChart"></div>
-                <!-- 当日数据列表 -->
-                <div class="right-box">
-                  <ul>
-                    <li>
-                      <span style="width:2rem;">支撑轴力(FN)</span>
-                      <span style="width:1rem;">时间</span>
-                      <span style="width:.4rem;">状态</span>
-                    </li>
-                    <li>
-                      <span style="width:2rem;">25%</span>
-                      <span style="width:1rem;">00:00</span>
-                      <span style="width:.4rem;">
-                        <i class="dot"></i>
-                      </span>
-                    </li>
-                    <li>
-                      <span style="width:2rem;">20%</span>
-                      <span style="width:1rem;">12:12</span>
-                      <span style="width:.4rem;">
-                        <i class="dot"></i>
-                      </span>
-                    </li>
-                    <li>
-                      <span style="width:2rem;">30%</span>
-                      <span style="width:1rem;">13:13</span>
-                      <span style="width:.4rem;">
-                        <i class="dot"></i>
-                      </span>
-                    </li>
-                  </ul>
-                </div>
               </div>
+              <!-- 当日数据列表 -->
               <div class="table-height">
-                <span style="width:33%;">检测点</span>
-                <span style="width:33%;">支撑轴力(FN)</span>
-                <span style="width:33%;">采集时间</span>
+                <span style="width: 33%;">检测点</span>
+                <span style="width: 33%;">支撑轴力(KN)</span>
+                <span style="width: 33%;">采集时间</span>
               </div>
               <div class="bottom-box">
                 <ul>
-                  <li>
-                    <span style="width:33%;">CJ-01</span>
-                    <span style="width:33%;">10%</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li>
-                  <li class="even">
-                    <span style="width:33%;">JH-01</span>
-                    <span style="width:33%;">20%</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li>
-                  <li>
-                    <span style="width:33%;">JW-01</span>
-                    <span style="width:33%;">100%</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
-                  </li>
-                  <li class="even">
-                    <span style="width:33%;">WU-01</span>
-                    <span style="width:33%;">25%</span>
-                    <span style="width:33%;">2018-02-06 12:00:00</span>
+                  <li
+                    v-for="(item, index) in axialForceTable"
+                    :key="item.id"
+                    :class="{'even':index%2!=0}"
+                  >
+                    <span style="width:33%;">{{filterAxialForce(item.factorId)}}</span>
+                    <span style="width:33%;">{{item.factorForce}}</span>
+                    <span style="width:33%;">{{item.creation}}</span>
                   </li>
                 </ul>
               </div>
@@ -760,7 +708,6 @@
               </div>
             </div>
           </div>
-
           <!-- 地下水位历史数据 -->
           <div class="main" v-show="selectShow==1&&historyShow" v-if="stage!=''">
             <!-- 搜索栏 -->
@@ -809,13 +756,6 @@
                       <template slot-scope="scope">{{filterStage(scope.row.factorId)}}</template>
                     </el-table-column>
                     <el-table-column prop="waterLevel" label="地下水位（m）"></el-table-column>
-                    <!-- <el-table-column>
-                      <template slot-scope="scope">
-                        <div
-                          :style="`color:${scope.row.status==0?'#fe8990':'#58de87'}`"
-                        >{{scope.row.status==0?'不合格':'合格'}}</div>
-                      </template>
-                    </el-table-column>-->
                     <el-table-column prop="creation" label="时间"></el-table-column>
                   </el-table>
                   <el-pagination
@@ -976,17 +916,17 @@
             </div>
           </div>
           <!-- 支撑轴力历史数据 暂时未开发 -->
-          <div class="main" v-show="selectShow==4&&historyShow">
+          <div class="main" v-show="selectShow==4&&historyShow" v-if="axialForce != ''">
             <!-- 搜索栏 -->
             <div class="search-box">
               <div class="left-search">
                 测点：
-                <el-select v-model="value" placeholder="请选择">
+                <el-select v-model="axialForceChild" placeholder="请选择" @change="getAxialForceHistory('today')">
                   <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="item in axialForceList"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
                   ></el-option>
                 </el-select>起止时间：
                 <el-date-picker
@@ -1002,34 +942,41 @@
             <!-- 数据内容 -->
             <div class="data-box">
               <div class="table-height">
-                <span>检测点</span>
+                <span></span>
                 <span>当日数据趋势图</span>
-                <span style="width:2.4rem;">当日数据列表</span>
+                <span></span>
               </div>
               <div class="top-box">
                 <!-- 当日数据趋势图 -->
                 <div class="line-chart" id="historyFour"></div>
               </div>
-              <div class="table-box">
-                <el-table :data="historyTableData4" stripe border>
-                  <el-table-column type="selection" width="40"></el-table-column>
-                  <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
-                  <el-table-column prop="name" label="检测点" width="150"></el-table-column>
-                  <el-table-column label="支撑轴力（FN）" width="150">
-                    <template slot-scope="scope">
-                      <div :style="`color:${scope.row.status==0?'#fe8990':''}`">{{scope.row.level}}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column>
-                    <template slot-scope="scope">
-                      <div
-                        :style="`color:${scope.row.status==0?'#fe8990':'#58de87'}`"
-                      >{{scope.row.status==0?'不合格':'合格'}}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="time" label="时间"></el-table-column>
-                </el-table>
+              <div class="table-box" :style="historyTableChange">
+                <div class="table-wrap">
+                  <el-table :data="axialForceHistoryTable" stripe border>
+                    <el-table-column type="selection" width="40"></el-table-column>
+                    <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
+                    <el-table-column label="检测点">
+                      <template slot-scope="scope">{{filterAxialForce(scope.row.factorId)}}</template>
+                    </el-table-column>
+                    <el-table-column prop="factorForce" label="支撑轴力（KN）"></el-table-column>
+                    <el-table-column prop="creation" label="时间"></el-table-column>
+                  </el-table>
+                  <el-pagination
+                    @current-change="handlePageNum"
+                    :current-page="pageNum"
+                    :page-size="historyPageSize"
+                    layout="total, prev, pager, next, jumper"
+                    :total="historyAxialForceTolal"
+                  ></el-pagination>
+                  <div class="notSeeMore" @click="historyTableChangeHeight()">收起</div>
+                </div>
+                <div class="seeMore" v-show="seeMore"></div>
               </div>
+              <div
+                class="seeMoreClick"
+                @click="historyTableChangeHeight('add')"
+                v-show="seeMore"
+              >查看更多数据</div>
             </div>
           </div>
           <!-- 结构应变历史数据 -->
@@ -1445,7 +1392,7 @@
           position: relative;
           .scroll-wrap {
             width: 11.18rem;
-            overflow-x: scroll;
+            overflow-x: auto;
             overflow-y: hidden;
             .scroll-inner {
               height: 100%;
@@ -1466,6 +1413,7 @@
                 color: #858585;
                 height: 0.8rem;
                 border-bottom: 0.05rem solid #3eaafd;
+                padding-bottom: .15rem;
               }
             }
           }
@@ -1940,7 +1888,16 @@ export default {
       allOfAlarm: 0, // 总共的报警次数
       alarmListTotal: 0, // 报警表格数据总数
       alarmEchats: [], // 报警图表数据
-      stationList: [] // 报警搜索的测点显示
+      stationList: [], // 报警搜索的测点显示
+      axialForce: "", // 支撑轴力id
+      axialForceList: [], // 支撑轴力测点列表
+      axialForceChild: [], // 支撑轴力测点选择项
+      axialForceTable: [], // 支撑轴力测点选择项
+      axialMaxList: [], // 支撑轴力最大值列表
+      axialForceFourHoverList: [], // 支撑轴力最大值列表
+      axialForceHistoryTable: [], // 支撑轴力监测点表格(历史)
+      historyAxialForceTolal: 0, // 支撑轴力监测点表格数据
+      axialForceHistoryEcharts: [], // 支撑轴力监测点图表数据
     };
   },
   mounted() {
@@ -2035,6 +1992,9 @@ export default {
                 case "沉降":
                   this.selectShow = 3;
                   break;
+                case "支撑轴力":
+                  this.selectShow = 4;
+                  break;
                 case "应变原始数据":
                   this.selectShow = 5;
                   break;
@@ -2060,6 +2020,9 @@ export default {
                 break;
               case "建筑物倾斜":
                 this.bias = value.id;
+                break;
+              case "支撑轴力":
+                this.axialForce = value.id;
                 break;
               default:
                 break;
@@ -2135,6 +2098,19 @@ export default {
             }
           });
       }
+      if (this.axialForce > 0) {
+        this.$axios
+          .post(`${url}${this.axialForce}`)
+          .then(res => {
+            if (res.data.code == 0) {
+              this.axialForceList = res.data.data;
+              this.axialForceChild = res.data.data[0].id;
+              this.getAxialForce(1, 4);
+              this.getAxialForceFourHoverList();
+              this.getAxialForceMax();
+            }
+          });
+      }
     },
 
     // 获取测点水位数据
@@ -2202,6 +2178,19 @@ export default {
         });
     },
 
+    // 获取测点轴力数据
+    getAxialForce(num, size) {
+      this.$axios
+        .post(
+          `/api/hjDeeppit/getFactorData?factorId=${this.axialForceChild}&date=${
+            this.nowTime
+          }&pageNum=${num}&pageSize=${size}&endTime=`
+        )
+        .then(res => {
+          this.axialForceTable = res.data.data;
+        });
+    },
+
     // 显示水位监测点名称
     filterStage(id) {
       for (let i = 0; i < this.stageList.length; i++) {
@@ -2247,11 +2236,20 @@ export default {
       }
     },
 
+    // 显示轴力监测点名称
+    filterAxialForce(id) {
+      for (let i = 0; i < this.axialForceList.length; i++) {
+        if (this.axialForceList[i].id == id) {
+          return this.axialForceList[i].name;
+        }
+      }
+    },
+
     // 获取水位四小时记录
     getStageFourHoverList() {
       this.$axios
         .post(
-          `/api/hjDeeppit/selectSpecial?factorId=${this.stageListChild}&date=${this.nowTime}&param=water_level`
+          `/api/hjDeeppit/selectSpecial?factorId=${this.stageListChild}&date=${this.nowTime}&types=1`
         )
         .then(res => {
           this.stageFourHoverList = res.data;
@@ -2338,6 +2336,17 @@ export default {
         });
     },
 
+    // 获取轴力四小时记录
+    getAxialForceFourHoverList() {
+      this.$axios
+        .post(
+          `/api/hjDeeppit/selectSpecial?factorId=${this.axialForceChild}&date=${this.nowTime}&types=2`
+        )
+        .then(res => {
+          this.axialForceFourHoverList = res.data;
+        });
+    },
+
     // 历史记录翻页
     handlePageNum(val) {
       this.pageNum = val;
@@ -2372,6 +2381,8 @@ export default {
           this.getOffsetHistory("today");
         } else if (this.selectShow == 3) {
           this.getSubsideHistory("today");
+        } else if (this.selectShow == 4) {
+          this.getAxialForceHistory("today");
         } else if (this.selectShow == 5) {
           this.getProductHistory("today");
         } else if (this.selectShow == 6) {
@@ -2384,7 +2395,7 @@ export default {
     getStageMax() {
       this.$axios
         .post(
-          `/api/hjDeeppit/getParmeterAvg?displayId=${this.stage}&factorId=${this.stageListChild}`
+          `/api/hjDeeppit/getParmeterAvg?displayId=${this.stage}&factorId=${this.stageListChild}&types=1`
         )
         .then(res => {
           this.stageMaxList = res.data.data;
@@ -2411,6 +2422,17 @@ export default {
       //   })
     },
 
+    // 获取轴力最大值
+    getAxialForceMax() {
+      this.$axios
+        .post(
+          `/api/hjDeeppit/getParmeterAvg?displayId=${this.axialForce}&factorId=${this.axialForceChild}&types=2`
+        )
+        .then(res => {
+          this.axialMaxList = res.data.data;
+        });
+    },
+
     // 历史记录按钮点击事件
     historyClick() {
       switch (this.selectShow) {
@@ -2422,6 +2444,9 @@ export default {
           break;
         case 3:
           this.getSubsideHistory("today");
+          break;
+        case 4:
+          this.getAxialForceHistory("today");
           break;
         case 5:
           this.getProductHistory("today");
@@ -2481,6 +2506,57 @@ export default {
           .then(res => {
             this.stageHistoryTable = res.data.data;
             this.historyStageTolal = res.data.sum;
+          });
+      }
+    },
+
+    // 获取轴力历史数据
+    getAxialForceHistory(today) {
+      if (today) {
+        let startTime = this.nowTime + " 00:00:00";
+        let endTime = this.nowTime + " 23:59:59";
+        this.$axios
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.axialForceChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.axialForce}`
+          )
+          .then(res => {
+            this.axialForceHistoryEcharts = res.data;
+            this.ifCart();
+          });
+        this.$axios
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.axialForceChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
+          .then(res => {
+            this.axialForceHistoryTable = res.data.data;
+            this.historyAxialForceTolal = res.data.sum;
+          });
+      } else {
+        let startTime =
+          this.searchTime[0]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 00:00:00";
+        let endTime =
+          this.searchTime[1]
+            .toLocaleDateString()
+            .split("/")
+            .join("-") + " 23:59:59";
+        this.$axios
+          .post(
+            `/api/hjDeeppit/selectSpecialS?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&displayId=${this.axialForce}`
+          )
+          .then(res => {
+            this.axialForceHistoryEcharts = res.data;
+            this.ifCart();
+          });
+        this.$axios
+          .post(
+            `/api/hjDeeppit/getFactorDataT?factorId=${this.stageListChild}&startTime=${startTime}&endTime=${endTime}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`
+          )
+          .then(res => {
+            this.axialForceHistoryTable = res.data.data;
+            this.historyAxialForceTolal = res.data.sum;
           });
       }
     },
@@ -2700,6 +2776,12 @@ export default {
           this.getSubsideHistory();
         } else {
           this.getSubsideHistory("today");
+        }
+      } else if (this.selectShow == 4) {
+        if (this.searchTime) {
+          this.getAxialForceHistory();
+        } else {
+          this.getAxialForceHistory("today");
         }
       } else if (this.selectShow == 5) {
         if (this.searchTime) {
@@ -3126,6 +3208,96 @@ export default {
             data: offsetY
           }
         ]
+      });
+    },
+
+    // 轴力当日数据趋势图
+    fourChart(stageFrom) {
+      let date = new Date();
+      let time = `${date.getFullYear()}/${date.getMonth() +
+        1}/${date.getDate()}`;
+      let stage = Object.assign({}, stageFrom);
+      // stage.length = 48;
+      stage.length = 24;
+      for (let i = 0; i < stage.length; i++) {
+        let temp = new Array();
+        temp.push(
+          // new Date(
+          //   `${time} ${
+          //     i == 0
+          //       ? "00:00:00"
+          //       : i % 2
+          //       ? Math.floor(i / 2) + ":30:00"
+          //       : i / 2 + ":00:00"
+          //   }`
+          // ).getTime()
+          new Date(
+            `${time} ${ i == 0 ? "00:00:00" : i + ":00:00" }`
+          ).getTime()
+        );
+        temp.push(stage[i] ? stage[i] : undefined);
+        stage[i] = temp;
+      }
+      let fourChart = this.$echarts.init(document.getElementById("fourChart"));
+      fourChart.setOption({
+        // backgroundColor: "#FBFBFB",
+        grid: {
+          x: 60,
+          y: 30,
+          x2: 50,
+          y2: 50,
+          containLabel: true
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        calculable: true,
+        xAxis: {
+          axisLabel: {
+            rotate: 0,
+            interval: 0,
+            color: "#000"
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          type: "time",
+          boundaryGap: false
+        },
+        yAxis: {
+          type: "value",
+          max: value => value.max + 20,
+          // interval: 0.1,
+          axisLabel: {
+            textStyle: {
+              color: "#000"
+            }
+            // formatter: "{value} 度"
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["#ccc"],
+              width: 1,
+              type: "dashed"
+            }
+          }
+        },
+        series: {
+          name: "地下水位",
+          type: "line",
+          // symbolSize: 10,
+          smooth: 0.2,
+          color: ["#0090ff"],
+          data: stage
+        }
       });
     },
 
@@ -3759,7 +3931,7 @@ export default {
     },
 
     // 支撑轴力历史数据
-    historyFour() {
+    historyFour(data) {
       let historyFour = this.$echarts.init(
         document.getElementById("historyFour")
       );
@@ -3775,64 +3947,56 @@ export default {
           trigger: "axis"
         },
         calculable: true,
-        xAxis: [
-          {
-            axisLabel: {
-              rotate: 0,
-              interval: 0,
+        xAxis: {
+          axisLabel: {
+            rotate: 0,
+            interval: 0,
+            color: "#000"
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          type: "time"
+        },
+        yAxis: {
+          type: "value",
+          axisLabel: {
+            textStyle: {
               color: "#000"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#132e6d"
-              }
-            },
-            type: "category",
-            boundaryGap: false,
-            data: ["00：00", "04：00", "08：00", "12：00", "16：00", "20：00"]
-          }
-        ],
-        yAxis: [
-          {
-            type: "value",
-            min: 0,
-            interval: 0.15,
-            axisLabel: {
-              textStyle: {
-                color: "#000"
-              }
-              //   formatter: "{value} 度"
-            },
-            axisLine: {
-              lineStyle: {
-                color: "#132e6d"
-              }
-            },
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: ["#ccc"],
-                width: 1,
-                type: "dashed"
-              }
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: "#132e6d"
+            }
+          },
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ["#ccc"],
+              width: 1,
+              type: "dashed"
             }
           }
-        ],
-        dataZoom: {
-          realtime: true, //拖动滚动条时是否动态的更新图表数据
-          height: 25, //滚动条高度
-          start: 40, //滚动条开始位置（共100等份）
-          end: 65 //结束位置（共100等份）
         },
+        dataZoom: [
+          {
+            realtime: true, //拖动滚动条时是否动态的更新图表数据
+            height: 25, //滚动条高度
+            start:0,//滚动条开始位置（共100等份）
+            // end:15,//结束位置（共100等份）
+            // filterMode: 'filter',
+            type: "slider"
+          }
+        ],
         series: [
           {
-            name: "支撑轴力历史数据图",
+            name: "地下水位",
             type: "line",
-            symbolSize: 10,
-            smooth: 0.2,
             color: ["#0090ff"],
-            data: [0.26, 0.25, 0.35, 0.25, 0.14, 0.15]
-            // data: zcrs
+            data: data.reverse()
           }
         ]
       });
@@ -4067,9 +4231,9 @@ export default {
         }
       }
       if (this.selectShow == 4 && !this.historyShow) {
-        // if (document.getElementById("fourChart")) {
-        //   this.fourChart();
-        // }
+        if (document.getElementById("fourChart")) {
+          this.fourChart(this.axialForceFourHoverList);
+        }
       }
       if (this.selectShow == 5 && !this.historyShow) {
         if (
@@ -4117,10 +4281,9 @@ export default {
       }
       if (this.selectShow == 4 && this.historyShow) {
         if (
-          document.getElementById("historyFour") &&
-          this.stageFourHoverList.length > 0
+          document.getElementById("historyFour")
         ) {
-          this.historyFour();
+          this.historyFour(this.axialForceHistoryEcharts);
         }
       }
       if (this.selectShow == 5 && this.historyShow) {

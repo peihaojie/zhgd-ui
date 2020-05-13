@@ -1,7 +1,7 @@
 <!--
  * @Date         : 2020-04-10 16:34:49
  * @LastEditors  : HaoJie
- * @LastEditTime : 2020-04-10 19:39:35
+ * @LastEditTime : 2020-04-27 15:55:22
  * @FilePath     : \src\components\aboutHuJiang\aboutHuJiang.vue
  -->
 <template>
@@ -59,9 +59,33 @@
             <li>中标华润南、北方公司供应商</li>
             <li>与中车信息形成合作关系</li>
             <li>预计实现全国200+主要城市覆盖</li>
-            <li>服务项目1000+</li>
             <li>产业工人系统上线</li>
           </ul>
+        </div>
+      </div>
+      <div class="company-qualification">
+        <div class="title">
+          <span>公司资质</span>
+          <span>COMPANY QUALIFICATION</span>
+        </div>
+        <div class="diploma">
+        </div>
+      </div>
+      <div class="contact-us">
+        <div class="title">
+          <span>联系我们</span>
+          <span>CONTACT US</span>
+        </div>
+        <div class="message">
+          <div class="map"></div>
+          <div class="contact">
+            <p class="title">联系我们</p>
+            <p class="phone">400-188-6585</p>
+            <p class="e-mail">94721393@qq.com</p>
+            <p class="sz">深圳虎匠：广东省深圳市龙华区大浪街道科伦特低碳产业园</p>
+            <p class="hb">河北一虎：河北省石家庄市裕华区国际丽都1604</p>
+            <p class="bj">北京一虎：北京市朝阳区大黄庄35号菁英梦谷二期212D室</p>
+          </div>
         </div>
       </div>
     </div>
@@ -149,8 +173,9 @@ export default {
     .year {
       height: 5.5rem;
       background: url("~images/about_hujiang_airplane.png");
-      background-position: center;
+      background-position: center right;
       background-repeat: no-repeat;
+      background-size: 80%;
       position: relative;
       ul {
         span {
@@ -165,6 +190,56 @@ export default {
           font-size: .18rem;
           line-height: .3rem;
         }
+        &.fifteen {
+          position: absolute;
+          left: 1rem;
+          top: 1.8rem;
+        }
+        &.sixteen {
+          position: absolute;
+          left: 4.3rem;
+          bottom: 1rem;
+        }
+        &.seventeen {
+          position: absolute;
+          left: 4.3rem;
+          top: 1rem;
+        }
+        &.eighteen {
+          position: absolute;
+          right: -.25rem;
+          bottom: 1rem;
+        }
+        &.nineteen {
+          position: absolute;
+          top: 0;
+          right: 2rem;
+        }
+      }
+    }
+  }
+  .company-qualification {
+    .diploma {
+      height: 4.45rem;
+      width: 6.85rem;
+      margin: auto;
+      margin-top: .4rem;
+      margin-bottom: .9rem;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      background-image: url("~images/about_hujiang_diploma.png");
+    }
+  }
+  .contact-us {
+    .message {
+      padding: .8rem 0 1.3rem;
+      .map {
+        width: 6rem;
+        height: 4rem;
+        display: inline-block;
+        background-image: url("~images/about_hujiang_map.png");
+        background-repeat: no-repeat;
+        background-size: 100%;
       }
     }
   }
