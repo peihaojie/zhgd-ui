@@ -121,6 +121,9 @@
                 <li>
                   <a @click="unopenClick">3D打印应用</a>
                 </li>
+                <li>
+                  <a target="_blank" href="http://39.108.103.150:8090">库存管理</a>
+                </li>
               </ul>
             </div>
           </li>

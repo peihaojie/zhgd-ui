@@ -251,6 +251,13 @@
               <img src="../../../static/images/planeCard.png" alt="" @click="plane">
             </div>
             <div class="flex planeCard_black" v-else @click="msg" style="cursor: pointer;"></div>
+            <!-- 库存管理 -->
+            <div class="flex inventory_bg" v-if="open">
+              <a target="_blank" href="http://39.108.103.150:8090">
+                <img src="../../../static/images/inventory.png" alt="">
+              </a>
+            </div>
+            <div class="flex setCard_black" v-else></div>
             <i></i>
             <i></i>
             <i></i>
@@ -605,6 +612,9 @@
       }
       .setCard_bg {
         background-image: url('../../../static/images/setCard_bg.png');
+      }
+      .inventory_bg {
+        background-image: url('../../../static/images/inventory_bg.png');
       }
       .setCard_black {
         background-image: url('../../../static/images/setCard_black.png');

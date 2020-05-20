@@ -179,10 +179,10 @@
     </div>
     <!-- 页面下半部分 -->
     <div class="bottom">
-      <!-- 进场手续签订 -->
+      <!-- 进场确认书签订 -->
       <div class="procedure">
         <div class="name">
-          <h3>进场手续签订</h3>
+          <h3>进场确认书签订</h3>
         </div>
         <div class="float-left">
           <ul style="margin-top:-.1rem">
@@ -232,10 +232,10 @@
           </div>
         </div>
       </div>
-      <!-- 退场手续签订 -->
+      <!-- 退场确认书签订 -->
       <div class="contract">
         <div class="name">
-          <h3>退场手续签订</h3>
+          <h3>退场确认书签订</h3>
         </div>
         <div class="float-left">
           <ul style="margin-top:-.1rem">
