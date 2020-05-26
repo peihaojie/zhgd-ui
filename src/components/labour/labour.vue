@@ -210,7 +210,7 @@
         <div
           class="map float-right"
           :class="contract.workConfirm.hg=='合格'?'qualified':'disqualification'"
-           v-if="contract.workConfirm"
+          v-if="contract.workConfirm"
         >
           <!-- qualified为合格 disqualification为不合格 -->
           <div class="border" :class="contract.workConfirm.hg=='合格'?'border-green':'border-red'" v-if="contract.workConfirm">

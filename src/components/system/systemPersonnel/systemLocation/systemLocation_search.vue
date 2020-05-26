@@ -38,7 +38,7 @@
             </li>
             <li>
               设备电量：
-              <span>{{personnelData.bat}}%</span>
+              <span v-if="personnelData.bat">{{personnelData.bat}}%</span>
             </li>
             <li>
               定位时间：
@@ -49,18 +49,18 @@
               <span>{{personnelData.address}}</span>
             </li>
             <li>
-              <input type="checkbox" v-model="personnelData.laborContract" disabled>劳动合同
-              <input type="checkbox" v-model="personnelData.tertiaryEducation" disabled>三级教育
-              <input type="checkbox" v-model="personnelData.digitalTraining" disabled>数字化培训
+              <input type="checkbox" v-model="personnelData.laborContract" disabled />劳动合同
+              <input type="checkbox" v-model="personnelData.tertiaryEducation" disabled />三级教育
+              <input type="checkbox" v-model="personnelData.digitalTraining" disabled />数字化培训
             </li>
             <li v-if="personnelData.skilCertificate">
               技能证书:
-              <img :src="personnelData.skilCertificate" style="width: 100%; height: 1.5rem">
+              <img :src="personnelData.skilCertificate" style="width: 100%; height: 1.5rem" />
             </li>
           </ul>
         </div>
       </div>
-      <div class="map">
+      <div class="map" v-loading="loading">
         <el-amap
           ref="map"
           vid="amapDemo"
@@ -157,7 +157,7 @@ let amapManager = new VueAMap.AMapManager();
 export default {
   data() {
     return {
-      projectId: 1, // 项目id
+      projectId: sessionStorage.getItem("pid"), // 项目id
       circle: "", // 电子围栏位置信息
       marker: "", // 人员位置坐标点
       name: "", //需要查询的人名或设备编号或手机号码
@@ -201,7 +201,6 @@ export default {
       }, //人员定位默认数据
       polygon: "",
       text: "",
-      marker: "",
       amapManager,
       zoom: 12,
       center: [114.003378, 22.571492],
@@ -282,159 +281,80 @@ export default {
         address: ""
       }, // 人员数据
       path: [],
+      loading: false
     };
   },
   created() {
-    this.getPid();
     this.getName();
   },
   methods: {
-    // 获取人员定位数据
-    getLocaltionListData() {
-      this.$axios
-        .get(
-          `/lz/hire/localtionList?id=${this.pid}&string=${this.name}&createDate=${this.createDate}`
-        )
-        .then(res => {
-          if (res.data.length > 0) {
-            if (res.data[0].localtionList.length > 0) {
-              this.localtionListData = res.data[0];
-              // 电子围栏渲染
-              let temp = [];
-              let temp2 = [];
-              temp.push(this.localtionListData.areaList[0].xloc);
-              temp.push(this.localtionListData.areaList[0].yloc);
-              temp2.push(this.localtionListData.localtionList[0].xloc);
-              temp2.push(this.localtionListData.localtionList[0].yloc);
-              this.circle.setCenter(temp);
-              // this.circle.setCenter(temp2)
-              this.circle.setRadius(this.localtionListData.areaList[0].radius);
-              // 地图中心点设为电子围栏中心点
-              this.center = temp2;
-              this.zoom = 14;
-              // 渲染人员所在位置坐标点
-              this.marker.setPosition(temp2);
-              this.marker.show();
-            } else {
-              this.$message({
-                message: "无此人定位数据",
-                type: "warning"
-              });
-            }
-          } else {
-            this.$message({
-              message: "无此人定位数据",
-              type: "warning"
-            });
-          }
-        });
-    },
-
     // 获取实时监控页面传过来的值
     getName() {
-      // console.log(this.$route.query.orderId)
       if (this.$route.query.orderId != undefined && this.getNameState == 0) {
         this.name = this.$route.query.orderId;
-        this.getLocaltionListData();
+        this.getHireSearch();
         this.getNameState = 1;
       }
-    },
-
-    // 获取项目id
-    getPid() {
-      this.projectId = sessionStorage.getItem("pid");
     },
 
     // 获取人员定位数据
     getHireSearch() {
       if (this.name) {
+        this.loading = true;
+        this.clear(this.personnelData);
         this.$axios
           .post(
             `/api/hireApi/getHireSearch?filed=${this.name}&projectId=${this.projectId}`
           )
           .then(res => {
-            if (res.data.code == 0 && res.data.data.length && !res.data.data[0].way) {
+            this.loading = false;
+            if (
+              res.data.code == 0 &&
+              res.data.data.length &&
+              !res.data.data[0].way
+            ) {
               this.personnelData = res.data.data[0];
-              let temp = [];
-              let temp2 = [];
-              temp.push(this.personnelData.xloc);
-              temp.push(this.personnelData.yloc);
-              temp2.push(this.personnelData.areaXloc);
-              temp2.push(this.personnelData.areaYloc);
-              this.circle.setRadius(this.personnelData.areaRadius);
-              this.circle.setCenter(temp2);
-              this.center = temp;
+              let temp = res.data.data[0];
+              this.circle.setRadius(temp.areaRadius);
+              this.circle.setCenter([temp.areaXloc, temp.areaYloc]);
+              this.center = [temp.xloc, temp.yloc];
               this.zoom = 14;
-              this.marker.setPosition(temp);
+              this.marker.setPosition([temp.areaXloc, temp.areaYloc]);
               this.marker.show();
-            } else if (res.data.code == 0 && res.data.data.length && res.data.data[0].way) {
+            } else if (
+              res.data.code == 0 &&
+              res.data.data.length &&
+              res.data.data[0].way
+            ) {
               this.personnelData = res.data.data[0];
-              console.log("getHireSearch -> this.personnelData", this.personnelData)
-              let temp = []
-              temp.push(res.data.data[0].localtion.map(a => {
-                return new Array(a.xloc, a.yloc)
-              }));
-              temp.forEach(item => {
-                this.path.push(item)
-              });
+              let temp = res.data.data[0];
+              this.path.push(
+                temp.localtion.map(a => new Array(a.xloc, a.yloc))
+              );
               this.zoom = 14;
-              let center = [res.data.data[0].xloc, res.data.data[0].yloc]
-              this.center = center
-              this.marker.setPosition(center);
+              this.center = [temp.xloc, temp.yloc];
+              this.marker.setPosition([temp.xloc, temp.yloc]);
               this.marker.show();
             } else {
-              this.personnelData = {
-                id: 0,
-                userName: "",
-                userPhone: "",
-                constructionName: "",
-                imei: "",
-                bat: "",
-                watchDate: "",
-                xloc: "",
-                yloc: "",
-                address: "",
-                skilCertificate: "",
-                laborContract: 0,
-                tertiaryEducation: 0,
-                digitalTraining: 0,
-                idCode: "",
-                workType: ""
-              };
               this.$message({
                 message: "未找到相关人员",
                 type: "warning"
               });
             }
           });
-      } else {
-        this.personnelData = {
-          id: 0,
-          userName: "",
-          userPhone: "",
-          constructionName: "",
-          imei: "",
-          bat: "",
-          watchDate: "",
-          xloc: "",
-          yloc: "",
-          address: ""
-        };
-        this.$message({
-          message: "输入框不得为空",
-          type: "warning"
-        });
+        return;
       }
+      this.$message({
+        message: "输入框不得为空",
+        type: "warning"
+      });
     },
 
-    // 获取实时监控页面传过来的值
-    getName() {
-      // console.log(this.$route.query.orderId)
-      if (this.$route.query.orderId != undefined && this.getNameState == 0) {
-        this.name = this.$route.query.orderId;
-        this.getHireSearch();
-        this.getNameState = 1;
-      }
+    // 清除数据
+    clear(obj) {
+      Object.keys(obj).forEach(key => {
+        obj[key] = null;
+      });
     }
   }
 };

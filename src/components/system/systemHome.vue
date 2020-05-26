@@ -19,7 +19,8 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/systemPersonnel">
+          <!-- <router-link to="/systemPersonnel"> -->
+          <router-link to="/systemLocation">
             <div class="icon personnel"></div>
             <span>人员管理</span>
           </router-link>
@@ -252,12 +253,12 @@
             </div>
             <div class="flex planeCard_black" v-else @click="msg" style="cursor: pointer;"></div>
             <!-- 库存管理 -->
-            <div class="flex inventory_bg" v-if="open">
+            <!-- <div class="flex inventory_bg" v-if="open">
               <a target="_blank" href="http://39.108.103.150:8090">
                 <img src="../../../static/images/inventory.png" alt="">
               </a>
             </div>
-            <div class="flex setCard_black" v-else></div>
+            <div class="flex setCard_black" v-else></div> -->
             <i></i>
             <i></i>
             <i></i>

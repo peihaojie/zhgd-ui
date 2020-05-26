@@ -6,7 +6,8 @@
     <div class="side-nav">
       <ul>
         <li class="button">
-          <router-link to="/systemPersonnel" class="return" v-show="retractState"></router-link>
+          <!-- <router-link to="/systemPersonnel" class="return" v-show="retractState"></router-link> -->
+          <router-link to="/systemHome" class="return" v-show="retractState"></router-link>
           <a class="retract" @click="retractClick"></a>
         </li>
         <li @click="activeShow='/systemLocation_home'">

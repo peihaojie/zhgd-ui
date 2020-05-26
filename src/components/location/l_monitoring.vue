@@ -2,21 +2,6 @@
   <div id="l_monitoring">
     <div class="content-box">
       <div class="nav">
-        <!-- <el-collapse accordion>
-                    <el-collapse-item :title="monitoringData.title" name="1">
-                        <el-collapse @change="handleChange" accordion>
-                            <el-collapse-item v-for="(item,index) in monitoringData.areaList" :key="index" :title="item.name" :name="`${item.name}`">
-                                <div v-for="(item2,index2) in item.hireList" :key="index2">
-                                    <a style="color:#fff" @click="$router.push({ path: '/location/l_search', query: { orderId: item2.hname } })">
-                                    {{item2.hname}}
-                                    <span class="online" v-show="item2.xloc">在线</span>
-                                    <span class="offline" v-show="!item2.xloc">不在线</span>
-                                    </a>
-                                </div>
-                            </el-collapse-item>
-                        </el-collapse>
-                    </el-collapse-item>
-        </el-collapse>-->
         <el-collapse accordion>
           <el-collapse-item
             v-for="(item,index) in workAreaList"
@@ -31,7 +16,7 @@
                 v-for="item2 in item.areaList"
                 :key="item2.areaId"
               >
-                <div v-for="item3 in item2.userList" :key="item3.yuserId">
+                <!-- <div v-for="item3 in item2.userList" :key="item3.yuserId">
                   <a
                     @click="$router.push({ path: '/location/l_search',query: { orderId: item3.userName}})"
                   >
@@ -40,7 +25,32 @@
                       :class="item3.userStatus?'online':'offline'"
                     >{{item3.userStatus?'在线':'不在线'}}</span>
                   </a>
-                </div>
+                </div> -->
+                <el-collapse accordion>
+                  <el-collapse-item
+                    :title="`在线${item2.line.onLine.length}人，${getIn(item2.line.onLine)}人在工区`"
+                  >
+                    <a
+                      v-for="onLine in item2.line.onLine"
+                      :key="onLine.userId"
+                      @click="$router.push({ path: '/location/l_search',query: { orderId: onLine.userName}})"
+                    >
+                      {{onLine.userName}}
+                      <span class="online" v-if="onLine.in">在线</span>
+                      <span class="offline" v-else>在线(离开)</span>
+                    </a>
+                  </el-collapse-item>
+                  <el-collapse-item :title="`不在线(${item2.line.offLine.length}人)`">
+                    <a
+                      v-for="offLine in item2.line.offLine"
+                      :key="offLine.userId"
+                      @click="$router.push({ path: '/location/l_search',query: { orderId: offLine.userName}})"
+                    >
+                      {{offLine.userName}}
+                      <span class="offline">不在线</span>
+                    </a>
+                  </el-collapse-item>
+                </el-collapse>
               </el-collapse-item>
             </el-collapse>
           </el-collapse-item>
@@ -54,9 +64,32 @@
           :center="center"
           :zoom="zoom"
           :plugin="plugin"
-          :events="events"
           class="amap-demo"
-        ></el-amap>
+        >
+          <el-amap-polygon
+            :path="path"
+            strokeColor="#333"
+            strokeWeight="2"
+            fillColor="#fff"
+            fillOpacity="0.5"
+          ></el-amap-polygon>
+          <template v-if="markers.length">
+            <el-amap-marker
+              v-for="(marker, index) in markers"
+              :key="index+Math.random()*10000"
+              :position="marker.position"
+              :events="marker.events"
+            ></el-amap-marker>
+            <el-amap-info-window
+              v-for="(marker, index) in markers"
+              :key="index+Math.random()*10000"
+              :position="marker.position"
+              :content="marker.content"
+              :visible="marker.visible"
+              :offset="[0, -35]"
+            ></el-amap-info-window>
+          </template>
+        </el-amap>
         <div class="alarm" @click="dialog">
           <i class="spectacularsAlarm"></i>
         </div>
@@ -236,105 +269,6 @@ export default {
       // circleRadius: 0, // 园半径
       zoom: 12,
       center: [114.014129, 22.571492],
-      events: {
-        init: o => {
-          // this.marker = new AMap.Marker({
-          //     position: [114.003378,22.571492]
-          // });
-          // this.marker.setMap(o);
-          // console.log(o.getCenter())
-          // console.log(this.$refs.map.$$getInstance())
-          // o.getCity(result => {
-          //     console.log(result)
-          // })
-          this.text = new AMap.Text({
-            position: [114.003378, 22.669854],
-            text: "20人在场"
-          });
-          this.text.setMap(o);
-          this.text.hide();
-          // let circle1 = new AMap.Circle({
-          //     center: [113.994194,22.578189],
-          //     fillOpacity: 1, //透明度
-          //     zIndex: 100, //层级
-          //     radius: 10, //半径
-          //     fillColor: '#e10505', //填充颜色
-          //     strokeColor: '#e10505', //轮廓线颜色
-          // })
-          // let circle2 = new AMap.Circle({
-          //     center: [114.004537,22.563725],
-          //     fillOpacity: 1, //透明度
-          //     zIndex: 100, //层级
-          //     radius: 10, //半径
-          //     fillColor: '#e10505', //填充颜色
-          //     strokeColor: '#e10505', //轮廓线颜色
-          // })
-          // let circle3 = new AMap.Circle({
-          //     center: [114.009601,22.570383],
-          //     fillOpacity: 1, //透明度
-          //     zIndex: 100, //层级
-          //     radius: 10, //半径
-          //     fillColor: '#e10505', //填充颜色
-          //     strokeColor: '#e10505', //轮廓线颜色
-          // })
-          // let circle4 = new AMap.Circle({
-          //     center: [114.006167,22.580171],
-          //     fillOpacity: 1, //透明度
-          //     zIndex: 100, //层级
-          //     radius: 10, //半径
-          //     fillColor: '#e10505', //填充颜色
-          //     strokeColor: '#e10505', //轮廓线颜色
-          // })
-          // circle1.setMap(o);
-          // circle2.setMap(o);
-          // circle3.setMap(o);
-          // circle4.setMap(o);
-          // // marker = [marker1,marker2]
-          // // marker.setMap(o)
-          // let polyline = new AMap.Polyline({
-          //     path:[
-          //         new AMap.LngLat(113.994194,22.578189),
-          //         new AMap.LngLat(114.004537,22.563725),
-          //         new AMap.LngLat(114.009601,22.570383),
-          //         new AMap.LngLat(114.006167,22.580171)
-          //     ],
-          //     lineJoin: 'round', //折线拐点样式
-          //     showDir: true, //移动方向
-          //     strokeWeight: 3, //线条宽度
-          //     strokeColor: '#3366ff', //线条颜色
-          // })
-          // polyline.setMap(o);
-          this.polygon = new AMap.Polygon({
-            path: [
-              new AMap.LngLat(113.992992, 22.581439),
-              new AMap.LngLat(114.01033, 22.582786),
-              new AMap.LngLat(114.010287, 22.562853),
-              new AMap.LngLat(113.996898, 22.563329)
-            ],
-            fillColor: "#fff", // 多边形填充颜色
-            fillOpacity: 0, //填充颜色透明度
-            borderWeight: 1, // 线条宽度
-            strokeColor: "#137ed2" // 线条颜色}
-          });
-          this.polygon.setMap(o);
-          this.polygon.hide();
-          // 电子围栏位置信息
-          this.circle = new AMap.Circle({
-            center: [114.007675, 22.663599], // 圆心位置
-            radius: 0, // 圆半径
-            fillColor: "none", // 圆形填充颜色
-            fillOpacity: 0, // 填充色透明度
-            strokeColor: "#3979fe", // 描边颜色
-            strokeWeight: 2 // 描边宽度
-          });
-          this.circle.setMap(o);
-        },
-        moveend: () => {},
-        zoomchange: () => {},
-        click: e => {
-          // alert('map clicked')
-        }
-      },
       plugin: [
         {
           pName: "ToolBar",
@@ -346,7 +280,7 @@ export default {
           }
         }
       ],
-      projectId: "", // 项目id
+      projectId: sessionStorage.getItem("pid"), //项目id
       workAreaList: "", // 工区列表
       alarmClick: false, // 报警弹窗显示
       alarmList: [], // 报警列表
@@ -370,39 +304,65 @@ export default {
           value: 3
         }
       ], // 报警搜索列表
+      path: [],
+      markers: []
     };
   },
   created() {
-    this.getProjectId();
     this.getMonitoringData();
     this.getDay()
   },
   methods: {
     // 导航栏点击事件
     handleChange(val) {
-      // console.log(val)
-      // if (val == '1-1') {
-      //     this.polygon.show()
-      //     this.text.show()
-      //     this.marker.hide()
-      // }
-      // this.circle.show()
       let temp = [];
-      for (let i = 0; i < this.workAreaList[0].areaList.length; i++) {
-        // console.log(this.monitoringData.areaList[i].name)
-        if (val == this.workAreaList[0].areaList[i].areaId) {
-          temp.push(this.workAreaList[0].areaList[i].areaXloc);
-          temp.push(this.workAreaList[0].areaList[i].areaYloc);
+      this.workAreaList[0].areaList.forEach(item => {
+        if (val == item.areaId && !item.way) {
+          temp.push(item.areaXloc);
+          temp.push(item.areaYloc);
           // 设置电子围栏圆心
           this.circle.setCenter(temp);
           // 设置电子围栏半径
-          this.circle.setRadius(this.workAreaList[0].areaList[i].areaRadius);
+          this.circle.setRadius(item.areaRadius);
           // 设置地图中心点
           this.center = temp;
           // 设置地图缩放等级
           this.zoom = 14;
+          return
         }
-      }
+        if (val == item.areaId && item.way) {
+          this.zoom = 14;
+          this.center = [item.localtion[0].xloc, item.localtion[0].yloc];
+          this.markers = new Array();
+          item.line.onLine.forEach(a => {
+            let obj = {
+              position: [a.userXloc, a.userYloc],
+              content: a.userName,
+              visible: false,
+              events: {
+                mouseover: () => (obj.visible = true),
+                mouseout: () => (obj.visible = false),
+                click: () =>
+                  this.$router.push({
+                    path: "/location/l_search",
+                    query: { orderId: obj.content }
+                  })
+              }
+            };
+            this.markers.push(obj);
+          });
+          this.path.push(item.localtion.map(a => new Array(a.xloc, a.yloc)));
+        }
+      });
+    },
+
+    // 判断是否在区域内
+    getIn(list) {
+      let num = 0;
+      list.forEach(a => {
+        if (a.in) num++;
+      });
+      return num;
     },
 
     // 获取工区列表
@@ -410,13 +370,23 @@ export default {
       this.$axios
         .post(`/api/hireApi/getHirePeople?projectId=${this.projectId}`)
         .then(res => {
-          this.workAreaList = res.data.data;
+          if (res.data.code == 0) {
+            res.data.data[0].areaList.forEach(item => {
+              let line = item.line
+              line.offLine = line.offLine ? line.offLine : [];
+              line.onLine = line.onLine ? line.onLine : [];
+              let path = new Array();
+              path.push(item.localtion.map(a => new Array(a.xloc, a.yloc)));
+              line.onLine.forEach(a => {
+                a.in = AMap.GeometryUtil.isPointInRing(
+                  new Array(a.userXloc, a.userYloc),
+                  path
+                );
+              });
+            });
+            this.workAreaList = res.data.data;
+          }
         });
-    },
-
-    // 获取项目id
-    getProjectId() {
-      this.projectId = sessionStorage.getItem("pid");
     },
 
     // 获取报警数据，并弹窗
@@ -428,14 +398,14 @@ export default {
           .then(res => {
             if (res.data.code == 0) {
               this.alarmList = res.data.data
-              setTimeout(() => {
-                this.startScroll()
-              }, 500);
+              // setTimeout(() => {
+              //   this.startScroll()
+              // }, 500);
             }
           })
       } else {
-        clearInterval(this.clearScroll)
-        this.$refs.scroll.scrollTop = 0
+        // clearInterval(this.clearScroll)
+        // this.$refs.scroll.scrollTop = 0
       }
     },
 
@@ -473,7 +443,7 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.clearScroll) clearInterval(this.clearScroll)
+    // if (this.clearScroll) clearInterval(this.clearScroll)
   }
 };
 </script>

@@ -26,7 +26,7 @@
             </li>
             <li>
               设备电量：
-              <span>{{personnelData.bat}}%</span>
+              <span v-if="personnelData.bat">{{personnelData.bat}}%</span>
             </li>
             <li>
               定位时间：
@@ -39,7 +39,7 @@
           </ul>
         </div>
       </div>
-      <div class="map">
+      <div class="map" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.8)">
         <el-amap
           ref="map"
           vid="amapDemo"
@@ -49,7 +49,15 @@
           :plugin="plugin"
           :events="events"
           class="amap-demo"
-        ></el-amap>
+        >
+          <el-amap-polygon
+            :path="path"
+            strokeColor="#333"
+            strokeWeight="2"
+            fillColor="#fff"
+            fillOpacity="0.5"
+          ></el-amap-polygon>
+        </el-amap>
       </div>
     </div>
   </div>
@@ -121,14 +129,13 @@ let amapManager = new VueAMap.AMapManager();
 export default {
   data() {
     return {
-      projectId: "", // 项目id
+      projectId: sessionStorage.getItem("pid"), // 项目id
       circle: "", // 电子围栏位置信息
       marker: "", // 人员位置坐标点
       name: "", //需要查询的人名或设备编号或手机号码
       createDate: "", //需要查询的定位数据的日期
       polygon: "",
       text: "",
-      marker: "",
       amapManager,
       zoom: 12,
       center: [114.003378, 22.571492],
@@ -251,84 +258,77 @@ export default {
         xloc: "",
         yloc: "",
         address: ""
-      } // 人员数据
+      }, // 人员数据
+      loading: false,
+      path: []
     };
   },
   created() {
-    this.getPid();
     this.getName();
   },
   methods: {
-    // 获取项目id
-    getPid() {
-      this.projectId = sessionStorage.getItem("pid");
-    },
-
     // 获取人员定位数据
     getHireSearch() {
       if (this.name) {
+        this.loading = true;
+        this.clear(this.personnelData);
         this.$axios
           .post(
             `/api/hireApi/getHireSearch?filed=${this.name}&projectId=${this.projectId}`
           )
           .then(res => {
-            // console.log(res.data)
-            if (res.data.code == 0 && res.data.data.length) {
+            this.loading = false;
+            if (
+              res.data.code == 0 &&
+              res.data.data.length &&
+              !res.data.data[0].way
+            ) {
               this.personnelData = res.data.data[0];
-              let temp = [];
-              let temp2 = [];
-              temp.push(this.personnelData.xloc);
-              temp.push(this.personnelData.yloc);
-              temp2.push(this.personnelData.areaXloc);
-              temp2.push(this.personnelData.areaYloc);
-              this.circle.setRadius(this.personnelData.areaRadius);
-              this.circle.setCenter(temp2);
-              this.center = temp;
+              let temp = res.data.data[0];
+              this.circle.setRadius(temp.areaRadius);
+              this.circle.setCenter([temp.areaXloc, temp.areaYloc]);
+              this.center = [temp.xloc, temp.yloc];
               this.zoom = 14;
-              this.marker.setPosition(temp);
+              this.marker.setPosition([temp.areaXloc, temp.areaYloc]);
+              this.marker.show();
+            } else if (
+              res.data.code == 0 &&
+              res.data.data.length &&
+              res.data.data[0].way
+            ) {
+              this.personnelData = res.data.data[0];
+              let temp = res.data.data[0];
+              this.path.push(
+                temp.localtion.map(a => new Array(a.xloc, a.yloc))
+              );
+              this.zoom = 14;
+              this.center = [temp.xloc, temp.yloc];
+              this.marker.setPosition([temp.xloc, temp.yloc]);
               this.marker.show();
             } else {
-              this.personnelData = {
-                id: 0,
-                userName: "",
-                userPhone: "",
-                constructionName: "",
-                imei: "",
-                bat: "",
-                watchDate: "",
-                xloc: "",
-                yloc: "",
-                address: ""
-              };
               this.$message({
                 message: "未找到相关人员",
                 type: "warning"
               });
             }
           });
-      } else {
-        this.personnelData = {
-          id: 0,
-          userName: "",
-          userPhone: "",
-          constructionName: "",
-          imei: "",
-          bat: "",
-          watchDate: "",
-          xloc: "",
-          yloc: "",
-          address: ""
-        };
-        this.$message({
-          message: "输入框不得为空",
-          type: "warning"
-        });
+        return;
       }
+      this.$message({
+        message: "输入框不得为空",
+        type: "warning"
+      });
+    },
+
+    // 清除数据
+    clear(obj) {
+      Object.keys(obj).forEach(key => {
+        obj[key] = null;
+      });
     },
 
     // 获取实时监控页面传过来的值
     getName() {
-      // console.log(this.$route.query.orderId)
       if (this.$route.query.orderId != undefined && this.getNameState == 0) {
         this.name = this.$route.query.orderId;
         this.getHireSearch();
