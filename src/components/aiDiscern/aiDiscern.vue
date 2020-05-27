@@ -21,10 +21,10 @@
       </div>
       <!-- 视频区域 -->
       <div class="video-wrap">
-        <video src autoplay="autoplay"></video>
-        <!-- <video v-show="bgc==1" src="http://gd.hj-tec.com/zhgd/weiqu.mp4" width="100%" height="100%" controls autoplay></video>
+        <!-- <video src autoplay="autoplay"></video> -->
+        <video v-show="bgc==1" src="http://gd.hj-tec.com/zhgd/weiqu.mp4" width="100%" height="100%" controls autoplay></video>
         <video v-show="bgc==2" src="http://gd.hj-tec.com/zhgd/anquanmao.mp4" width="100%" height="100%" controls autoplay></video>
-        <video v-show="bgc==3" src="http://gd.hj-tec.com/zhgd/fanguangyi.mp4" width="100%" height="100%" controls autoplay></video> -->
+        <video v-show="bgc==3" src="http://gd.hj-tec.com/zhgd/fanguangyi.mp4" width="100%" height="100%" controls autoplay></video>
         <span class="nav-list" @click="dialog">
           <i class="el-icon-circle-plus-outline" v-if="navListShow"></i>
           <i class="el-icon-remove-outline" v-else></i>
